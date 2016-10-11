@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/sagen.unity
+- path: Assets/ContentGeneration.unity
   isLoaded: 1
   isActive: 1
