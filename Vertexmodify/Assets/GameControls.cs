@@ -19,11 +19,15 @@ public class GameControls : MonoBehaviour {
 
 	GameObject spawnObject; 
 
+	public Material prefabMat; 
+
 
 	public float maxX; 
 	public float minX; 
 	public float maxZ; 
 	public float minZ; 
+
+
 
 	void Start () { 
 
@@ -43,6 +47,8 @@ public class GameControls : MonoBehaviour {
 
 
 	void instantiatePrefab(GameObject objectToSpawn){
+		// Trying to change the color of the material on each instantiate
+		//objectToSpawn.GetComponent<Material>() = new Color (Random.Range (0, 2), Random.Range (0, 2), Random.Range (0, 2)); 
 		spawnPosition = new Vector3 (Random.Range (maxX, minX), 1.0f, Random.Range (maxZ, minZ));
 		Quaternion spawnRotation = Quaternion.identity; 
 		Instantiate (objectToSpawn, spawnPosition, spawnRotation); 
@@ -52,6 +58,7 @@ public class GameControls : MonoBehaviour {
 		int determine; 
 		determine = Random.Range (0,4); 
 		Debug.Log (determine); 
+		//prefabMat.color = new Color (Random.Range (0, 2), Random.Range (0, 2), Random.Range (0, 2)); 
 
 		if (determine == 0) {
 			instantiatePrefab (prefab); 
