@@ -1,15 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GameControls.cs">
     <Files>
-      <File FileName="Assets/GameControls.cs" Line="58" Column="5" />
-      <File FileName="Assets/ScaleController.cs" Line="13" Column="18" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MapgenHeight.cs">
-    <Files>
-      <File FileName="Assets/MapgenHeight.cs" Line="12" Column="1" />
->>>>>>> 634aabc07e2a35625aa2ce0c1d2a311540473f6b
+      <File FileName="Assets/ScaleController.cs" Line="11" Column="63" />
+      <File FileName="Assets/GameControls.cs" Line="63" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

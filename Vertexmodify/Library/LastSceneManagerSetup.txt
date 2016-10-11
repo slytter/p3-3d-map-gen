@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/ContentGeneration.unity
+- path: Assets/Edge detection.unity
   isLoaded: 1
   isActive: 1
