@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\EdgeDetectionScript.cs" />
      <Compile Include="Assets\MapgenHeight.cs" />
      <Compile Include="Assets\sc.cs" />
  <Reference Include="UnityEngine.UI">
