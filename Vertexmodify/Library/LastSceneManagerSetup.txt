@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Edge detection.unity
+- path: Assets/camera.unity
   isLoaded: 1
   isActive: 1
