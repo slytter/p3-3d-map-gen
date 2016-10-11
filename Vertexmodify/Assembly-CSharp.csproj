@@ -45,7 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
      <Compile Include="Assets\GameControls.cs" />
+=======
+     <Compile Include="Assets\EdgeDetectionScript.cs" />
+>>>>>>> dcfd5ed595c6f7e240cff226f48971edb4cf0f5f
      <Compile Include="Assets\MapgenHeight.cs" />
      <Compile Include="Assets\ScaleController.cs" />
      <Compile Include="Assets\sc.cs" />
