@@ -15,3 +15,20 @@
 /Users/macbook/Vertexmodify/Temp/bin/Debug/Assembly-CSharp.dll
 /Users/macbook/Vertexmodify/obj/Debug/Assembly-CSharp.dll
 /Users/macbook/Vertexmodify/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/obj/Debug/Assembly-CSharp.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/UnityEngine.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/UnityEditor.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Mono.Cecil.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Unity.DataContract.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Temp/bin/Debug/Mono.Cecil.Mdb.dll
