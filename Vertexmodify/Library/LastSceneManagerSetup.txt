@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/sagen.unity
+- path: Assets/camera.unity
   isLoaded: 1
   isActive: 1
