@@ -6,7 +6,7 @@ using System;
 public class ColorDetection : MonoBehaviour
 {
 
-	Color[] pixO;
+
 	void Start ()
 	{
 
@@ -20,18 +20,17 @@ public class ColorDetection : MonoBehaviour
 		GetComponent<Renderer> ().material.mainTexture = newIm;
 
 		pixN = originalIm.GetPixels ();
-		pixO = originalIm.GetPixels ();
 		newIm.SetPixels (pixN);
 		newIm.Apply ();	
 
 		// looking for green
-		//colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f);
+		colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f);
 
 		// Loking for yellow
 		//colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f);
 
 		// overloaded method for red, since intervals is crossing 0
-		colorDetection (pixN, newIm, 1f, 0f, 0.94f, 0.02f, 0.25f, 0.5f);
+		//colorDetection (pixN, newIm, 1f, 0f, 0.94f, 0.02f, 0.25f, 0.5f);
 
 		// Looking for Orange
 		//colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f);
@@ -42,11 +41,13 @@ public class ColorDetection : MonoBehaviour
 			
 	}
 
-	bool [,] colorDetection (Color [] pixN, Texture2D newIm, float hueMax, float hueMin, float sat, float val)
+	float [,] colorDetection (Color[] pixN, Texture2D newIm, float hueMax, float hueMin, float sat, float val)
 	{
 
 		//Float 2d array to assign and return
-		bool[,] pixelPosGreen = new bool[512, 512];  
+		float[,] pixelPosOutput = new float[512, 512];
+
+
 		float h; 
 		float s; 
 		float v; 
@@ -61,20 +62,26 @@ public class ColorDetection : MonoBehaviour
 				// Looking for green
 				if (h > hueMin && h < hueMax && s > sat && v > val) {
 					// Assigning position x,y in float array. 
-					pixelPosGreen [x, y] = true;
+					pixelPosOutput[x,y] = 1f; 
+
 				} else {
-					pixelPosGreen [x, y] = false; 
+					pixelPosOutput [x, y] = 0f; 
+
 				}
 			}
-		} 
-		printBinary (pixelPosGreen, pixN, newIm); 
-		return pixelPosGreen;
+		}
+		 
+		printBinary (pixelPosOutput, pixN, newIm); 
+
+		return pixelPosOutput; 
+
 	}
-	bool [,] colorDetection (Color [] pixN, Texture2D newIm, float Max,float Min, float hueMax, float hueMin, float sat, float val)
+
+	float [,] colorDetection (Color[] pixN, Texture2D newIm, float Max, float Min, float hueMax, float hueMin, float sat, float val)
 	{
 
 		//Float 2d array to assign and return
-		bool[,] pixelPosGreen = new bool[512, 512];  
+		float[,] pixelPosRed = new float[512, 512];  
 		float h; 
 		float s; 
 		float v; 
@@ -89,25 +96,26 @@ public class ColorDetection : MonoBehaviour
 				// Looking for green
 				if (h > Min && h < hueMin && s > sat && v > val || h > hueMax && h < Max && s > sat && v > val) {
 					// Assigning position x,y in float array. 
-					pixelPosGreen [x, y] = true;
+					pixelPosRed [x, y] = 1f;
 				} else {
-					pixelPosGreen [x, y] = false; 
+					pixelPosRed [x, y] = 0f; 
 				}
 			}
 		} 
-		printBinary (pixelPosGreen, pixN, newIm); 
-		return pixelPosGreen;
+		//printBinary (pixelPosGreen, pixN, newIm); 
+		return pixelPosRed;
 	}
 
 
-	void printBinary (bool[,] input, Color [] pixN, Texture2D newIm)
+	// only for testing
+	void printBinary (float[,] input, Color[] pixN, Texture2D newIm)
 	{
 
-		for (int y = 0; y < input.GetLength(0); y++) {
-			for (int x = 0; x < input.GetLength(1); x++) {
+		for (int y = 0; y < input.GetLength (0); y++) {
+			for (int x = 0; x < input.GetLength (1); x++) {
 
 
-				if (input [x, y] == true) {
+				if (input [x, y] == 1f) {
 					pixN [y * newIm.width + x] = new Color (0, 1, 0); 
 				} else {
 					pixN [y * newIm.width + x] = new Color (0, 0, 0);
