@@ -9,7 +9,6 @@ public class ColorDetection : MonoBehaviour
 	Texture2D newIm;
 	Color[] pixN;
 	Color[] pixO;
-	GameObject TxtBox;
 
 	void Start ()
 	{
@@ -29,8 +28,6 @@ public class ColorDetection : MonoBehaviour
 	{
 
 		if (Input.GetKeyDown (KeyCode.F1))
-			resetImage ();
-		if (Input.GetKeyDown (KeyCode.F2))
 			colorDetection ();
 	}
 
@@ -40,12 +37,6 @@ public class ColorDetection : MonoBehaviour
 		newIm.SetPixels (pixN);
 		newIm.Apply ();	
 		pixO = newIm.GetPixels ();
-	}
-
-	void resetImage ()
-	{
-		pixN = originalIm.GetPixels ();
-		updateOldImAndApplyNewIm ();
 	}
 
 	bool [,] colorDetection ()
@@ -64,17 +55,13 @@ public class ColorDetection : MonoBehaviour
 				//Converting rgb to HSV and assigning float variables. 
 				Color.RGBToHSV (pixO [y * newIm.width + x], out h, out s, out v); 
 
-				if (y == 45 && x == 188) {
-					Debug.Log ("Hue is: " + h + " Saturation is: " + s + " Value is: " + v);
-				}
 				// Looking for green
-				if (h > 100 && h < 140 && s > 0f && v > 0f) {
+				if (h > 0.194f  && h < 0.42f && s > 0.3f && v > 0.6f) {
 					// Assigning position x,y in float array. 
 					pixelPos [x, y] = true;
 				} else {
 					pixelPos [x, y] = false; 
 				}
-
 			}
 		} 
 		return pixelPos;
