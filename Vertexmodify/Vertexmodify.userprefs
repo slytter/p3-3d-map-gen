@@ -2,7 +2,21 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ColorDetection.cs">
     <Files>
+<<<<<<< HEAD
       <File FileName="Assets/Scripts/ColorDetection.cs" Line="74" Column="13" />
+=======
+      <File FileName="Assets/ScaleController.cs" Line="11" Column="63" />
+      <File FileName="Assets/GameControls.cs" Line="63" Column="24" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/EdgeDetectionScript.cs">
+    <Files>
+<<<<<<< HEAD
+      <File FileName="Assets/EdgeDetectionScript.cs" Line="68" Column="18" />
+=======
+      <File FileName="Assets/EdgeDetectionScript.cs" Line="17" Column="62" />
+>>>>>>> dcfd5ed595c6f7e240cff226f48971edb4cf0f5f
+>>>>>>> f7e13814280c550276523f863bbb3041e96eb2ae
+>>>>>>> master
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
