@@ -29,6 +29,7 @@ public class ColorDetection : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.F1))
 			colorDetection ();
+		
 	}
 
 	void updateOldImAndApplyNewIm ()
