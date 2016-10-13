@@ -45,12 +45,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\EdgeDetectionScript.cs" />
-     <Compile Include="Assets\GameControls.cs" />
-     <Compile Include="Assets\MapgenHeight.cs" />
-     <Compile Include="Assets\ScaleController.cs" />
-     <Compile Include="Assets\cameraScript.cs" />
-     <Compile Include="Assets\sc.cs" />
+     <Compile Include="Assets\Scripts\ColorDetection.cs" />
+     <Compile Include="Assets\Scripts\EdgeDetectionScript.cs" />
+     <Compile Include="Assets\Scripts\GameControls.cs" />
+     <Compile Include="Assets\Scripts\MapgenHeight.cs" />
+     <Compile Include="Assets\Scripts\ScaleController.cs" />
+     <Compile Include="Assets\Scripts\cameraScript.cs" />
+     <Compile Include="Assets\Scripts\sc.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

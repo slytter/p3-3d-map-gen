@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/camera.unity
+- path: Assets/Scenes/ColorDetection.unity
   isLoaded: 1
   isActive: 1
