@@ -13,6 +13,7 @@ public class ColorDetection : MonoBehaviour
 		Texture2D originalIm;
 		Texture2D newIm;
 		Color[] pixN;
+		float[,] testArray = new float[512, 512]; 
 		 
 
 		newIm = new Texture2D (512, 512);
@@ -24,9 +25,9 @@ public class ColorDetection : MonoBehaviour
 		newIm.Apply ();	
 
 		// looking for green
-		colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f);
+		Array.Copy(colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f), testArray);
 
-		// Loking for yellow
+		// Looking for yellow
 		//colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f);
 
 		// overloaded method for red, since intervals is crossing 0
@@ -36,10 +37,16 @@ public class ColorDetection : MonoBehaviour
 		//colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f);
 	}
 
-	void Update ()
+	float [,] grassFire(float [,] testArray, int nodeX, int nodeY)
 	{
-			
+		float [,] objectsDefined = new float[512, 512];
+
+
+
+		return objectsDefined;
 	}
+
+
 
 	float [,] colorDetection (Color[] pixN, Texture2D newIm, float hueMax, float hueMin, float sat, float val)
 	{
@@ -111,8 +118,8 @@ public class ColorDetection : MonoBehaviour
 	void printBinary (float[,] input, Color[] pixN, Texture2D newIm)
 	{
 
-		for (int y = 0; y < input.GetLength (0); y++) {
-			for (int x = 0; x < input.GetLength (1); x++) {
+		for (int y = 0; y < input.GetLength (1); y++) {
+			for (int x = 0; x < input.GetLength (0); x++) {
 
 
 				if (input [x, y] == 1f) {
