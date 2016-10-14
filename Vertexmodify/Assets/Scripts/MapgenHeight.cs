@@ -20,13 +20,15 @@ public class MapgenHeight : MonoBehaviour {
 //		}
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
-		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
-		myHeightMap = mountainRecursion (2, myHeightMap, 0.8f, 10);
-		myHeightMap = mountainRecursion (4, myHeightMap, 0.5f, 5);
-		myHeightMap = mountainRecursion (8, myHeightMap, 0.3f, 5);
-		myHeightMap = mountainRecursion (16, myHeightMap, 0.2f, 0);
-		myHeightMap = mountainRecursion (32, myHeightMap, 0.1f, 0);
-		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);
+		//myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
+		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
+		myHeightMap = mountainRecursion (4, myHeightMap, 0.8f, 10);
+		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
+		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
+		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
+		myHeightMap = mountainRecursion (64, myHeightMap, 0.2f, 0);
+		myHeightMap = mountainRecursion (128, myHeightMap, 0.2f, 0);
+
 		myHeightMap = finalMap (myHeightMap);
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
@@ -90,9 +92,9 @@ public class MapgenHeight : MonoBehaviour {
 				currentTerrainHeight = randomValues [randomArrayPointerX, randomArrayPointerY];
 
 				if (amount == 1) {
-					heightMap [i, j] = currentTerrainHeight + rounder;
+					heightMap [i, j] = Math.Abs(currentTerrainHeight + rounder);
 				} else{
-					heightMap [i, j] += amount/2 - currentTerrainHeight * amount;
+					heightMap [i, j] += Math.Abs(amount/2 - currentTerrainHeight * amount);
 				}
 
 				if (heightMap [i, j] > max_val) {
@@ -130,18 +132,18 @@ public class MapgenHeight : MonoBehaviour {
 					float blur = (
 						heightMap [i, j] 
 
-						+ heightMap [i + 1, j + 1] 
-						+ heightMap [i + 1, j] 
-						+ heightMap [i, j + 1]
+						+ heightMap [i + 1, j + 1] 		* 2 
+						+ heightMap [i + 1, j] 			* 2
+						+ heightMap [i, j + 1] 			* 2
 
-						+ heightMap [i - 1, j - 1] 
-						+ heightMap [i - 1, j] 
-						+ heightMap [i, j - 1]
+						+ heightMap [i - 1, j - 1] 		* 2  
+						+ heightMap [i - 1, j] 			* 2
+						+ heightMap [i, j - 1] 			* 2
 
-						+ heightMap [i + 1, j - 1] 
-						+ heightMap [i - 1, j + 1]
+						+ heightMap [i + 1, j - 1] 		* 2
+						+ heightMap [i - 1, j + 1] 		* 2
 					) 
-						/ 9;
+						/ (9 + 8);
 					heightMap [i, j] = blur;	
 				}
 			}

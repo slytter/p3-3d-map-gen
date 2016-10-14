@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{2A9DB8AB-D897-9ECC-52F4-F87B5F94C2BD}") = "Vertexmodify", "Assembly-CSharp.csproj", "{1D3DD191-AB06-BBBE-1C97-755E6A19CCFF}"
 EndProject
+Project("{2A9DB8AB-D897-9ECC-52F4-F87B5F94C2BD}") = "Vertexmodify", "Assembly-CSharp-Editor.csproj", "{126475FE-11C1-6E1F-344C-6D4BDD9A3B01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{1D3DD191-AB06-BBBE-1C97-755E6A19CCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D3DD191-AB06-BBBE-1C97-755E6A19CCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D3DD191-AB06-BBBE-1C97-755E6A19CCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{126475FE-11C1-6E1F-344C-6D4BDD9A3B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{126475FE-11C1-6E1F-344C-6D4BDD9A3B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{126475FE-11C1-6E1F-344C-6D4BDD9A3B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{126475FE-11C1-6E1F-344C-6D4BDD9A3B01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

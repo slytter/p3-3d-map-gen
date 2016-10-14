@@ -31,15 +31,13 @@ public class EdgeDetectionScript : MonoBehaviour
 		if (Input.GetKeyDown (KeyCode.F1))
 			resetImage ();
 		if (Input.GetKeyDown (KeyCode.F2))
-			medianFilter ();
+			gaussianEdge3x3 ();
 		if (Input.GetKeyDown (KeyCode.F3))
 			sobelHorisontal ();
 		if (Input.GetKeyDown (KeyCode.F4))
 			sobelVertical ();
 		if (Input.GetKeyDown (KeyCode.F5))
 			prewittHorisontalVertical ();
-		if (Input.GetKeyDown (KeyCode.F6))
-			gaussianEdge3x3 ();
 	}
 
 	void updateOldImAndApplyNewIm(){
@@ -52,45 +50,6 @@ public class EdgeDetectionScript : MonoBehaviour
 	void resetImage ()
 	{
 		pixN = originalIm.GetPixels ();
-		updateOldImAndApplyNewIm ();
-	}
-
-	void medianFilter()
-	{
-		//int[] kernel = {0, 1, 0, 1, 1, 1, 0, 1, 0};
-		float[] sumR = new float[9];
-		float[] sumG = new float[9];
-		float[] sumB = new float[9];
-
-
-		for (int y = 1; y < newIm.height-1; y++)
-		{
-			for (int x = 1; x < newIm.width-1; x++)
-			{
-
-				for (int ky = 0; ky < 2; ky++)
-				{	
-					for (int kx = 0; kx < 2; kx++)
-					{
-						sumR [ky * 3 + kx] = pixO [(y+ky-1) * newIm.width + (x + kx - 1)].r;
-						sumG [ky * 3 + kx] = pixO [(y+ky-1) * newIm.width + (x + kx - 1)].g;
-						sumB [ky * 3 + kx] = pixO [(y+ky-1) * newIm.width + (x + kx - 1)].b;
-					}
-					
-				}
-
-				Array.Sort (sumR);
-				Array.Sort (sumG);
-				Array.Sort (sumB);
-
-				pixN [y * newIm.width + x].r = sumR [4];
-				pixN [y * newIm.width + x].g = sumG [4];
-				pixN [y * newIm.width + x].b = sumB [4];
-
-
-			}
-		}
-
 		updateOldImAndApplyNewIm ();
 	}
 
