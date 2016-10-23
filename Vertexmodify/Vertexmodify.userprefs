@@ -2,8 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MapgenHeight.cs">
     <Files>
+<<<<<<< HEAD
       <File FileName="Assets/Scripts/ColorDetection.cs" Line="27" Column="44" />
       <File FileName="Assets/Scripts/MapgenHeight.cs" Line="35" Column="42" />
+=======
+      <File FileName="Assets/Scripts/ColorDetection.cs" Line="40" Column="62" />
+>>>>>>> origin/blobanalysis
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
