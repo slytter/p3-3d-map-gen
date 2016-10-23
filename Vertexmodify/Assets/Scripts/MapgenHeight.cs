@@ -61,9 +61,8 @@ public class MapgenHeight : MonoBehaviour {
 	/// <param name="amount">Amount.</param>
 	float[,] mountainRecursion(int recursion, float[,] heightMap, float amount, int gaussianAmount){
 		// float amount goes from 0 to 1. and is  
-		// Get current date and time 
-		// Date
-		Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
+		// Get current date and time
+		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
 		lastmillis = Time.realtimeSinceStartup;
 
 		// Calculate the number of milliseconds since midnight
