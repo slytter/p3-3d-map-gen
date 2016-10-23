@@ -47,7 +47,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\ColorDetection.cs" />
      <Compile Include="Assets\Scripts\EdgeDetectionScript.cs" />
-     <Compile Include="Assets\Scripts\GameControls.cs" />
      <Compile Include="Assets\Scripts\MapgenHeight.cs" />
      <Compile Include="Assets\Scripts\ScaleController.cs" />
      <Compile Include="Assets\Scripts\cameraScript.cs" />
