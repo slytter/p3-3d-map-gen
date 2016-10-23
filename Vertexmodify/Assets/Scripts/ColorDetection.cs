@@ -25,7 +25,7 @@ public class ColorDetection : MonoBehaviour
 		newIm.Apply ();	
 
 		// looking for green
-		Array.Copy(colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f), testArray);
+		Array.Copy(colorDetection (pixN, newIm, 0.42f, 0.24f, 0.20f, 0.5f), testArray, 0);
 
 		// Looking for yellow
 		//colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f);

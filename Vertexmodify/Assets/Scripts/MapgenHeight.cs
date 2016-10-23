@@ -9,7 +9,6 @@ public class MapgenHeight : MonoBehaviour {
 	int frame = 0;
 	float[,] myHeightMap = new float[512, 512];
 	float[,] drawMap = new float[512, 512];
-	float rounder;
 	float lastmillis;
 	float max_val = 0;
 
@@ -79,7 +78,6 @@ public class MapgenHeight : MonoBehaviour {
 		int randomArrayPointerY = 0;
 
 		for (int i = 0; i < heightMap.GetLength(1)-1; i ++) {
-			//if(i % 10 == 0) rounder = Mathf.Abs(Mathf.Sin (Mathf.PI * i / splitLength)) / 4;  	//rounder
 			if (i % splitLength == 0) 	randomArrayPointerY = i / splitLength; //same here
 
 			for (int j = 0; j < heightMap.GetLength (0)-1; j++) {
@@ -92,7 +90,7 @@ public class MapgenHeight : MonoBehaviour {
 				currentTerrainHeight = randomValues [randomArrayPointerX, randomArrayPointerY];
 
 				if (amount == 1) {
-					heightMap [i, j] = Math.Abs(currentTerrainHeight + rounder);
+					heightMap [i, j] = Math.Abs(currentTerrainHeight);
 				} else{
 					heightMap [i, j] += Math.Abs(amount/2 - currentTerrainHeight * amount);
 				}
