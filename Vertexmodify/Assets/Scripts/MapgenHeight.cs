@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+
 public class MapgenHeight : MonoBehaviour {
 	public int length;
 	public int height;
@@ -12,8 +13,11 @@ public class MapgenHeight : MonoBehaviour {
 	float lastmillis;
 	float max_val = 0;
 
+	imageProcModules modules; 
+
 	void Start () {
-		
+		modules = GetComponent<imageProcModules>();
+
 //		for (int i = 1; i < 8; i++) {
 //			myHeightMap = mountainRecursion (i*i, myHeightMap, 1f / i);
 //		}
@@ -21,35 +25,18 @@ public class MapgenHeight : MonoBehaviour {
 		float startit = Time.realtimeSinceStartup;
 		//myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
-		myHeightMap = mountainRecursion (4, myHeightMap, 0.8f, 10);
+		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
 		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
 		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
 		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
-		myHeightMap = mountainRecursion (64, myHeightMap, 0.2f, 0);
-		myHeightMap = mountainRecursion (128, myHeightMap, 0.2f, 0);
+		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);
+		myHeightMap = mountainRecursion (128, myHeightMap, 0.1f, 0);
 
 		myHeightMap = finalMap (myHeightMap);
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 		currentTerrain = Terrain.activeTerrain;
 
-	}
-
-
-	/// <summary>
-	/// Creates random value 2D array.
-	/// </summary>
-	/// <returns>The value gen.</returns>
-	/// <param name="height">Height.</param>
-	/// <param name="length">Length.</param>
-	float[,] randomValGen(int height, int length){
-		float[,] randomValues = new float[height, length];
-		for (int i = 0; i < randomValues.GetLength (1); i++) {
-			for (int j = 0; j < randomValues.GetLength (0); j++) {
-				randomValues [i,j] = UnityEngine.Random.Range (0f, 1f);
-			}
-		}
-		return randomValues;
 	}
 		
 	/// <summary>
@@ -67,7 +54,7 @@ public class MapgenHeight : MonoBehaviour {
 
 		// Calculate the number of milliseconds since midnight
 
-		float[,] randomValues = randomValGen (512, 512);
+		float[,] randomValues = modules.randomValGen (512, 512);
 		int splitLength;
 		float currentTerrainHeight;
 
@@ -100,49 +87,18 @@ public class MapgenHeight : MonoBehaviour {
 
 			}
 		}
-		heightMap = gaussian (heightMap, gaussianAmount);
+		heightMap = modules.gaussian (heightMap, gaussianAmount);
 		//Debug.Log ("maimum: " + max_val);
 		return heightMap;
 	}
 
 
 	float[,] finalMap(float[,] heightMap) {
-		heightMap = gaussian (heightMap, 5);
+		heightMap = modules.gaussian (heightMap, 5);
 
 		for (int i = 0; i < heightMap.GetLength (1); i++) {
 			for (int j = 0; j < heightMap.GetLength (0); j++) {
 				heightMap [i, j] = heightMap [i, j] / max_val;
-			}
-		}
-		return heightMap;
-	}
-		
-	/// <summary>
-	/// Gaussian the specified 2dArray by using smoothing.
-	/// </summary>
-	/// <param name="heightMap">2D float height map.</param>
-	/// <param name="smoothing">Number of blob iterations.</param>
-	float[,] gaussian(float[,] heightMap, int smoothing){
-		for (int k = 0; k < smoothing; k++) {
-			for (int i = 1; i < heightMap.GetLength (1)-1; i++) {
-				for (int j = 1; j < heightMap.GetLength (0)-1; j++) {
-					float blur = (
-						heightMap [i, j] 
-
-						+ heightMap [i + 1, j + 1] 		* 2 
-						+ heightMap [i + 1, j] 			* 2
-						+ heightMap [i, j + 1] 			* 2
-
-						+ heightMap [i - 1, j - 1] 		* 2  
-						+ heightMap [i - 1, j] 			* 2
-						+ heightMap [i, j - 1] 			* 2
-
-						+ heightMap [i + 1, j - 1] 		* 2
-						+ heightMap [i - 1, j + 1] 		* 2
-					) 
-						/ (9 + 8);
-					heightMap [i, j] = blur;	
-				}
 			}
 		}
 		return heightMap;
