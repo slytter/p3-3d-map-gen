@@ -83,7 +83,7 @@ public class imageProcModules : MonoBehaviour {
 		return heightMap;
 	}
 
-	bool[,] dilation (bool[,] bools){
+	public bool[,] dilation (bool[,] bools){
 		bool[,] returnedBools = new bool[512,512];
 		Array.Copy (bools, returnedBools,0);
 		for (int y = 1; y < bools.GetLength(1)-2; y++) {
@@ -105,10 +105,8 @@ public class imageProcModules : MonoBehaviour {
 		return returnedBools;
 	}
 
-	float [,] boolToFloat(bool[,] toBeConverted){
-	
+	public float [,] boolToFloat(bool[,] toBeConverted){
 		float[,] outputFloatArray = new float[toBeConverted.GetLength (1), toBeConverted.GetLength (0)]; 
-
 		for (int y = 0; y < toBeConverted.GetLength(1); y++) {
 			for (int x = 0; x < toBeConverted.GetLength(0); x++) {
 				if (toBeConverted [y, x] == true) {
@@ -119,14 +117,12 @@ public class imageProcModules : MonoBehaviour {
 		return outputFloatArray; 
 	}
 
-	bool [,] floatToBool(float [,] toBeConverted){
-	
+	public bool [,] floatToBool(float [,] toBeConverted){
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
-
 		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
 			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
 
-				if (toBeConverted [x, y] > 1) {
+				if (toBeConverted [x, y] > 0.5f) {
 					outputBoolArray [x, y] = true; 
 				}
 			}
@@ -135,24 +131,37 @@ public class imageProcModules : MonoBehaviour {
 		return outputBoolArray; 
 	}
 
-	bool [,] blackFrame(bool[,] boolArrayToBeFramed){
-
+	/// <summary>
+	/// Blacks the frame.
+	/// </summary>
+	/// <returns>The frame.</returns>
+	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
+	public bool [,] blackFrame(bool[,] boolArrayToBeFramed){
 		for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
 			for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
 
-				if (y == 0 || y == 1) {
+				if (y == 0)
+					boolArrayToBeFramed [x, y] = true; 
+				if (y == 1) 
 					boolArrayToBeFramed [x, y] = false; 
-				} else if (y == boolArrayToBeFramed.GetLength (1) || y == boolArrayToBeFramed.GetLength (1) - 1) {
+				
+				if( y == boolArrayToBeFramed.GetLength (1) )
+					boolArrayToBeFramed [x, y] = true; 
+				if( y == boolArrayToBeFramed.GetLength (1) - 1 ) 
 					boolArrayToBeFramed [x, y] = false; 
-				} else if (x == 0 || x == 1) {
+				
+				if (x == 0)
+					boolArrayToBeFramed [x, y] = true;
+				if (x == 1)
 					boolArrayToBeFramed [x, y] = false;
-				} else if (x == boolArrayToBeFramed.GetLength (0) || x == boolArrayToBeFramed.GetLength (0) - 1) {
+				
+				if (x == boolArrayToBeFramed.GetLength (0) ) 
+					boolArrayToBeFramed [x, y] = true;
+				if(x == boolArrayToBeFramed.GetLength (0) - 1) 
 					boolArrayToBeFramed [x, y] = false;
-				}	
+
 			}
 		}
 		return boolArrayToBeFramed; 
-
 	}
-
 }

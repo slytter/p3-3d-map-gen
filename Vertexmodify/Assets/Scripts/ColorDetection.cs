@@ -6,8 +6,9 @@ using System;
 public class ColorDetection : MonoBehaviour
 {
 	public Color[] originalImage;
-
+	imageProcModules m;
 	void Start () {
+		m = GetComponent<imageProcModules>();
 		Texture2D originalTexture;
 		Texture2D newTexture; 
 
@@ -36,7 +37,7 @@ public class ColorDetection : MonoBehaviour
 
 
 
-	public float [,] colorDetection (Color[] pixN, float hueMax, float hueMin, float sat, float val) {
+	public bool [,] colorDetection (Color[] pixN, float hueMax, float hueMin, float sat, float val) {
 
 		Texture2D newIm = new Texture2D (512, 512); // Only used for width & height.
 
@@ -62,19 +63,24 @@ public class ColorDetection : MonoBehaviour
 				}
 			}
 		}
+
 		printBinary (pixelPosOutput, pixN, newIm); 
-		return pixelPosOutput; 
+		return (m.floatToBool(pixelPosOutput)); 
 
 	}
 
 
 
-	// only for testing
+	/// <summary>
+	/// Prints the binary.
+	/// </summary>
+	/// <param name="input">Input.</param>
+	/// <param name="pixN">Pix n.</param>
+	/// <param name="newIm">New im.</param>
 	void printBinary (float[,] input, Color[] pixN, Texture2D newIm) {
 		Debug.Log ("printing");
 		for (int y = 0; y < newIm.height; y++) {
 			for (int x = 0; x < newIm.width; x++) {
-
 
 				if (input [x, y] == 1f) {
 					pixN [y * newIm.width + x] = new Color (1, 1, 1);

@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class MapgenHeight : MonoBehaviour {
-	imageProcModules modules; 
+	imageProcModules m; 
 	public int length;
 	public int height;
 	Terrain currentTerrain;
@@ -16,16 +16,18 @@ public class MapgenHeight : MonoBehaviour {
 	ColorDetection colorScanScript;
 	void Start () {
 
-		modules = GetComponent<imageProcModules>();
+		m = GetComponent<imageProcModules>();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
 
-		float [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
+		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
 //		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
-	
-		myHeightMap = inputColorImage;
+
+		myHeightMap = m.boolToFloat(m.floodFill(inputColorImage)); //TESTING
+
+	//	myHeightMap = inputColorImage;
 		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
 		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
 		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
@@ -35,7 +37,7 @@ public class MapgenHeight : MonoBehaviour {
 //		myHeightMap = mountainRecursion (128, myHeightMap, 0.1f, 0);
 
 		//myHeightMap = finalMap (inputColorImage);
-		myHeightMap = inputColorImage;
+		//myHeightMap = inputColorImage;
 
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
@@ -57,7 +59,7 @@ public class MapgenHeight : MonoBehaviour {
 		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
 		lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
 
-		float[,] randomValues = modules.randomValGen (512, 512);
+		float[,] randomValues = m.randomValGen (512, 512);
 		int splitLength;
 		float currentTerrainHeight;
 
@@ -90,14 +92,14 @@ public class MapgenHeight : MonoBehaviour {
 
 			}
 		}
-		heightMap = modules.gaussian (heightMap, gaussianAmount);
+		heightMap = m.gaussian (heightMap, gaussianAmount);
 		//Debug.Log ("maimum: " + max_val);
 		return heightMap;
 	}
 
 
 	float[,] finalMap(float[,] heightMap) {
-		heightMap = modules.gaussian (heightMap, 5);
+		heightMap = m.gaussian (heightMap, 5);
 
 		for (int i = 0; i < heightMap.GetLength (1); i++) {
 			for (int j = 0; j < heightMap.GetLength (0); j++) {
