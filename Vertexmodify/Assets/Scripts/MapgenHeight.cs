@@ -7,10 +7,10 @@ public class MapgenHeight : MonoBehaviour {
 	public int length;
 	public int height;
 	Terrain currentTerrain;
-	float update = 0;
-	int frame = 0;
+//	float update = 0;
+//	int frame = 0;
+//	float[,] drawMap = new float[512, 512];
 	float[,] myHeightMap = new float[512, 512];
-	float[,] drawMap = new float[512, 512];
 	float lastmillis;
 	float max_val = 0;
 	ColorDetection colorScanScript;
@@ -28,10 +28,8 @@ public class MapgenHeight : MonoBehaviour {
 			modules.gaussian (
 				modules.boolToFloat (
 					modules.floodFill (
-						modules.blackFrame (
-							modules.dilation (
-								inputColorImage
-							)
+						modules.dilation (
+							inputColorImage
 						)
 					)
 				),10
@@ -41,25 +39,24 @@ public class MapgenHeight : MonoBehaviour {
 			modules.gaussian(
 				modules.boolToFloat(
 					modules.floodFill(
-						modules.blackFrame(
-							modules.dilation(
-								inputColorImage
-							)
+						modules.dilation(
+							inputColorImage
 						)
 					)
 				)
 			,2);
-		
+
+
 //		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 //		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
-//		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
-//		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
-		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 2);
-		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
-		myHeightMap = mountainRecursion (64, myHeightMap, 0.2f, 0);
-		myHeightMap = mountainRecursion (128, myHeightMap, 0.2f, 0);
+		myHeightMap = midpointDisplacement (3, myHeightMap, 0.8f, 10);
+		myHeightMap = midpointDisplacement (8, myHeightMap, 0.7f, 10);
+		myHeightMap = midpointDisplacement (16, myHeightMap, 0.5f, 0);
+		myHeightMap = midpointDisplacement (32, myHeightMap, 0.5f, 0);
+		myHeightMap = midpointDisplacement (64, myHeightMap, 0.5f, 0);
+		myHeightMap = midpointDisplacement (128, myHeightMap, 0.5f, 0);
 
-		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea));
+		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea),1);
 		//myHeightMap = inputColorImage;
 
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
@@ -68,16 +65,16 @@ public class MapgenHeight : MonoBehaviour {
 		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
 
 	}
-		
+
 
 	/// <summary>
-	/// Mountain generator, taking the current recursion, the 2 heightmap
+	/// midpointDisplacement, taking the current recursion, heightmap..
 	/// </summary>
 	/// <returns>The recursion.</returns>
 	/// <param name="recursion">Recursion.</param>
 	/// <param name="heightMap">heightMap.</param>
 	/// <param name="amount">Amount.</param>
-	float[,] mountainRecursion(int recursion, float[,] heightMap, float amount, int gaussianAmount) {
+	float[,] midpointDisplacement(int recursion, float[,] heightMap, float amount, int gaussianAmount) {
 		// float amount goes from 0 to 1.
 		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
 		// lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
@@ -118,6 +115,7 @@ public class MapgenHeight : MonoBehaviour {
 		return heightMap;
 	}
 
+
 	/// <summary>
 	/// Removes moutains where they should not be
 	/// 
@@ -141,8 +139,8 @@ public class MapgenHeight : MonoBehaviour {
 	/// </summary>
 	/// <returns>The map.</returns>
 	/// <param name="heightMap">Height map.</param>
-	float[,] finalMap(float[,] heightMap) {
-		heightMap = modules.gaussian (heightMap, 3);
+	float[,] finalMap(float[,] heightMap, int smoothing) {
+		heightMap = modules.gaussian (heightMap, smoothing);
 		for (int i = 0; i < heightMap.GetLength (1); i++) {
 			for (int j = 0; j < heightMap.GetLength (0); j++) {
 				heightMap [i, j] = heightMap [i, j] / max_val;
@@ -151,8 +149,8 @@ public class MapgenHeight : MonoBehaviour {
 		return heightMap;
 	}
 
-	//---------UPDATE---------//
 
+	//---------UPDATE---------//
 //	void Update(){
 //		if(frame % 1 == 0){	
 //			for (int i = 0; i < drawMap.GetLength (1); i++) {

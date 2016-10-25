@@ -6,9 +6,9 @@ using System;
 public class ColorDetection : MonoBehaviour
 {
 	public Color[] originalImage;
-	imageProcModules m;
+	//imageProcModules m;
 	void Start () {
-		m = GetComponent<imageProcModules>();
+		//m = GetComponent<imageProcModules>();
 		Texture2D originalTexture;
 		Texture2D newTexture; 
 
@@ -43,12 +43,6 @@ public class ColorDetection : MonoBehaviour
 
 		bool[,] pixelPosOutput = new bool[512, 512]; // Float 2d array to assign and return
 
-		bool overHueBound = false;
-		if (hueMax > 1) {
-			overHueBound = true;
-			hueMax = hueMax % 1; 
-		}
-
 		float h; 
 		float s; 
 		float v; 
@@ -56,22 +50,17 @@ public class ColorDetection : MonoBehaviour
 
 		for (int y = 0; y < newIm.height; y++) {
 			for (int x = 0; x < newIm.width; x++) {
-				//Converting rgb to HSV and assigning float variables. 
-				Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); 
-				// Looking for green
+				Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); //Converting rgb to HSV and assigning float variables. 
+
 				if (h > hueMin && h < hueMax && s > sat && v > val) {
-					// Assigning position x,y in float array. 
-					pixelPosOutput[x,y] = true; 
+					pixelPosOutput[x,y] = true; // Assigning position x,y in float array. 
 				} else {
 					pixelPosOutput [x, y] = false; 
-
 				}
 			}
 		}
-
 		printBinary (pixelPosOutput, pixN, newIm); 
 		return (pixelPosOutput); 
-
 	}
 
 

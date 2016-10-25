@@ -6,14 +6,15 @@ using System.Linq;
 
 public class imageProcModules : MonoBehaviour {
 
-	
+
+
 	/// <summary>
 	/// Floods the fill.
 	/// </summary>
 	/// <returns>The fill.</returns>
 	/// <param name="inputPicture">Input picture.</param>
-	public bool [,] floodFill(bool[,]inputPicture)
-	{
+	public bool [,] floodFill (bool[,] inputPicture) {
+		inputPicture = blackFrame (inputPicture);
 
 		List<int> xPos = new List<int> ();
 		List<int> yPos = new List<int> ();
@@ -22,16 +23,12 @@ public class imageProcModules : MonoBehaviour {
 		yPos.Add (1);
 
 		int listIndex = 0;
-
 		int[] kernelX = { 0, 1, 0, -1 };
 		int[] kernelY = { -1, 0, 1, 0 };
 
-		while (listIndex != xPos.Count && listIndex != yPos.Count)
-		{
-			for (int i = 0; i < 4; i++)
-			{
+		while (listIndex != xPos.Count && listIndex != yPos.Count){
+			for (int i = 0; i < 4; i++){
 				if (xPos.ElementAt (listIndex) < 510 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < 510 && yPos.ElementAt (listIndex) > 0) {
-					
 					if (inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] == false) {
 						xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
 						yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
@@ -43,6 +40,7 @@ public class imageProcModules : MonoBehaviour {
 		}
 		return invert(inputPicture);
 	}
+
 
 
 	public bool[,] invert (bool [,] boolArray){
@@ -70,6 +68,7 @@ public class imageProcModules : MonoBehaviour {
 		}
 		return randomValues;
 	}
+
 
 
 	/// <summary>
@@ -104,6 +103,7 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 
+
 	/// <summary>
 	/// Dilate the specified bools.
 	/// </summary>
@@ -131,6 +131,7 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 
+
 	/// <summary>
 	/// Bools to float.
 	/// </summary>
@@ -149,8 +150,9 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 
+
 	/// <summary>
-	/// Floats to boolean.
+	/// Converts float array to boolean array.
 	/// </summary>
 	/// <returns>The to bool.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
@@ -169,12 +171,13 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 
+
 	/// <summary>
-	/// Blacks the frame.
+	/// Removes frames.
 	/// </summary>
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
-	public bool [,] blackFrame(bool[,] boolArrayToBeFramed){
+	private bool [,] blackFrame(bool[,] boolArrayToBeFramed) {
 		for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
 			for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
 
