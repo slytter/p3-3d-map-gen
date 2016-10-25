@@ -105,7 +105,7 @@ public class imageProcModules : MonoBehaviour {
 		return returnedBools;
 	}
 
-	bool [,] boolToFloat(bool[,] toBeConverted){
+	float [,] boolToFloat(bool[,] toBeConverted){
 	
 		float[,] outputFloatArray = new float[toBeConverted.GetLength (1), toBeConverted.GetLength (0)]; 
 
@@ -119,7 +119,7 @@ public class imageProcModules : MonoBehaviour {
 		return outputFloatArray; 
 	}
 
-	float [,] floatToBool(float [,] toBeConverted){
+	bool [,] floatToBool(float [,] toBeConverted){
 	
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
 
@@ -128,14 +128,31 @@ public class imageProcModules : MonoBehaviour {
 
 				if (toBeConverted [x, y] > 1) {
 					outputBoolArray [x, y] = true; 
-				
 				}
-
 			}
-
 		}
 
 		return outputBoolArray; 
+	}
+
+	bool [,] blackFrame(bool[,] boolArrayToBeFramed){
+
+		for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
+			for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
+
+				if (y == 0 || y == 1) {
+					boolArrayToBeFramed [x, y] = false; 
+				} else if (y == boolArrayToBeFramed.GetLength (1) || y == boolArrayToBeFramed.GetLength (1) - 1) {
+					boolArrayToBeFramed [x, y] = false; 
+				} else if (x == 0 || x == 1) {
+					boolArrayToBeFramed [x, y] = false;
+				} else if (x == boolArrayToBeFramed.GetLength (0) || x == boolArrayToBeFramed.GetLength (0) - 1) {
+					boolArrayToBeFramed [x, y] = false;
+				}	
+			}
+		}
+		return boolArrayToBeFramed; 
+
 	}
 
 }
