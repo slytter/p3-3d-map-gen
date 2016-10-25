@@ -68,7 +68,6 @@ public class imageProcModules : MonoBehaviour {
 		return heightMap;
 	}
 
-
 	bool[,] dilation (bool[,] bools){
 		bool[,] returnedBools = new bool[512,512];
 		Array.Copy (bools, returnedBools,0);
@@ -89,6 +88,39 @@ public class imageProcModules : MonoBehaviour {
 			}
 		}
 		return returnedBools;
+	}
+
+	bool [,] boolToFloat(bool[,] toBeConverted){
+	
+		float[,] outputFloatArray = new float[toBeConverted.GetLength (1), toBeConverted.GetLength (0)]; 
+
+		for (int y = 0; y < toBeConverted.GetLength(1); y++) {
+			for (int x = 0; x < toBeConverted.GetLength(0); x++) {
+				if (toBeConverted [y, x] == true) {
+					outputFloatArray [y, x] = 1; 
+				}
+			}
+		}
+		return outputFloatArray; 
+	}
+
+	float [,] floatToBool(float [,] toBeConverted){
+	
+		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
+
+		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
+			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
+
+				if (toBeConverted [x, y] > 1) {
+					outputBoolArray [x, y] = true; 
+				
+				}
+
+			}
+
+		}
+
+		return outputBoolArray; 
 	}
 
 }
