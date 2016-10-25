@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System;
 public class imageProcModules : MonoBehaviour {
 
 
@@ -67,4 +67,28 @@ public class imageProcModules : MonoBehaviour {
 		}
 		return heightMap;
 	}
+
+
+	bool[,] dilation (bool[,] bools){
+		bool[,] returnedBools = new bool[512,512];
+		Array.Copy (bools, returnedBools,0);
+		for (int y = 1; y < bools.GetLength(1)-2; y++) {
+			for (int x = 1; x < bools.GetLength(0)-2; x++) {
+				bool hit = false;
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						if (hit) {
+							returnedBools [x - j, y - i] = true;
+						} else if (bools [x - j, y - i]) {
+							hit = true;
+							i = -1;
+							j = -1;
+						}
+					}
+				}
+			}
+		}
+		return returnedBools;
+	}
+
 }
