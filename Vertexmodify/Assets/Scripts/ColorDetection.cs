@@ -41,7 +41,7 @@ public class ColorDetection : MonoBehaviour
 
 		Texture2D newIm = new Texture2D (512, 512); // Only used for width & height.
 
-		float[,] pixelPosOutput = new float[512, 512]; // Float 2d array to assign and return
+		bool[,] pixelPosOutput = new bool[512, 512]; // Float 2d array to assign and return
 
 		bool overHueBound = false;
 		if (hueMax > 1) {
@@ -61,17 +61,16 @@ public class ColorDetection : MonoBehaviour
 				// Looking for green
 				if (h > hueMin && h < hueMax && s > sat && v > val) {
 					// Assigning position x,y in float array. 
-					pixelPosOutput[x,y] = 1f; 
-
+					pixelPosOutput[x,y] = true; 
 				} else {
-					pixelPosOutput [x, y] = 0f; 
+					pixelPosOutput [x, y] = false; 
 
 				}
 			}
 		}
 
 		printBinary (pixelPosOutput, pixN, newIm); 
-		return (m.floatToBool(pixelPosOutput)); 
+		return (pixelPosOutput); 
 
 	}
 
@@ -83,12 +82,12 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="input">Input.</param>
 	/// <param name="pixN">Pix n.</param>
 	/// <param name="newIm">New im.</param>
-	void printBinary (float[,] input, Color[] pixN, Texture2D newIm) {
+	void printBinary (bool[,] input, Color[] pixN, Texture2D newIm) {
 		Debug.Log ("printing");
 		for (int y = 0; y < newIm.height; y++) {
 			for (int x = 0; x < newIm.width; x++) {
 
-				if (input [x, y] == 1f) {
+				if (input [x, y]) {
 					pixN [y * newIm.width + x] = new Color (1, 1, 1);
 				} else {
 					pixN [y * newIm.width + x] = new Color (0, 0, 0);

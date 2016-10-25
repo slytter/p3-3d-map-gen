@@ -25,7 +25,18 @@ public class MapgenHeight : MonoBehaviour {
 		float startit = Time.realtimeSinceStartup;
 //		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 
-		myHeightMap = m.boolToFloat(m.floodFill(m.dilation(m.blackFrame(inputColorImage)))); //TESTING
+		myHeightMap = 
+			m.gaussian(
+				m.boolToFloat(
+					m.floodFill(
+						m.blackFrame(
+							m.dilation(
+								inputColorImage
+							)
+						)
+					)
+				)
+			,10); //TESTING
 
 	//	myHeightMap = inputColorImage;
 //		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);

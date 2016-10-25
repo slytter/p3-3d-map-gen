@@ -6,7 +6,7 @@ using System.Linq;
 
 public class imageProcModules : MonoBehaviour {
 
-
+	
 	/// <summary>
 	/// Floods the fill.
 	/// </summary>
@@ -28,10 +28,10 @@ public class imageProcModules : MonoBehaviour {
 
 		while (listIndex != xPos.Count && listIndex != yPos.Count)
 		{
-
 			for (int i = 0; i < 4; i++)
 			{
 				if (xPos.ElementAt (listIndex) < 510 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < 510 && yPos.ElementAt (listIndex) > 0) {
+					
 					if (inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] == false) {
 						xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
 						yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
@@ -41,7 +41,17 @@ public class imageProcModules : MonoBehaviour {
 			}
 			listIndex++;
 		}
-		return inputPicture;
+		return invert(inputPicture);
+	}
+
+
+	public bool[,] invert (bool [,] boolArray){
+		for (int x = 0; x < boolArray.GetLength(0); x++) {
+			for (int y = 0; y < boolArray.GetLength(1); y++) {
+				boolArray [x, y] = !boolArray [x, y];
+			}
+		}
+		return boolArray;
 	}
 
 
@@ -60,7 +70,6 @@ public class imageProcModules : MonoBehaviour {
 		}
 		return randomValues;
 	}
-
 
 
 	/// <summary>
@@ -94,6 +103,11 @@ public class imageProcModules : MonoBehaviour {
 		return heightMap;
 	}
 
+
+	/// <summary>
+	/// Dilate the specified bools.
+	/// </summary>
+	/// <param name="bools">Bools.</param>
 	public bool[,] dilation (bool[,] bools){
 		bool[,] returnedBools = new bool[512,512];
 		Array.Copy (bools, returnedBools,0);
@@ -116,6 +130,12 @@ public class imageProcModules : MonoBehaviour {
 		return returnedBools;
 	}
 
+
+	/// <summary>
+	/// Bools to float.
+	/// </summary>
+	/// <returns>The to float.</returns>
+	/// <param name="toBeConverted">To be converted.</param>
 	public float [,] boolToFloat(bool[,] toBeConverted){
 		float[,] outputFloatArray = new float[toBeConverted.GetLength (1), toBeConverted.GetLength (0)]; 
 		for (int y = 0; y < toBeConverted.GetLength(1); y++) {
@@ -128,6 +148,12 @@ public class imageProcModules : MonoBehaviour {
 		return outputFloatArray; 
 	}
 
+
+	/// <summary>
+	/// Floats to boolean.
+	/// </summary>
+	/// <returns>The to bool.</returns>
+	/// <param name="toBeConverted">To be converted.</param>
 	public bool [,] floatToBool(float [,] toBeConverted){
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
 		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
@@ -141,6 +167,7 @@ public class imageProcModules : MonoBehaviour {
 
 		return outputBoolArray; 
 	}
+
 
 	/// <summary>
 	/// Blacks the frame.
