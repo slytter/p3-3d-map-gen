@@ -8,30 +8,40 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
-	/// Grasses the fire.
+	/// Floods the fill.
 	/// </summary>
-	/// <returns>The fire.</returns>
-	/// <param name="testArray">Test array.</param>
-	/// <param name="nodeX">Node x.</param>
-	/// <param name="nodeY">Node y.</param>
+	/// <returns>The fill.</returns>
+	/// <param name="inputPicture">Input picture.</param>
 	public bool [,] floodFill(bool[,]inputPicture)
 	{
-		List<bool> list = new List<bool> ();
 
+		List<int> xPos = new List<int> ();
+		List<int> yPos = new List<int> ();
 
-		for (int y = 1; y < inputPicture.GetLength(1) - 1; y++)
+		xPos.Add (1);
+		yPos.Add (1);
+
+		int listIndex = 0;
+
+		int[] kernelX = { 0, 1, 0, -1 };
+		int[] kernelY = { -1, 0, 1, 0 };
+
+		while (listIndex != xPos.Count && listIndex != yPos.Count)
 		{
-			for (int x = 1; x < inputPicture.GetLength(0) - 1; x++)
+
+			for (int i = 0; i < 4; i++)
 			{
-				if (inputPicture[x, y] == true)
+				if (inputPicture[xPos.ElementAt(listIndex) + kernelX[i], yPos.ElementAt(listIndex) + kernelY[i]] == false)
 				{
-					
-					
+					xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
+					yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
+					inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] = true;
 				}
 			}
+			listIndex++;
 		}
+		return inputPicture;
 	}
-
 
 
 	/// <summary>
