@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+
 public class imageProcModules : MonoBehaviour {
 
 
@@ -11,10 +14,22 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="testArray">Test array.</param>
 	/// <param name="nodeX">Node x.</param>
 	/// <param name="nodeY">Node y.</param>
-	public float [,] grassFire(float [,] testArray, int nodeX, int nodeY)
+	public bool [,] floodFill(bool[,]inputPicture)
 	{
-		float [,] objectsDefined = new float[512, 512];
-		return objectsDefined;
+		List<bool> list = new List<bool> ();
+
+
+		for (int y = 1; y < inputPicture.GetLength(1) - 1; y++)
+		{
+			for (int x = 1; x < inputPicture.GetLength(0) - 1; x++)
+			{
+				if (inputPicture[x, y] == true)
+				{
+					
+					
+				}
+			}
+		}
 	}
 
 
