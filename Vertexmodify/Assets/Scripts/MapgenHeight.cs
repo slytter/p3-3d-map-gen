@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class MapgenHeight : MonoBehaviour {
-	imageProcModules m; 
+	imageProcModules modules; 
 	public int length;
 	public int height;
 	Terrain currentTerrain;
@@ -16,38 +16,50 @@ public class MapgenHeight : MonoBehaviour {
 	ColorDetection colorScanScript;
 	void Start () {
 
-		m = GetComponent<imageProcModules>();
+		modules = GetComponent<imageProcModules>();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
 
 		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
-//		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 
+		float[,] moutainArea = 
+			modules.gaussian (
+				modules.boolToFloat (
+					modules.floodFill (
+						modules.blackFrame (
+							modules.dilation (
+								inputColorImage
+							)
+						)
+					)
+				),10
+			);
+		
 		myHeightMap = 
-			m.gaussian(
-				m.boolToFloat(
-					m.floodFill(
-						m.blackFrame(
-							m.dilation(
+			modules.gaussian(
+				modules.boolToFloat(
+					modules.floodFill(
+						modules.blackFrame(
+							modules.dilation(
 								inputColorImage
 							)
 						)
 					)
 				)
-			,10); //TESTING
-
-	//	myHeightMap = inputColorImage;
+			,2);
+		
+//		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 //		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
 //		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
 //		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
-//		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
-//		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
-//		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);
-//		myHeightMap = mountainRecursion (128, myHeightMap, 0.1f, 0);
+		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 2);
+		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
+		myHeightMap = mountainRecursion (64, myHeightMap, 0.2f, 0);
+		myHeightMap = mountainRecursion (128, myHeightMap, 0.2f, 0);
 
-		//myHeightMap = finalMap (inputColorImage);
+		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea));
 		//myHeightMap = inputColorImage;
 
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
@@ -57,6 +69,7 @@ public class MapgenHeight : MonoBehaviour {
 
 	}
 		
+
 	/// <summary>
 	/// Mountain generator, taking the current recursion, the 2 heightmap
 	/// </summary>
@@ -65,12 +78,11 @@ public class MapgenHeight : MonoBehaviour {
 	/// <param name="heightMap">heightMap.</param>
 	/// <param name="amount">Amount.</param>
 	float[,] mountainRecursion(int recursion, float[,] heightMap, float amount, int gaussianAmount) {
-		// float amount goes from 0 to 1. and is  
-		// Get current date and time
+		// float amount goes from 0 to 1.
 		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
-		lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
+		// lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
 
-		float[,] randomValues = m.randomValGen (512, 512);
+		float[,] randomValues = modules.randomValGen (512, 512);
 		int splitLength;
 		float currentTerrainHeight;
 
@@ -83,7 +95,6 @@ public class MapgenHeight : MonoBehaviour {
 			if (i % splitLength == 0) 	randomArrayPointerY = i / splitLength; //same here
 
 			for (int j = 0; j < heightMap.GetLength (0)-1; j++) {
-				
 				if (j % splitLength == 0) {
 					if (j == 0) randomArrayPointerX = 0;
 					randomArrayPointerX = j / splitLength; 
@@ -103,15 +114,35 @@ public class MapgenHeight : MonoBehaviour {
 
 			}
 		}
-		heightMap = m.gaussian (heightMap, gaussianAmount);
-		//Debug.Log ("maimum: " + max_val);
+		heightMap = modules.gaussian (heightMap, gaussianAmount);
+		return heightMap;
+	}
+
+	/// <summary>
+	/// Removes moutains where they should not be
+	/// 
+	/// </summary>
+	/// <returns>The remove.</returns>
+	/// <param name="heightMap">Height map.</param>
+	/// <param name="whereMoutainsShouldBe">Where moutains should be.</param>
+	float[,] mountainRemove(float[,] heightMap, float[,] moutainArea) {
+		for (int x = 0; x < heightMap.GetLength (0); x++) {
+			for (int y = 0; y < heightMap.GetLength (1); y++) {
+				heightMap[x,y] = heightMap [x, y] * moutainArea [x, y];
+			}
+		}
+
 		return heightMap;
 	}
 
 
+	/// <summary>
+	/// Finals the map.
+	/// </summary>
+	/// <returns>The map.</returns>
+	/// <param name="heightMap">Height map.</param>
 	float[,] finalMap(float[,] heightMap) {
-		heightMap = m.gaussian (heightMap, 5);
-
+		heightMap = modules.gaussian (heightMap, 3);
 		for (int i = 0; i < heightMap.GetLength (1); i++) {
 			for (int j = 0; j < heightMap.GetLength (0); j++) {
 				heightMap [i, j] = heightMap [i, j] / max_val;
