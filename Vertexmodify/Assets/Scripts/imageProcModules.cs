@@ -5,6 +5,21 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
+	/// Grasses the fire.
+	/// </summary>
+	/// <returns>The fire.</returns>
+	/// <param name="testArray">Test array.</param>
+	/// <param name="nodeX">Node x.</param>
+	/// <param name="nodeY">Node y.</param>
+	public float [,] grassFire(float [,] testArray, int nodeX, int nodeY)
+	{
+		float [,] objectsDefined = new float[512, 512];
+		return objectsDefined;
+	}
+
+
+
+	/// <summary>
 	/// Creates random value 2D array.
 	/// </summary>
 	/// <returns>The value gen.</returns>

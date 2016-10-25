@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 
 public class MapgenHeight : MonoBehaviour {
+	imageProcModules modules; 
 	public int length;
 	public int height;
 	Terrain currentTerrain;
@@ -12,30 +13,34 @@ public class MapgenHeight : MonoBehaviour {
 	float[,] drawMap = new float[512, 512];
 	float lastmillis;
 	float max_val = 0;
-
-	imageProcModules modules; 
-
+	ColorDetection colorScanScript;
 	void Start () {
-		modules = GetComponent<imageProcModules>();
 
-//		for (int i = 1; i < 8; i++) {
-//			myHeightMap = mountainRecursion (i*i, myHeightMap, 1f / i);
-//		}
+		modules = GetComponent<imageProcModules>();
+		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
+
+		float [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
+
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
-		//myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
+//		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
+	
+		myHeightMap = inputColorImage;
 		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
 		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
 		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
-		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
-		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
-		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);
-		myHeightMap = mountainRecursion (128, myHeightMap, 0.1f, 0);
+//		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
+//		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
+//		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);
+//		myHeightMap = mountainRecursion (128, myHeightMap, 0.1f, 0);
 
-		myHeightMap = finalMap (myHeightMap);
+		//myHeightMap = finalMap (inputColorImage);
+		myHeightMap = inputColorImage;
+
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 		currentTerrain = Terrain.activeTerrain;
+		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
 
 	}
 		
@@ -46,13 +51,11 @@ public class MapgenHeight : MonoBehaviour {
 	/// <param name="recursion">Recursion.</param>
 	/// <param name="heightMap">heightMap.</param>
 	/// <param name="amount">Amount.</param>
-	float[,] mountainRecursion(int recursion, float[,] heightMap, float amount, int gaussianAmount){
+	float[,] mountainRecursion(int recursion, float[,] heightMap, float amount, int gaussianAmount) {
 		// float amount goes from 0 to 1. and is  
 		// Get current date and time
 		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
-		lastmillis = Time.realtimeSinceStartup;
-
-		// Calculate the number of milliseconds since midnight
+		lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
 
 		float[,] randomValues = modules.randomValGen (512, 512);
 		int splitLength;
@@ -106,18 +109,18 @@ public class MapgenHeight : MonoBehaviour {
 
 	//---------UPDATE---------//
 
-	void Update(){
-		if(frame % 1 == 0){	
-			for (int i = 0; i < drawMap.GetLength (1); i++) {
-				for (int j = 0; j < drawMap.GetLength (0); j++) {
-					drawMap [i, j] = myHeightMap [i, j] * update;
-				}
-			}
-			currentTerrain.terrainData.SetHeights (0, 0, drawMap);
-		}
-		frame ++;
-		if(update < 1f)
-			update += 0.006f;
-	}
+//	void Update(){
+//		if(frame % 1 == 0){	
+//			for (int i = 0; i < drawMap.GetLength (1); i++) {
+//				for (int j = 0; j < drawMap.GetLength (0); j++) {
+//					drawMap [i, j] = myHeightMap [i, j] * update;
+//				}
+//			}
+//			currentTerrain.terrainData.SetHeights (0, 0, drawMap);
+//		}
+//		frame ++;
+//		if(update < 1f)
+//			update += 0.006f;
+//	}
 
 }
