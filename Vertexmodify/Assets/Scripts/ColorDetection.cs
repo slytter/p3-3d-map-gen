@@ -43,6 +43,12 @@ public class ColorDetection : MonoBehaviour
 
 		float[,] pixelPosOutput = new float[512, 512]; // Float 2d array to assign and return
 
+		bool overHueBound = false;
+		if (hueMax > 1) {
+			overHueBound = true;
+			hueMax = hueMax % 1; 
+		}
+
 		float h; 
 		float s; 
 		float v; 
