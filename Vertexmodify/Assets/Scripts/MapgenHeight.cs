@@ -25,12 +25,12 @@ public class MapgenHeight : MonoBehaviour {
 		float startit = Time.realtimeSinceStartup;
 //		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 
-		myHeightMap = m.boolToFloat(m.floodFill(inputColorImage)); //TESTING
+		myHeightMap = m.boolToFloat(m.floodFill(m.dilation(m.blackFrame(inputColorImage)))); //TESTING
 
 	//	myHeightMap = inputColorImage;
-		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
-		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
-		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
+//		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
+//		myHeightMap = mountainRecursion (3, myHeightMap, 0.8f, 10);
+//		myHeightMap = mountainRecursion (8, myHeightMap, 0.7f, 10);
 //		myHeightMap = mountainRecursion (16, myHeightMap, 0.5f, 5);
 //		myHeightMap = mountainRecursion (32, myHeightMap, 0.3f, 0);
 //		myHeightMap = mountainRecursion (64, myHeightMap, 0.1f, 0);

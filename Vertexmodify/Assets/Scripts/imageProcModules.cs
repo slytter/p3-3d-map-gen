@@ -31,11 +31,12 @@ public class imageProcModules : MonoBehaviour {
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (inputPicture[xPos.ElementAt(listIndex) + kernelX[i], yPos.ElementAt(listIndex) + kernelY[i]] == false)
-				{
-					xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
-					yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
-					inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] = true;
+				if (xPos.ElementAt (listIndex) < 510 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < 510 && yPos.ElementAt (listIndex) > 0) {
+					if (inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] == false) {
+						xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
+						yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
+						inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] = true;
+					}
 				}
 			}
 			listIndex++;
@@ -155,9 +156,9 @@ public class imageProcModules : MonoBehaviour {
 				if (y == 1) 
 					boolArrayToBeFramed [x, y] = false; 
 				
-				if( y == boolArrayToBeFramed.GetLength (1) )
+				if( y == boolArrayToBeFramed.GetLength (1) - 1 )
 					boolArrayToBeFramed [x, y] = true; 
-				if( y == boolArrayToBeFramed.GetLength (1) - 1 ) 
+				if( y == boolArrayToBeFramed.GetLength (1) - 2 ) 
 					boolArrayToBeFramed [x, y] = false; 
 				
 				if (x == 0)
@@ -165,9 +166,9 @@ public class imageProcModules : MonoBehaviour {
 				if (x == 1)
 					boolArrayToBeFramed [x, y] = false;
 				
-				if (x == boolArrayToBeFramed.GetLength (0) ) 
+				if (x == boolArrayToBeFramed.GetLength (0) - 1 ) 
 					boolArrayToBeFramed [x, y] = true;
-				if(x == boolArrayToBeFramed.GetLength (0) - 1) 
+				if(x == boolArrayToBeFramed.GetLength (0) - 2) 
 					boolArrayToBeFramed [x, y] = false;
 
 			}
