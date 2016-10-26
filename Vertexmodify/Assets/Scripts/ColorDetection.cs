@@ -22,7 +22,6 @@ public class ColorDetection : MonoBehaviour
 
 		//Texture2D backupImage = GetComponent<Renderer> ().material.mainTexture;
 
-
 		// Looking for yellow
 		// colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f);
 
@@ -36,7 +35,15 @@ public class ColorDetection : MonoBehaviour
 
 
 
-
+	/// <summary>
+	/// Detect colors in an image
+	/// </summary>
+	/// <returns>The detection.</returns>
+	/// <param name="pixN">Pix n.</param>
+	/// <param name="hueMax">Hue max.</param>
+	/// <param name="hueMin">Hue minimum.</param>
+	/// <param name="sat">Sat.</param>
+	/// <param name="val">Value.</param>
 	public bool [,] colorDetection (Color[] pixN, float hueMax, float hueMin, float sat, float val) {
 
 		Texture2D newIm = new Texture2D (512, 512); // Only used for width & height.
@@ -53,7 +60,7 @@ public class ColorDetection : MonoBehaviour
 				Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); //Converting rgb to HSV and assigning float variables. 
 
 				if (h > hueMin && h < hueMax && s > sat && v > val) {
-					pixelPosOutput[x,y] = true; // Assigning position x,y in float array. 
+					pixelPosOutput[x, y] = true; // Assigning position x,y in float array. 
 				} else {
 					pixelPosOutput [x, y] = false; 
 				}
@@ -66,7 +73,7 @@ public class ColorDetection : MonoBehaviour
 
 
 	/// <summary>
-	/// Prints the binary.
+	/// Prints out image.
 	/// </summary>
 	/// <param name="input">Input.</param>
 	/// <param name="pixN">Pix n.</param>

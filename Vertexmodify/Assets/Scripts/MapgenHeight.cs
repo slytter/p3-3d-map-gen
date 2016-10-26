@@ -14,8 +14,8 @@ public class MapgenHeight : MonoBehaviour {
 	float lastmillis;
 	float max_val = 0;
 	ColorDetection colorScanScript;
-	void Start () {
 
+	void Start () {
 		modules = GetComponent<imageProcModules>();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
 
@@ -32,18 +32,12 @@ public class MapgenHeight : MonoBehaviour {
 							inputColorImage
 						)
 					)
-				),10
+				),20
 			);
 		
 		myHeightMap = 
 			modules.gaussian(
-				modules.boolToFloat(
-					modules.floodFill(
-						modules.dilation(
-							inputColorImage
-						)
-					)
-				)
+				myHeightMap = midpointDisplacement (8, myHeightMap, 0.7f, 10)
 			,2);
 		colorScanScript.printBinary (myHeightMap);
 
@@ -57,7 +51,6 @@ public class MapgenHeight : MonoBehaviour {
 		myHeightMap = midpointDisplacement (128, myHeightMap, 0.5f, 0);
 
 		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea),1);
-		//myHeightMap = inputColorImage;
 		colorScanScript.printBinary (myHeightMap);
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
@@ -91,10 +84,10 @@ public class MapgenHeight : MonoBehaviour {
 		for (int i = 0; i < heightMap.GetLength(1)-1; i ++) {
 			if (i % splitLength == 0) 	
 				randomArrayPointerY = i / splitLength; //same here
-
 			for (int j = 0; j < heightMap.GetLength (0)-1; j++) {
 				if (j % splitLength == 0) {
-					if (j == 0) randomArrayPointerX = 0;
+					if (j == 0) 
+						randomArrayPointerX = 0;
 					randomArrayPointerX = j / splitLength; 
 				}
 				currentTerrainHeight = randomValues [randomArrayPointerX, randomArrayPointerY];
@@ -116,10 +109,9 @@ public class MapgenHeight : MonoBehaviour {
 
 
 	/// <summary>
-	/// Removes moutains where they should not be
-	/// 
+	/// Removes moutains where they should not be.
 	/// </summary>
-	/// <returns>The remove.</returns>
+	/// <returns>Clean heightmap.</returns>
 	/// <param name="heightMap">Height map.</param>
 	/// <param name="whereMoutainsShouldBe">Where moutains should be.</param>
 	float[,] mountainRemove(float[,] heightMap, float[,] moutainArea) {
@@ -128,15 +120,14 @@ public class MapgenHeight : MonoBehaviour {
 				heightMap[x,y] = heightMap [x, y] * moutainArea [x, y];
 			}
 		}
-
 		return heightMap;
 	}
 
 
 	/// <summary>
-	/// Finals the map.
+	/// Limits the map to go from 0-1, and applies master smoothing.
 	/// </summary>
-	/// <returns>The map.</returns>
+	/// <returns>Final heightmap.</returns>
 	/// <param name="heightMap">Height map.</param>
 	float[,] finalMap(float[,] heightMap, int smoothing) {
 		heightMap = modules.gaussian (heightMap, smoothing);

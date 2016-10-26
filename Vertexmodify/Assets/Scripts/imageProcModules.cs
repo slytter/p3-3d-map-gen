@@ -105,7 +105,7 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
-	/// Dilate the specified bools.
+	/// Dilate the specified boolean array.
 	/// </summary>
 	/// <param name="bools">Bools.</param>
 	public bool[,] dilation (bool[,] bools){
@@ -133,7 +133,7 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
-	/// Bools to float.
+	/// Converts boolean array to float array.
 	/// </summary>
 	/// <returns>The to float.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
@@ -173,7 +173,7 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
-	/// Removes frames.
+	/// Adds true border, adds false inline border.
 	/// </summary>
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
