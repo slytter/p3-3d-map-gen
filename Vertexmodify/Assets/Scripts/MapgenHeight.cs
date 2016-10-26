@@ -7,9 +7,9 @@ public class MapgenHeight : MonoBehaviour {
 	public int length;
 	public int height;
 	Terrain currentTerrain;
-//	float update = 0;
-//	int frame = 0;
-//	float[,] drawMap = new float[512, 512];
+	float update = 0;
+	int frame = 0;
+	float[,] drawMap = new float[512, 512];
 	float[,] myHeightMap = new float[512, 512];
 	float lastmillis;
 	float max_val = 0;
@@ -62,7 +62,7 @@ public class MapgenHeight : MonoBehaviour {
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 		currentTerrain = Terrain.activeTerrain;
-		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
+//		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
 
 	}
 
@@ -150,19 +150,18 @@ public class MapgenHeight : MonoBehaviour {
 	}
 
 
-	//---------UPDATE---------//
-//	void Update(){
-//		if(frame % 1 == 0){	
-//			for (int i = 0; i < drawMap.GetLength (1); i++) {
-//				for (int j = 0; j < drawMap.GetLength (0); j++) {
-//					drawMap [i, j] = myHeightMap [i, j] * update;
-//				}
-//			}
-//			currentTerrain.terrainData.SetHeights (0, 0, drawMap);
-//		}
-//		frame ++;
-//		if(update < 1f)
-//			update += 0.006f;
-//	}
+	void Update(){
+		if(frame % 1 == 0){	
+			for (int i = 0; i < drawMap.GetLength (1); i++) {
+				for (int j = 0; j < drawMap.GetLength (0); j++) {
+					drawMap [i, j] = myHeightMap [i, j] * update;
+				}
+			}
+			currentTerrain.terrainData.SetHeights (0, 0, drawMap);
+		}
+		frame ++;
+		if(update < 1f)
+			update += 0.006f;
+	}
 
 }
