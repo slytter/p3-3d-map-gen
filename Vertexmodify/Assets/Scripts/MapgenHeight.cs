@@ -45,7 +45,7 @@ public class MapgenHeight : MonoBehaviour {
 					)
 				)
 			,2);
-
+		colorScanScript.printBinary (myHeightMap);
 
 //		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
 //		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
@@ -58,7 +58,7 @@ public class MapgenHeight : MonoBehaviour {
 
 		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea),1);
 		//myHeightMap = inputColorImage;
-
+		colorScanScript.printBinary (myHeightMap);
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 		currentTerrain = Terrain.activeTerrain;
@@ -89,14 +89,14 @@ public class MapgenHeight : MonoBehaviour {
 		int randomArrayPointerY = 0;
 
 		for (int i = 0; i < heightMap.GetLength(1)-1; i ++) {
-			if (i % splitLength == 0) 	randomArrayPointerY = i / splitLength; //same here
+			if (i % splitLength == 0) 	
+				randomArrayPointerY = i / splitLength; //same here
 
 			for (int j = 0; j < heightMap.GetLength (0)-1; j++) {
 				if (j % splitLength == 0) {
 					if (j == 0) randomArrayPointerX = 0;
 					randomArrayPointerX = j / splitLength; 
 				}
-
 				currentTerrainHeight = randomValues [randomArrayPointerX, randomArrayPointerY];
 
 				if (amount == 1) {
@@ -108,7 +108,6 @@ public class MapgenHeight : MonoBehaviour {
 				if (heightMap [i, j] > max_val) {
 					max_val = heightMap [i, j];
 				}
-
 			}
 		}
 		heightMap = modules.gaussian (heightMap, gaussianAmount);

@@ -59,7 +59,7 @@ public class ColorDetection : MonoBehaviour
 				}
 			}
 		}
-		printBinary (pixelPosOutput, pixN, newIm); 
+		printBinary (pixelPosOutput); 
 		return (pixelPosOutput); 
 	}
 
@@ -71,19 +71,32 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="input">Input.</param>
 	/// <param name="pixN">Pix n.</param>
 	/// <param name="newIm">New im.</param>
-	void printBinary (bool[,] input, Color[] pixN, Texture2D newIm) {
-		Debug.Log ("printing");
-		for (int y = 0; y < newIm.height; y++) {
-			for (int x = 0; x < newIm.width; x++) {
+	public void printBinary (bool[,] input) {
+		Color[] pixN = new Color[input.GetLength (0) * input.GetLength (1)];
+		for (int y = 0; y < input.GetLength(1); y++) {
+			for (int x = 0; x < input.GetLength(0); x++) {
 
 				if (input [x, y]) {
-					pixN [y * newIm.width + x] = new Color (1, 1, 1);
+					pixN [y * input.GetLength(0) + x] = new Color (1, 1, 1);
 				} else {
-					pixN [y * newIm.width + x] = new Color (0, 0, 0);
+					pixN [y * input.GetLength(0) + x] = new Color (0, 0, 0);
 				}
 			}
 		}
+		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+		image.SetPixels (pixN);
+		image.Apply ();	
+	}
 
+	public void printBinary (float[,] input) {
+		Color[] pixN = new Color[input.GetLength (0) * input.GetLength (1)];
+		for (int y = 0; y < input.GetLength(1); y++) {
+			for (int x = 0; x < input.GetLength(0); x++) {
+				pixN [y * input.GetLength (0) + x].r = input [x, y];
+				pixN [y * input.GetLength (0) + x].g = input [x, y];
+				pixN [y * input.GetLength (0) + x].b = input [x, y];
+			}
+		}
 		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
 		image.SetPixels (pixN);
 		image.Apply ();	
