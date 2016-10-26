@@ -21,16 +21,8 @@ public class ColorDetection : MonoBehaviour
 		newTexture.Apply ();
 
 		//Texture2D backupImage = GetComponent<Renderer> ().material.mainTexture;
-
-		// Looking for yellow
-		// colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f);
-
-		// overloaded method for red, since intervals is crossing 0
-		// colorDetection (pixN, newIm, 1f, 0f, 0.94f, 0.02f, 0.25f, 0.5f);
-		// NOT WORKING SINCE OVERLOAD METHOD WAS REMOVED.
-
-		// Looking for Orange
-		// colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f);
+		// colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f); //yellow
+		// colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f); //orange
 	}
 
 
@@ -53,16 +45,30 @@ public class ColorDetection : MonoBehaviour
 		float h; 
 		float s; 
 		float v; 
-		Debug.Log(pixN.GetLength(0));
 
-		for (int y = 0; y < newIm.height; y++) {
-			for (int x = 0; x < newIm.width; x++) {
-				Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); //Converting rgb to HSV and assigning float variables. 
+		if (hueMax < hueMin) {
+			for (int y = 0; y < newIm.height; y++) {
+				for (int x = 0; x < newIm.width; x++) {
+					Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); //Converting rgb to HSV and assigning float variables. 
 
-				if (h > hueMin && h < hueMax && s > sat && v > val) {
-					pixelPosOutput[x, y] = true; // Assigning position x,y in float array. 
-				} else {
-					pixelPosOutput [x, y] = false; 
+					if (h > hueMin || h < hueMax && s > sat && v > val) {
+						pixelPosOutput [x, y] = true; // Assigning position x,y in float array. 
+					} else {
+						pixelPosOutput [x, y] = false; 
+					}
+
+				}
+			}
+		} else {
+			for (int y = 0; y < newIm.height; y++) {
+				for (int x = 0; x < newIm.width; x++) {
+					Color.RGBToHSV (pixN [y * newIm.width + x], out h, out s, out v); //Converting rgb to HSV and assigning float variables. 
+
+					if (h > hueMin && h < hueMax && s > sat && v > val) {
+						pixelPosOutput [x, y] = true; // Assigning position x,y in float array. 
+					} else {
+						pixelPosOutput [x, y] = false; 
+					}
 				}
 			}
 		}

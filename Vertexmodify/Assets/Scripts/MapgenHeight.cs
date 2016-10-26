@@ -19,7 +19,9 @@ public class MapgenHeight : MonoBehaviour {
 		modules = GetComponent<imageProcModules>();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
 
-		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
+		//bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
+
+		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.02f, 0.94f, 0.25f, 0.5f);
 
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
