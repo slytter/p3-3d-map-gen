@@ -26,7 +26,6 @@ public class ColorDetection : MonoBehaviour
 	}
 
 
-
 	/// <summary>
 	/// Detect colors in an image
 	/// </summary>
@@ -79,7 +78,7 @@ public class ColorDetection : MonoBehaviour
 
 
 	/// <summary>
-	/// Prints out image.
+	/// Prints out image, on the colorScan plane.
 	/// </summary>
 	/// <param name="input">Input.</param>
 	/// <param name="pixN">Pix n.</param>

@@ -19,32 +19,21 @@ public class MapgenHeight : MonoBehaviour {
 		modules = GetComponent<imageProcModules>();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection>();
 
-		//bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
-
-		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.02f, 0.94f, 0.25f, 0.5f);
-
 		float lastmillis = Time.realtimeSinceStartup;
 		float startit = Time.realtimeSinceStartup;
 
-		float[,] moutainArea = 
-			modules.gaussian (
-				modules.boolToFloat (
-					modules.floodFill (
-						modules.dilation (
-							inputColorImage
-						)
-					)
-				),20
-			);
-		
-		myHeightMap = 
-			modules.gaussian(
-				myHeightMap = midpointDisplacement (8, myHeightMap, 0.7f, 10)
-			,2);
-		colorScanScript.printBinary (myHeightMap);
+		//bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
-//		myHeightMap = mountainRecursion (1, myHeightMap, 0.9f, 15);
-//		myHeightMap = mountainRecursion (2, myHeightMap, 0.2f, 20);
+		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.02f, 0.94f, 0.25f, 0.5f); // getting colors from input image
+		currentTerrain = Terrain.activeTerrain; // getting terrain data
+
+
+		inputColorImage = modules.dilation (inputColorImage);
+		inputColorImage = modules.floodFill (inputColorImage);
+		//float convertion
+		myHeightMap = modules.boolToFloat (inputColorImage); // my heightmap = float
+		myHeightMap = modules.gaussian (myHeightMap, 4); //gauss
+
 		myHeightMap = midpointDisplacement (3, myHeightMap, 0.8f, 10);
 		myHeightMap = midpointDisplacement (8, myHeightMap, 0.7f, 10);
 		myHeightMap = midpointDisplacement (16, myHeightMap, 0.5f, 0);
@@ -52,11 +41,12 @@ public class MapgenHeight : MonoBehaviour {
 		myHeightMap = midpointDisplacement (64, myHeightMap, 0.5f, 0);
 		myHeightMap = midpointDisplacement (128, myHeightMap, 0.5f, 0);
 
-		myHeightMap = finalMap (mountainRemove(myHeightMap,moutainArea),1);
+
+		myHeightMap = finalMap (mountainRemove(myHeightMap,modules.boolToFloat(inputColorImage)),5);
 		colorScanScript.printBinary (myHeightMap);
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
-		currentTerrain = Terrain.activeTerrain;
+
 //		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
 
 	}
@@ -142,6 +132,9 @@ public class MapgenHeight : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	void Update(){
 		if(frame % 1 == 0){	
 			for (int i = 0; i < drawMap.GetLength (1); i++) {
