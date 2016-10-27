@@ -10,40 +10,41 @@ public class cameraScript : MonoBehaviour {
 	public GameObject targetPlane; 
 
     public RawImage rawimage;
-	Color [] pix; 
+	protected Color [] pixFromSnap; 
 	Texture2D tex1; 
-	Texture2D original;
 	WebCamTexture webcamTexture; 
 
 
 
 	void Start () {
-
 		StartCoroutine (fixBug ());    
     }
 	
 
 	void Update () {
 
-		//tex1.SetPixels (webcamTexture.GetPixels ()); 
-		//tex1.Apply (); 
-
 		if (Input.GetKeyDown ("s")) {
 			Snapshot();
 		}
 	}
 
-	void Snapshot()
+	public void Snapshot()
 {
 
 		tex1.SetPixels(webcamTexture.GetPixels()); 
 		tex1.Apply ();
 		targetPlane.GetComponent<Renderer> ().material.mainTexture = tex1; 
-		webcamTexture.Play (); 
+		rawimage.enabled = false; 
 
 		System.IO.File.WriteAllBytes(savePath + _CaptureCounter.ToString() + ".png", tex1.EncodeToPNG());
-		//webcamTexture.Pause (); 
 		_CaptureCounter ++; 
+		pixFromSnap = tex1.GetPixels (); 
+
+	}
+	public void retake(){
+
+		rawimage.enabled = true; 
+		webcamTexture.Play (); 
 
 	}
 
@@ -52,7 +53,8 @@ public class cameraScript : MonoBehaviour {
 		webcamTexture = new WebCamTexture();
 		webcamTexture.Play();
 
-		if (webcamTexture.width <= 16 || webcamTexture.height <= 16) {
+		if (webcamTexture.width <= 16 || webcamTexture.height <= 16) {		
+
 			while (!webcamTexture.didUpdateThisFrame) {
 				yield return new WaitForEndOfFrame (); 
 
@@ -67,15 +69,11 @@ public class cameraScript : MonoBehaviour {
 			webcamTexture.Play (); 
 
 		}
-
+			
 		rawimage.texture = webcamTexture;
 		rawimage.material.mainTexture = webcamTexture;
 
-		rawimage.enabled = false; 
-
-
 		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
-
 
 		Debug.Log ("The height of the webcam is: " + webcamTexture.height + " The width of the webcam is: " + webcamTexture.width); 
 	}
