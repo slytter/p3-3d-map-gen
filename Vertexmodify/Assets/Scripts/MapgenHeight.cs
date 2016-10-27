@@ -48,7 +48,7 @@ public class MapgenHeight : MonoBehaviour {
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 
-//		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
+		currentTerrain.terrainData.SetHeights (0, 0, myHeightMap);
 
 	}
 
@@ -132,22 +132,26 @@ public class MapgenHeight : MonoBehaviour {
 		return heightMap;
 	}
 
-
+	bool stop = false;
 	/// <summary>
 	/// Update this instance.
 	/// </summary>
 	void Update(){
-		if(frame % 1 == 0){	
-			for (int i = 0; i < drawMap.GetLength (1); i++) {
-				for (int j = 0; j < drawMap.GetLength (0); j++) {
-					drawMap [i, j] = myHeightMap [i, j] * update;
+		if (!stop) {
+			if (frame % 2 == 0) {	
+				for (int i = 0; i < drawMap.GetLength (1); i++) {
+					for (int j = 0; j < drawMap.GetLength (0); j++) {
+						drawMap [i, j] = myHeightMap [i, j] * update;
+					}
 				}
+				currentTerrain.terrainData.SetHeights (0, 0, drawMap);
 			}
-			currentTerrain.terrainData.SetHeights (0, 0, drawMap);
+			frame++;
+			if (update < 1f)
+				update += 0.01f;
+			else
+				stop = true;
 		}
-		frame ++;
-		if(update < 1f)
-			update += 0.006f;
 	}
 
 }
