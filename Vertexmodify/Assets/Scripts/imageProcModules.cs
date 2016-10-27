@@ -15,6 +15,10 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="inputPicture">Input picture.</param>
 	public bool [,] floodFill (bool[,] inputPicture) {
 		inputPicture = blackFrame (inputPicture);
+		bool[,] inputPictureEdge = new bool[inputPicture.GetLength(0), inputPicture.GetLength(1)];
+		Buffer.BlockCopy (inputPicture, 0, inputPictureEdge, 0, inputPicture.Length * sizeof(bool));
+		Debug.Log ("længden af inputPicture: " + inputPicture.Length + "længden af edge array: " + inputPictureEdge.Length);
+
 
 		List<int> xPos = new List<int> ();
 		List<int> yPos = new List<int> ();
@@ -28,7 +32,7 @@ public class imageProcModules : MonoBehaviour {
 
 		while (listIndex != xPos.Count && listIndex != yPos.Count){
 			for (int i = 0; i < 4; i++){
-				if (xPos.ElementAt (listIndex) < 510 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < 510 && yPos.ElementAt (listIndex) > 0) {
+				if (xPos.ElementAt (listIndex) < inputPicture.GetLength(0) - 2 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < inputPicture.GetLength(1) - 2 && yPos.ElementAt (listIndex) > 0) {
 					if (inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] == false) {
 						xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
 						yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
@@ -38,6 +42,19 @@ public class imageProcModules : MonoBehaviour {
 			}
 			listIndex++;
 		}
+
+		//adds the edges
+		for (int y = 2; y < inputPicture.GetLength(1) - 2; y++)
+		{
+			for (int x = 2; x < inputPicture.GetLength(0) - 2; x++)
+			{
+				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true)
+				{
+					inputPicture [x, y] = false;
+				}
+			}	
+		}
+
 		return invert(inputPicture);
 	}
 
@@ -109,8 +126,8 @@ public class imageProcModules : MonoBehaviour {
 	/// </summary>
 	/// <param name="bools">Bools.</param>
 	public bool[,] dilation (bool[,] bools){
-		bool[,] returnedBools = new bool[512,512];
-		Array.Copy (bools, returnedBools,0);
+		bool[,] returnedBools = new bool[bools.GetLength(0),bools.GetLength(1)];
+
 		for (int y = 1; y < bools.GetLength(1)-2; y++) {
 			for (int x = 1; x < bools.GetLength(0)-2; x++) {
 				bool hit = false;

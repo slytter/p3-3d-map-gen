@@ -24,12 +24,13 @@ public class MapgenHeight : MonoBehaviour {
 
 		//bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
-		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.02f, 0.94f, 0.25f, 0.5f); // getting colors from input image
+		bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f); // getting colors from input image
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
 
 
 		inputColorImage = modules.dilation (inputColorImage);
 		inputColorImage = modules.floodFill (inputColorImage);
+		colorScanScript.printBinary (inputColorImage);
 		//float convertion
 		myHeightMap = modules.boolToFloat (inputColorImage); // my heightmap = float
 		myHeightMap = modules.gaussian (myHeightMap, 4); //gauss
@@ -43,7 +44,7 @@ public class MapgenHeight : MonoBehaviour {
 
 
 		myHeightMap = finalMap (mountainRemove(myHeightMap,modules.boolToFloat(inputColorImage)),5);
-		colorScanScript.printBinary (myHeightMap);
+
 		Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit ) * 1000));
 
 
@@ -64,7 +65,7 @@ public class MapgenHeight : MonoBehaviour {
 		// Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
 		// lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight
 
-		float[,] randomValues = modules.randomValGen (512, 512);
+		float[,] randomValues = modules.randomValGen (heightMap.GetLength(0), heightMap.GetLength(1));
 		int splitLength;
 		float currentTerrainHeight;
 
