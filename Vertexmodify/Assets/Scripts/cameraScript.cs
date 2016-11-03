@@ -3,10 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class cameraScript : MonoBehaviour {
+	
+	//private string savePath = "/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder"; 
+	private string savePath = "C:/Users/User/Documents/GitHub/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder/";
 
-	private string savePath = "/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/CamSnaps/"; 
 
-	int _CaptureCounter = 0; 
 	public GameObject targetPlane; 
 
     public RawImage rawimage;
@@ -14,7 +15,7 @@ public class cameraScript : MonoBehaviour {
 	Texture2D tex1; 
 	WebCamTexture webcamTexture; 
 
-
+	public Texture2D outputImage;
 
 	void Start () {
 		StartCoroutine (fixBug ());    
@@ -36,9 +37,13 @@ public class cameraScript : MonoBehaviour {
 		targetPlane.GetComponent<Renderer> ().material.mainTexture = tex1; 
 		rawimage.enabled = false; 
 
-		System.IO.File.WriteAllBytes(savePath + _CaptureCounter.ToString() + ".png", tex1.EncodeToPNG());
-		_CaptureCounter ++; 
+		System.IO.File.WriteAllBytes(savePath + System.DateTime.Now.ToString ("dd-MM-yyyy-HH-mm-ss") + ".png", tex1.EncodeToPNG());
+
+	
 		pixFromSnap = tex1.GetPixels (); 
+		outputImage = tex1;
+
+
 
 	}
 	public void retake(){
