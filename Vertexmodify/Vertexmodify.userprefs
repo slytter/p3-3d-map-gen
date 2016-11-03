@@ -1,6 +1,7 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
 <<<<<<< HEAD
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/cameraScript.cs">
     <Files>
       <File FileName="Assets/Scripts/cameraScript.cs" Line="77" Column="3" />
@@ -9,6 +10,11 @@
     <Files>
       <File FileName="Assets/Scripts/MapgenHeight.cs" Line="29" Column="3" />
 >>>>>>> master
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\cameraScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\cameraScript.cs" Line="45" Column="3" />
+>>>>>>> d0f2111f8c0b16bd111a0f0f6c9f211f5df534c4
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
