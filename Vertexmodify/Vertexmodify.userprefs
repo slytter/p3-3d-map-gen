@@ -1,8 +1,20 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../imageProcLibrary/imageProcLibrary/MyClass.cs">
+<<<<<<< HEAD
+<<<<<<< HEAD
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/cameraScript.cs">
     <Files>
-      <File FileName="../imageProcLibrary/imageProcLibrary/MyClass.cs" Line="4" Column="1" />
+      <File FileName="Assets/Scripts/cameraScript.cs" Line="77" Column="3" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MapgenHeight.cs">
+    <Files>
+      <File FileName="Assets/Scripts/MapgenHeight.cs" Line="29" Column="3" />
+>>>>>>> master
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\cameraScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\cameraScript.cs" Line="45" Column="3" />
+>>>>>>> d0f2111f8c0b16bd111a0f0f6c9f211f5df534c4
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

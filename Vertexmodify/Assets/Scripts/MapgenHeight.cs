@@ -141,7 +141,7 @@ public class MapgenHeight : MonoBehaviour {
 			if (frame % 2 == 0) {	
 				for (int i = 0; i < drawMap.GetLength (1); i++) {
 					for (int j = 0; j < drawMap.GetLength (0); j++) {
-						drawMap [i, j] = myHeightMap [i, j] * update;
+						drawMap [i, j] = myHeightMap [i, j] * update * 0.5f;
 					}
 				}
 				currentTerrain.terrainData.SetHeights (0, 0, drawMap);
