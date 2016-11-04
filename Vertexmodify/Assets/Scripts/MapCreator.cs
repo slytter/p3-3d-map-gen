@@ -7,8 +7,8 @@ public class MapCreator : MonoBehaviour
     imageProcModules modules;
     ColorDetection colorScanScript;
     MountainGeneration mg;
-    public int length;
-    public int height;
+    int length = 512;
+    int height = 512;
     Terrain currentTerrain;
     float update = 0;
     int frame = 0;
