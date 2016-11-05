@@ -6,10 +6,12 @@ using System;
 public class ColorDetection : MonoBehaviour
 {
 	public Color[] originalImage;
-	//imageProcModules m;
-	void Start () {
-		//m = GetComponent<imageProcModules>();
-		Texture2D originalTexture;
+    
+    //imageProcModules m;
+    void Start () {
+
+        //m = GetComponent<imageProcModules>();
+        Texture2D originalTexture;
 		Texture2D newTexture; 
 
 		originalTexture = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
@@ -20,10 +22,27 @@ public class ColorDetection : MonoBehaviour
 		newTexture.SetPixels (originalImage);
 		newTexture.Apply ();
 
-		//Texture2D backupImage = GetComponent<Renderer> ().material.mainTexture;
-		// colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f); //yellow
-		// colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f); //orange
-	}
+        //Texture2D backupImage = GetComponent<Renderer> ().material.mainTexture;
+        // colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f); //yellow
+        // colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f); //orange
+
+
+        Texture2D webcamImage;
+        if (gameState.chosenImage != null)
+        {
+            print("no image chosen, using test image");
+        }
+        else
+        {
+            print(gameState.chosenImage);
+            webcamImage = Resources.Load("WebcamBilleder/" + gameState.chosenImage) as Texture2D;
+            webcamImage.Resize(512, 512);
+            originalImage = webcamImage.GetPixels();
+        }
+
+
+
+    }
 
 
 	/// <summary>

@@ -7,7 +7,7 @@ public class MountainGeneration : MonoBehaviour
     imageProcModules modules; 
     float max_val;
 
-    void Start(){
+    void Awake(){
         modules = GetComponent<imageProcModules>();
     }
     /// <summary>
@@ -18,6 +18,8 @@ public class MountainGeneration : MonoBehaviour
     /// <param name="heightMap">heightMap.</param>
     /// <param name="amount">Amount.</param>
     public float[,] midpointDisplacement(int recursion, float[,] heightMap, float amount, int gaussianAmount) {
+
+        // modules = GetComponent<imageProcModules>();
         // float amount goes from 0 to 1.
         // Debug.Log("Millis for iteration " + recursion + ": "  + ((Time.realtimeSinceStartup-lastmillis)*1000));
         // lastmillis = Time.realtimeSinceStartup; // Calculate the number of milliseconds since midnight

@@ -9,7 +9,7 @@ public class imageProcModules : MonoBehaviour {
 
 
 	/// <summary>
-	/// Floods the fill.
+	/// Flood fills.
 	/// </summary>
 	/// <returns>The fill.</returns>
 	/// <param name="inputPicture">Input picture.</param>

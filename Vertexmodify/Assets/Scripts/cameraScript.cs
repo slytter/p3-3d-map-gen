@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class cameraScript : MonoBehaviour {
-	
-	//private string savePath = "/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder"; 
-	private string savePath = "C:/Users/User/Documents/GitHub/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder/";
 
+    //private string savePath = "/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder"; 
+    private string savePath;
 
-	public GameObject targetPlane; 
+    public GameObject targetPlane; 
 
     public RawImage rawimage;
 	protected Color [] pixFromSnap; 
@@ -16,9 +15,13 @@ public class cameraScript : MonoBehaviour {
 	WebCamTexture webcamTexture; 
 
 	public Texture2D outputImage;
+    string currentImageName;
+
 
 	void Start () {
-		StartCoroutine (fixBug ());    
+        savePath = Application.dataPath + "/Assets/WebcamBilleder/";
+        print(savePath);
+		StartCoroutine (fixBug ());  //AD HVOR KLAMT  
     }
 	
 
@@ -29,32 +32,38 @@ public class cameraScript : MonoBehaviour {
 		}
 	}
 
-	public void Snapshot()
-{
+	public void Snapshot() {
 
 		tex1.SetPixels(webcamTexture.GetPixels()); 
 		tex1.Apply ();
 		targetPlane.GetComponent<Renderer> ().material.mainTexture = tex1; 
-		rawimage.enabled = false; 
+		rawimage.enabled = false;
 
-		System.IO.File.WriteAllBytes(savePath + System.DateTime.Now.ToString ("dd-MM-yyyy-HH-mm-ss") + ".png", tex1.EncodeToPNG());
+        currentImageName = System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
 
-	
+        System.IO.File.WriteAllBytes(savePath + currentImageName, tex1.EncodeToPNG());
+
+	    
 		pixFromSnap = tex1.GetPixels (); 
 		outputImage = tex1;
-
-
-
 	}
+
+
 	public void retake(){
 
 		rawimage.enabled = true; 
-		webcamTexture.Play (); 
+		webcamTexture.Play ();
+    }
 
-	}
+
+    public void choose() {
+        gameState.chosenImage = currentImageName;
+        print("image chosen: " + currentImageName);
+        Application.LoadLevel("sagen");
+    }
+
 
 	IEnumerator fixBug(){
-
 		webcamTexture = new WebCamTexture();
 		webcamTexture.Play();
 
@@ -62,7 +71,6 @@ public class cameraScript : MonoBehaviour {
 
 			while (!webcamTexture.didUpdateThisFrame) {
 				yield return new WaitForEndOfFrame (); 
-
 			}
 
 			webcamTexture.Pause (); 

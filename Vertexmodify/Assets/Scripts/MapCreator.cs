@@ -17,8 +17,9 @@ public class MapCreator : MonoBehaviour
     float lastmillis;
 
 
-    void Start()
-    {
+    void Start() {
+
+
         modules = GetComponent<imageProcModules>();
         colorScanScript = GameObject.Find("colorScan").GetComponent<ColorDetection>();
         mg = GetComponent<MountainGeneration>();
