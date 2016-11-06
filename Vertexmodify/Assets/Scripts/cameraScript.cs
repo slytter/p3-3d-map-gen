@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class cameraScript : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class cameraScript : MonoBehaviour {
 
 
 	void Start () {
-        savePath = Application.dataPath + "/Assets/WebcamBilleder/";
+		savePath = Application.dataPath + "/Resources/WebcamBilleder/";
         print(savePath);
 		StartCoroutine (fixBug ());  //AD HVOR KLAMT  
     }
@@ -39,7 +40,7 @@ public class cameraScript : MonoBehaviour {
 		targetPlane.GetComponent<Renderer> ().material.mainTexture = tex1; 
 		rawimage.enabled = false;
 
-        currentImageName = System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+		currentImageName = System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
 
         System.IO.File.WriteAllBytes(savePath + currentImageName, tex1.EncodeToPNG());
 
@@ -53,10 +54,14 @@ public class cameraScript : MonoBehaviour {
 
 		rawimage.enabled = true; 
 		webcamTexture.Play ();
+
     }
 
 
     public void choose() {
+		gameState.image = Texture2D.Instantiate(outputImage);
+		//Array.Copy(outputImage, gameState.image)
+		//gameState.image = outputImage;
         gameState.chosenImage = currentImageName;
         print("image chosen: " + currentImageName);
         Application.LoadLevel("sagen");

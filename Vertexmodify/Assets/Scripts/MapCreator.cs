@@ -29,7 +29,7 @@ public class MapCreator : MonoBehaviour
 
         //bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
-        bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f); // getting colors from input image
+		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.01f, 0.6f, 0.25f, 0.5f); // getting colors from input image
         currentTerrain = Terrain.activeTerrain; // getting terrain data
 
 

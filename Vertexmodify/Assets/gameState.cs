@@ -1,6 +1,16 @@
-﻿public class gameState {
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System;
+public class gameState {
 
-    public static string test = "yo";
+	void Awake(){
+		Debug.Log("gamestate init");
+	}
+    
+	public static Texture2D image;
+
+	public static string test = "yo";
     public static string chosenImage = "";
 
 

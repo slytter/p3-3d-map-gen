@@ -28,14 +28,17 @@ public class ColorDetection : MonoBehaviour
 
 
         Texture2D webcamImage;
-        if (gameState.chosenImage != null)
+
+		if (gameState.image == null)
         {
             print("no image chosen, using test image");
         }
         else
         {
             print(gameState.chosenImage);
-            webcamImage = Resources.Load("WebcamBilleder/" + gameState.chosenImage) as Texture2D;
+			//we = (Texture2D)Resources.LoadAssetAtPath(texture, typeof(Texture2D)
+			//webcamImage = Resources.Load("WebcamBilleder/05-11-2016-18-47-36") as Texture2D;
+			webcamImage = gameState.image;
             webcamImage.Resize(512, 512);
             originalImage = webcamImage.GetPixels();
         }
