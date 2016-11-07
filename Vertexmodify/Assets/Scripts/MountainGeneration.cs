@@ -32,10 +32,10 @@ public class MountainGeneration : MonoBehaviour
         int randomArrayPointerX = 0;
         int randomArrayPointerY = 0;
 
-        for (int i = 0; i < heightMap.GetLength(1)-1; i ++) {
+        for (int i = 0; i < heightMap.GetLength(0)-1; i ++) {
             if (i % splitLength == 0)   
                 randomArrayPointerY = i / splitLength; //same here
-            for (int j = 0; j < heightMap.GetLength (0)-1; j++) {
+            for (int j = 0; j < heightMap.GetLength (1)-1; j++) {
                 if (j % splitLength == 0) {
                     if (j == 0) 
                         randomArrayPointerX = 0;
@@ -82,8 +82,8 @@ public class MountainGeneration : MonoBehaviour
     /// <param name="heightMap">Height map.</param>
     public float[,] finalMap(float[,] heightMap, int smoothing) {
         heightMap = modules.gaussian (heightMap, smoothing);
-        for (int i = 0; i < heightMap.GetLength (1); i++) {
-            for (int j = 0; j < heightMap.GetLength (0); j++) {
+        for (int i = 0; i < heightMap.GetLength (0); i++) {
+            for (int j = 0; j < heightMap.GetLength (1); j++) {
                 heightMap [i, j] = heightMap [i, j] / max_val;
             }
         }

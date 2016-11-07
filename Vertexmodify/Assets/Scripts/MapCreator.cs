@@ -34,7 +34,11 @@ public class MapCreator : MonoBehaviour
 
 		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from input image
         currentTerrain = Terrain.activeTerrain; // getting terrain data
-		currentTerrain.terrainData.size = new Vector3(colorScanScript.heightOfTex,heightOfMap,colorScanScript.widthOfTex); //setting size
+
+
+		int biggestDimention = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
+		currentTerrain.terrainData.size = new Vector3(biggestDimention, heightOfMap, biggestDimention); //setting size
+
 
 		colorScanScript.printBinary(inputColorImage);
 
@@ -46,8 +50,7 @@ public class MapCreator : MonoBehaviour
 
 
 
-        myHeightMap = modules.gaussian(myHeightMap, 10); //gauss
-		//colorScanScript.printBinary(myHeightMap);
+		myHeightMap = modules.gaussian(myHeightMap, 10); //gauss
         myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.0f, 10);
         myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.0f, 10);
         myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.0f, 0);
@@ -58,13 +61,13 @@ public class MapCreator : MonoBehaviour
 //		currentTerrain.terrainData.GetTreeInstance(0).
 
         myHeightMap = mg.finalMap(mg.mountainRemove(myHeightMap, modules.boolToFloat(inputColorImage)), 5);
-		myHeightMap = modules.perlin(myHeightMap); 
+		//myHeightMap = modules.perlin(myHeightMap); 
 //        myHeightMap = mg.finalMap(myHeightMap, 5);
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
 
-			currentTerrain.terrainData.wavingGrassAmount = 1000;
-//        currentTerrain.terrainData.SetHeights(0, 0, myHeightMap);
+		currentTerrain.terrainData.wavingGrassAmount = 1000;
+//      currentTerrain.terrainData.SetHeights(0, 0, myHeightMap);
 
     }
 
@@ -76,19 +79,16 @@ public class MapCreator : MonoBehaviour
     /// <summary>
     /// Update this instance.
     /// </summary>
-    void Update()
-    {
-        if (!stop)
-        {
-            if (frame % 2 == 0)
-            {	
-                for (int i = 0; i < drawMap.GetLength(1); i++)
-                {
-                    for (int j = 0; j < drawMap.GetLength(0); j++)
-                    {
+    void Update() {
+        if (!stop){
+            if (frame % 2 == 0) {
+                for (int i = 0; i < drawMap.GetLength(0); i++) {
+                    for (int j = 0; j < drawMap.GetLength(1); j++) {
                         drawMap[i, j] = myHeightMap[i, j] * update * 0.5f;
                     }
                 }
+				print(drawMap.GetLength (0));
+				print(drawMap.GetLength (1));
                 currentTerrain.terrainData.SetHeights(0, 0, drawMap);
             }
             frame++;

@@ -100,8 +100,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="length">Length.</param>
 	public float[,] randomValGen(int height, int length){
 		float[,] randomValues = new float[height, length];
-		for (int i = 0; i < randomValues.GetLength (1); i++) {
-			for (int j = 0; j < randomValues.GetLength (0); j++) {
+		for (int i = 0; i < randomValues.GetLength (0); i++) {
+			for (int j = 0; j < randomValues.GetLength (1); j++) {
 				randomValues [i,j] = UnityEngine.Random.Range (0f, 1f);
 			}
 		}
@@ -117,8 +117,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="smoothing">Number of iterations.</param>
 	public float[,] gaussian(float[,] heightMap, int smoothing){
 		for (int k = 0; k < smoothing; k++) {
-			for (int i = 1; i < heightMap.GetLength (1)-1; i++) {
-				for (int j = 1; j < heightMap.GetLength (0)-1; j++) {
+			for (int i = 1; i < heightMap.GetLength (0)-1; i++) {
+				for (int j = 1; j < heightMap.GetLength (1)-1; j++) {
 					float blur = (
 						heightMap [i, j] 
 
@@ -177,11 +177,11 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The to float.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
 	public float [,] boolToFloat(bool[,] toBeConverted){
-		float[,] outputFloatArray = new float[toBeConverted.GetLength (1), toBeConverted.GetLength (0)]; 
-		for (int y = 0; y < toBeConverted.GetLength(1); y++) {
-			for (int x = 0; x < toBeConverted.GetLength(0); x++) {
-				if (toBeConverted [y, x] == true) {
-					outputFloatArray [y, x] = 1; 
+		float[,] outputFloatArray = new float[toBeConverted.GetLength (0), toBeConverted.GetLength (1)]; 
+		for (int x = 0; x < toBeConverted.GetLength(0); x++) {
+			for (int y = 0; y < toBeConverted.GetLength(1); y++) {
+				if (toBeConverted [x, y] == true) {
+					outputFloatArray [x, y] = 1; 
 				}
 			}
 		}
@@ -225,9 +225,9 @@ public class imageProcModules : MonoBehaviour {
 				if (y == 1) 
 					boolArrayToBeFramed [x, y] = false; 
 				
-				if( y == boolArrayToBeFramed.GetLength (1) - 1 )
+				if (y == boolArrayToBeFramed.GetLength (1) - 1 )
 					boolArrayToBeFramed [x, y] = true; 
-				if( y == boolArrayToBeFramed.GetLength (1) - 2 ) 
+				if (y == boolArrayToBeFramed.GetLength (1) - 2 ) 
 					boolArrayToBeFramed [x, y] = false; 
 				
 				if (x == 0)
@@ -237,7 +237,7 @@ public class imageProcModules : MonoBehaviour {
 				
 				if (x == boolArrayToBeFramed.GetLength (0) - 1 ) 
 					boolArrayToBeFramed [x, y] = true;
-				if(x == boolArrayToBeFramed.GetLength (0) - 2) 
+				if (x == boolArrayToBeFramed.GetLength (0) - 2) 
 					boolArrayToBeFramed [x, y] = false;
 
 			}
