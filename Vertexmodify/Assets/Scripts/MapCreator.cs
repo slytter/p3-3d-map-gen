@@ -22,6 +22,8 @@ public class MapCreator : MonoBehaviour
         mg = GetComponent<MountainGeneration>();
 
 
+		Debug.Log (colorScanScript.widthOfTex);
+		Debug.Log (colorScanScript.heightOfTex);
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		myHeightMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
@@ -34,6 +36,8 @@ public class MapCreator : MonoBehaviour
         currentTerrain = Terrain.activeTerrain; // getting terrain data
 		currentTerrain.terrainData.size = new Vector3(colorScanScript.heightOfTex,heightOfMap,colorScanScript.widthOfTex); //setting size
 
+		colorScanScript.printBinary(inputColorImage);
+
         inputColorImage = modules.dilation(inputColorImage);
         inputColorImage = modules.floodFill(inputColorImage);
         //colorScanScript.printBinary(inputColorImage);
@@ -43,7 +47,7 @@ public class MapCreator : MonoBehaviour
 
 
         myHeightMap = modules.gaussian(myHeightMap, 10); //gauss
-		colorScanScript.printBinary(myHeightMap);
+		//colorScanScript.printBinary(myHeightMap);
         myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.0f, 10);
         myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.0f, 10);
         myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.0f, 0);
