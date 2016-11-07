@@ -6,9 +6,14 @@ using System;
 public class ColorDetection : MonoBehaviour
 {
 	public Color[] originalImage;
-    
+	public int widthOfTex;
+	public int heightOfTex;
+
+
     //imageProcModules m;
     void Start () {
+
+
 
         //m = GetComponent<imageProcModules>();
         Texture2D originalTexture;
@@ -26,6 +31,8 @@ public class ColorDetection : MonoBehaviour
         // colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f); //yellow
         // colorDetection (pixN, newIm, 0.14f, 0.06f, 0.25f, 0.5f); //orange
 
+		widthOfTex = originalTexture.width;
+		heightOfTex = originalTexture.height;
 
         Texture2D webcamImage;
 
@@ -59,9 +66,9 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="val">Value.</param>
 	public bool [,] colorDetection (Color[] pixN, float hueMax, float hueMin, float sat, float val) {
 
-		Texture2D newIm = new Texture2D (512, 512); // Only used for width & height.
+		Texture2D newIm = new Texture2D (widthOfTex, heightOfTex); // Only used for width & height.
 
-		bool[,] pixelPosOutput = new bool[512, 512]; // Float 2d array to assign and return
+		bool[,] pixelPosOutput = new bool[widthOfTex, heightOfTex]; // Float 2d array to assign and return
 
 		float h; 
 		float s; 

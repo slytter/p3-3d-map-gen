@@ -6,6 +6,24 @@ using System.Linq;
 
 public class imageProcModules : MonoBehaviour {
 
+	/// <summary>
+	/// Perlin the specified inp.
+	/// </summary>
+	/// <param name="inp">Inp.</param>
+	public float [,] perlin(float [,] inp){
+		float pixelAmount = 50;
+		print (pixelAmount);
+		float px, py;
+		for (int x = 0; x < inp.GetLength (0); x++) {
+			for (int y = 0; y < inp.GetLength (1); y++) {
+				px = (float)x / pixelAmount;
+				py = (float)y / pixelAmount;
+				inp [x, y] += Mathf.PerlinNoise (px, py) / 2;
+			}
+		}
+		return inp;
+	}
+
 
 
 	/// <summary>
@@ -60,6 +78,10 @@ public class imageProcModules : MonoBehaviour {
 
 
 
+	/// <summary>
+	/// Invert the specified boolArray.
+	/// </summary>
+	/// <param name="boolArray">Bool array.</param>
 	public bool[,] invert (bool [,] boolArray){
 		for (int x = 0; x < boolArray.GetLength(0); x++) {
 			for (int y = 0; y < boolArray.GetLength(1); y++) {
