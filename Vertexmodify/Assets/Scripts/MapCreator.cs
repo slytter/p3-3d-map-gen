@@ -29,7 +29,7 @@ public class MapCreator : MonoBehaviour
 
         //bool [,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.23f, 0.15f, 0.25f, 0.5f);
 
-		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.01f, 0.6f, 0.25f, 0.5f); // getting colors from input image
+		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from input image
         currentTerrain = Terrain.activeTerrain; // getting terrain data
 
 
@@ -40,11 +40,11 @@ public class MapCreator : MonoBehaviour
         myHeightMap = modules.boolToFloat(inputColorImage); // my heightmap = float
         myHeightMap = modules.gaussian(myHeightMap, 4); //gauss
 
-        myHeightMap = mg.midpointDisplacement(3, myHeightMap, 0.8f, 10);
-        myHeightMap = mg.midpointDisplacement(8, myHeightMap, 0.7f, 10);
-        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 0.5f, 0);
-        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 0.5f, 0);
-        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 0.5f, 0);
+        myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.8f, 10);
+        myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.8f, 10);
+        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.6f, 0);
+        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 1.6f, 0);
+        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 1.6f, 0);
         myHeightMap = mg.midpointDisplacement(128, myHeightMap, 0.5f, 0);
 
 
