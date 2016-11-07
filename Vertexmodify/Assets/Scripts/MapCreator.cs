@@ -42,13 +42,15 @@ public class MapCreator : MonoBehaviour
 
         myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.8f, 10);
         myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.8f, 10);
-        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.6f, 0);
-        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 1.6f, 0);
-        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 1.6f, 0);
+        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.8f, 0);
+        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 0.5f, 0);
+        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 0.5f, 0);
         myHeightMap = mg.midpointDisplacement(128, myHeightMap, 0.5f, 0);
 
 
         myHeightMap = mg.finalMap(mg.mountainRemove(myHeightMap, modules.boolToFloat(inputColorImage)), 5);
+
+        myHeightMap = mg.finalMap(myHeightMap, 5);
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
 
