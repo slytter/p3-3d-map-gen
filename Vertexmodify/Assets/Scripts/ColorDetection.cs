@@ -48,12 +48,6 @@ public class ColorDetection : MonoBehaviour
 		widthOfTex = originalTexture.width;
 		heightOfTex = originalTexture.height;
 
-
-
-
-
-
-
     }
 
 
@@ -66,7 +60,7 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="hueMin">Hue minimum.</param>
 	/// <param name="sat">Sat.</param>
 	/// <param name="val">Value.</param>
-	public bool [,] colorDetection (Color[] pixN, float hueMax, float hueMin, float sat, float val) {
+	public bool [,] colorDetection (Color[] pixN, float hueMin, float hueMax, float sat, float val) {
 
 		Texture2D newIm = new Texture2D (widthOfTex, heightOfTex); // Only used for width & height.
 

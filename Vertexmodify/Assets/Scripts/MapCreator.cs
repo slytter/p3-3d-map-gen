@@ -26,50 +26,61 @@ public class MapCreator : MonoBehaviour
 
 		Debug.Log (colorScanScript.widthOfTex + ", " + colorScanScript.heightOfTex);
 
+		//fixing texture scale issue:
 		myHeightMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-		float startit = Time.realtimeSinceStartup; //starting milli counter:
 
-
-
-
-		//GENERATION: 		////////////
-		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0f, 0f); // getting colors from i	nput image
+		float startit = Time.realtimeSinceStartup; //starting milli counter
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
-		//fixing texturescale issue:
 		int biggestDimention = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
 		currentTerrain.terrainData.size = new Vector3(biggestDimention, heightOfMap, biggestDimention); //setting size
 
-        inputColorImage = modules.dilation(inputColorImage);
-        inputColorImage = modules.floodFill(inputColorImage);
+
+
+		bool[,] yellow = colorScanScript.colorDetection(colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.5f); // getting colors from input image
+		bool[,] red = colorScanScript.colorDetection(colorScanScript.originalImage, 0.94f, 0.02f, 0.25f, 0.5f); // getting colors from input image
+		bool[,] green = colorScanScript.colorDetection(colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
 
 
 
-		colorScanScript.printBinary(inputColorImage); //printing to plane
-
-		myHeightMap = modules.boolToFloat(inputColorImage);//float convertion
-		//myHeightMap = modules.perlin(myHeightMap); 
-		newHeightMap = new float[myHeightMap.GetLength(0),myHeightMap.GetLength(1)];
-		colorScanScript.printBinary(myHeightMap);
-		newHeightMap = modules.generateRiver(newHeightMap, myHeightMap);
-
-
-		//MOUNTAINS: 		////////////
-		myHeightMap = modules.gaussian(myHeightMap, 0); //gauss
-//		colorScanScript.printBinary(myHeightMap); //printing to plane
-//        myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.0f, 0);
-//        myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.0f, 0);
-//        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.0f, 0);
-//        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 0.5f, 0);
-//        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 0.5f, 0);
-//        myHeightMap = mg.midpointDisplacement(128, myHeightMap, 0.5f, 0);
-//
-//        myHeightMap = mg.finalMap(mg.mountainRemove(myHeightMap, modules.boolToFloat(inputColorImage)), 5);
-//		myHeightMap = modules.perlin(myHeightMap); 
+		float[,] mountains = generateMountains (yellow);
+		colorScanScript.printBinary (mountains);
+		currentTerrain.terrainData.SetHeights (0, 0, mountains);
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
     }
+
+
+
+	float[,] generateMountains(bool[,] area){
+		area = modules.dilation (area);
+		area = modules.floodFill (area);
+
+
+		float[,] mountainArea = new float[area.GetLength(0),area.GetLength(1)];
+		mountainArea = modules.boolToFloat (area);
+		mountainArea = modules.gaussian (mountainArea, 50);
+
+
+		float[,] randomMountains = new float[area.GetLength(0),area.GetLength(1)];
+        randomMountains = mg.midpointDisplacement(3, randomMountains, 0.5f, 0);
+        randomMountains = mg.midpointDisplacement(8, randomMountains, 0.5f, 0);
+        randomMountains = mg.midpointDisplacement(16, randomMountains, 0.4f, 0);
+        randomMountains = mg.midpointDisplacement(32, randomMountains, 0.3f, 0);
+        randomMountains = mg.midpointDisplacement(64, randomMountains, 0.3f, 0);
+		randomMountains = mg.midpointDisplacement(128, randomMountains, 0.2f, 0);
+		randomMountains = modules.gaussian (randomMountains, 10);
+
+
+		return mg.mountainRemove(randomMountains, mountainArea);
+	}
+
+
+
+
+
+
 
 
 
@@ -94,8 +105,6 @@ public class MapCreator : MonoBehaviour
 				stop = true;
 			}
         }
-
-
     }
 
 }
