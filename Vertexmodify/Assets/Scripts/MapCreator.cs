@@ -49,6 +49,10 @@ public class MapCreator : MonoBehaviour
 		myHeightMap = modules.boolToFloat(inputColorImage);//float convertion
 
 
+		int[,] treePositions1 = modules.generateTrees (myHeightMap);
+
+
+		generateTrees(treePositions1); 
 
 
 
@@ -67,36 +71,31 @@ public class MapCreator : MonoBehaviour
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
 
-		int[,] treePositions = modules.generateTrees (myHeightMap); 
+		currentTerrain.terrainData.SetHeights(0, 0, myHeightMap);
 
 
-		for (int x = 0; x < treePositions.GetLength(1); x++) {
-			//	tree.position = (new Vector3 (treePositions [0, x], currentTerrain.GetPosition().y, treePositions [1, x]));
-			//currentTerrain.AddTreeInstance(tree);
-
-			//RaycastHit rayHit = new RaycastHit ();
-			//Vector3 DirectionOfRay = new Vector3 (tree1.transform.TransformDirection (Vector3.down));
-
-
-
-			GameObject.Instantiate (tree1, new Vector3 (treePositions [0, x], currentTerrain.GetPosition().y, treePositions [1, x]), Quaternion.identity); 
-
-
-			//	print ("y: " + treePositions [1, x]); 
-
-		}
-		print (currentTerrain.SampleHeight(currentTerrain.GetPosition()));
-
-
+	
     }
 
+	void generateTrees(int[,] treePositions){
+		for (int x = 0; x < treePositions.GetLength(1); x++) {
 
+			RaycastHit rcHit = new RaycastHit (); 
+			Ray theRay = new Ray (new Vector3(treePositions[0,x], 100, treePositions[1,x]), Vector3.down);
+
+			if (Physics.Raycast (theRay, out rcHit, 10000)) {
+
+				float groundDist = rcHit.distance; 
+				GameObject.Instantiate (tree1, new Vector3 (treePositions [0, x], (100 - groundDist), treePositions [1, x]), Quaternion.identity); 
+			}
+		}
+	}
 
 
     bool stop = false;
 
     void Update() {
-        if (!stop){
+		if (!stop && false){
             if (frame % 2 == 0) {
                 for (int i = 0; i < drawMap.GetLength(0); i++) {
                     for (int j = 0; j < drawMap.GetLength(1); j++) {
