@@ -10,7 +10,7 @@ public class MapCreator : MonoBehaviour
     Terrain currentTerrain;
 	float update;
     int frame = 0;
-	float[,] drawMap, myHeightMap; 
+	float[,] drawMap, emptyMap; 
 	public int heightOfMap = 100;
 	public float [,] newHeightMap;
 	public float[,] river;
@@ -27,7 +27,7 @@ public class MapCreator : MonoBehaviour
 		Debug.Log (colorScanScript.widthOfTex + ", " + colorScanScript.heightOfTex);
 
 		//fixing texture scale issue:
-		myHeightMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
+		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
 		float startit = Time.realtimeSinceStartup; //starting milli counter
@@ -38,16 +38,17 @@ public class MapCreator : MonoBehaviour
 
 
 
+
+
+		//GENERATION: 		////////////
 		bool[,] yellow = colorScanScript.colorDetection(colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.5f); // getting colors from input image
 		bool[,] red = colorScanScript.colorDetection(colorScanScript.originalImage, 0.94f, 0.02f, 0.25f, 0.5f); // getting colors from input image
 		bool[,] green = colorScanScript.colorDetection(colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
 
 
-		float[,] perlin = modules.perlin (myHeightMap);
-		float[,] mountains = generateMountains (yellow); 
-
-
-		float[,] rivers = generateRivers(red, perlin , riverButtom);
+		float[,] perlin = modules.perlin (emptyMap);
+		float[,] mountains = generateMountains (yellow);
+		float[,] rivers = generateRivers(red, perlin, riverButtom);
 
 
 		colorScanScript.printBinary (modules.add(rivers, mountains));
@@ -100,7 +101,7 @@ public class MapCreator : MonoBehaviour
             if (frame % 2 == 0) {
                 for (int i = 0; i < drawMap.GetLength(0); i++) {
                     for (int j = 0; j < drawMap.GetLength(1); j++) {
-                        drawMap[i, j] = myHeightMap[i, j] * update * 0.5f;
+                        drawMap[i, j] = emptyMap[i, j] * update * 0.5f;
                     }
                 }
                 currentTerrain.terrainData.SetHeights(0, 0, drawMap);
