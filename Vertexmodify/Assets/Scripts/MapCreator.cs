@@ -2,8 +2,11 @@
 using System.Collections;
 using System;
 
+
+
 public class MapCreator : MonoBehaviour
 {
+	public GameObject tree1; 
     imageProcModules modules;
     ColorDetection colorScanScript;
     MountainGeneration mg;
@@ -14,6 +17,7 @@ public class MapCreator : MonoBehaviour
 	public int heightOfMap = 100;
 
 	public TreeInstance tree;
+	public TreePrototype TheTree; 
 
     void Start() {
 
@@ -42,8 +46,8 @@ public class MapCreator : MonoBehaviour
         inputColorImage = modules.dilation(inputColorImage);
         inputColorImage = modules.floodFill(inputColorImage);
 		colorScanScript.printBinary(inputColorImage); //printing to plane
-
 		myHeightMap = modules.boolToFloat(inputColorImage);//float convertion
+
 
 
 
@@ -62,6 +66,28 @@ public class MapCreator : MonoBehaviour
 		myHeightMap = modules.perlin(myHeightMap); 
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
+
+		int[,] treePositions = modules.generateTrees (myHeightMap); 
+
+
+		for (int x = 0; x < treePositions.GetLength(1); x++) {
+			//	tree.position = (new Vector3 (treePositions [0, x], currentTerrain.GetPosition().y, treePositions [1, x]));
+			//currentTerrain.AddTreeInstance(tree);
+
+			//RaycastHit rayHit = new RaycastHit ();
+			//Vector3 DirectionOfRay = new Vector3 (tree1.transform.TransformDirection (Vector3.down));
+
+
+
+			GameObject.Instantiate (tree1, new Vector3 (treePositions [0, x], currentTerrain.GetPosition().y, treePositions [1, x]), Quaternion.identity); 
+
+
+			//	print ("y: " + treePositions [1, x]); 
+
+		}
+		print (currentTerrain.SampleHeight(currentTerrain.GetPosition()));
+
+
     }
 
 

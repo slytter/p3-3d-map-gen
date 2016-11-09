@@ -211,23 +211,28 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 	public int[,] generateTrees(float [,] inputArea){
-		int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
-		int nextXPosition = 0; 
-		int nextYPosition = 0; 
-		for (int y = 0; y < inputArea.GetLength(1); y+4) {
-			for (int x = 0; x < inputArea.GetLength(0); x+4) {
+		
+		// int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
+		int[,] treepositions1 = new int[2, 10000]; 
+
+		//int nextXPosition = UnityEngine.Random.Range(2,5); 
+		//int nextYPosition = UnityEngine.Random.Range(2,5); 
+
+		int index = 0; 
+
+		for (int y = 0; y < inputArea.GetLength(1); y+=4) {
+			for (int x = 0; x < inputArea.GetLength(0); x+=4) {
 				// Check if the pixel scanned is white. If so, generate a tree. 
-				if (inputArea [x, y] == 1f && inputArea[x+1,y] == 1 && inputArea[x, y+1] == 1) {
-					// If a pixel is white, it should 
-					treePositions[x+ nextXPosition,y+nextYPosition] = 1; 
+				if (inputArea [x, y] == 1f) {
+					//treePositions [x + nextXPosition, y + nextYPosition] = 1; 
+					treepositions1 [0,index] = x; 
+					treepositions1 [1,index] = y; 
 
-				}
-
-				nextXPosition = UnityEngine.Random.Range(2,5); 
-				nextYPosition = UnityEngine.Random.Range(2,5); 
+					index++; 
+				} 
 			}
 		}
-		return treePositions; 
+		return treepositions1; 
 	}
 
 
