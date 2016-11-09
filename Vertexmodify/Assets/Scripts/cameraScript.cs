@@ -7,9 +7,7 @@ public class cameraScript : MonoBehaviour {
 
     //private string savePath = "/Users/ejer/Desktop/Medialogy/3. Semester/P3/P3-3DMapGen/Vertexmodify/Assets/WebcamBilleder"; 
     private string savePath;
-
     public GameObject targetPlane; 
-
     public RawImage rawimage;
 	protected Color [] pixFromSnap; 
 	Texture2D tex1; 
@@ -20,17 +18,16 @@ public class cameraScript : MonoBehaviour {
 
 
 	void Start () {
+
 		savePath = Application.dataPath + "/Resources/WebcamBilleder/";
         print(savePath);
-		StartCoroutine (fixBug ());  //AD HVOR KLAMT  
+		StartCoroutine (fixBug ());  //AD HVOR KLAMT 
+		 
     }
 	
 
 	void Update () {
 
-		if (Input.GetKeyDown ("s")) {
-			Snapshot();
-		}
 	}
 
 	public void Snapshot() {
@@ -47,6 +44,7 @@ public class cameraScript : MonoBehaviour {
 	    
 		pixFromSnap = tex1.GetPixels (); 
 		outputImage = tex1;
+		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
 	}
 
 
@@ -69,12 +67,14 @@ public class cameraScript : MonoBehaviour {
 
 
 	IEnumerator fixBug(){
+		Debug.Log ("Jeg er her"); 
 		webcamTexture = new WebCamTexture();
 		webcamTexture.Play();
 
 		if (webcamTexture.width <= 16 || webcamTexture.height <= 16) {		
-
+			Debug.Log ("Så for satan!");
 			while (!webcamTexture.didUpdateThisFrame) {
+				Debug.Log ("Så for satan!");
 				yield return new WaitForEndOfFrame (); 
 			}
 
@@ -83,8 +83,9 @@ public class cameraScript : MonoBehaviour {
 			webcamTexture.Stop (); 
 
 			yield return new WaitForEndOfFrame ();
-
+			Debug.Log ("Så for satan!"); 
 			webcamTexture.Play (); 
+
 
 		}
 			

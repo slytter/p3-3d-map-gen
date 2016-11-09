@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO; 
 using System.Collections.Generic;
 using System.Linq;
 
@@ -207,6 +208,26 @@ public class imageProcModules : MonoBehaviour {
 		}
 
 		return outputBoolArray; 
+	}
+
+	public int[,] generateTrees(float [,] inputArea){
+		int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
+		int nextXPosition = 0; 
+		int nextYPosition = 0; 
+		for (int y = 0; y < inputArea.GetLength(1); y+4) {
+			for (int x = 0; x < inputArea.GetLength(0); x+4) {
+				// Check if the pixel scanned is white. If so, generate a tree. 
+				if (inputArea [x, y] == 1f && inputArea[x+1,y] == 1 && inputArea[x, y+1] == 1) {
+					// If a pixel is white, it should 
+					treePositions[x+ nextXPosition,y+nextYPosition] = 1; 
+
+				}
+
+				nextXPosition = UnityEngine.Random.Range(2,5); 
+				nextYPosition = UnityEngine.Random.Range(2,5); 
+			}
+		}
+		return treePositions; 
 	}
 
 
