@@ -244,4 +244,16 @@ public class imageProcModules : MonoBehaviour {
 		}
 		return boolArrayToBeFramed; 
 	}
+
+	public float [,] generateRiver (float[,] inputHeightmap, float[,] riverArea)
+	{
+		for (int y = 0; y < inputHeightmap.GetLength(1); y ++) {
+			for (int x = 0; x < inputHeightmap.GetLength(0); x++) {
+
+				inputHeightmap[x,y] -= riverArea[x,y];
+
+			}
+		}
+		return inputHeightmap;
+	}
 }

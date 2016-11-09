@@ -12,6 +12,8 @@ public class MapCreator : MonoBehaviour
     int frame = 0;
 	float[,] drawMap, myHeightMap; 
 	public int heightOfMap = 100;
+	public float [,] newHeightMap;
+	public float[,] river;
 
 	public TreeInstance tree;
 
@@ -41,25 +43,30 @@ public class MapCreator : MonoBehaviour
 
         inputColorImage = modules.dilation(inputColorImage);
         inputColorImage = modules.floodFill(inputColorImage);
+
+
+
 		colorScanScript.printBinary(inputColorImage); //printing to plane
 
 		myHeightMap = modules.boolToFloat(inputColorImage);//float convertion
-
-
+		//myHeightMap = modules.perlin(myHeightMap); 
+		newHeightMap = new float[myHeightMap.GetLength(0),myHeightMap.GetLength(1)];
+		colorScanScript.printBinary(myHeightMap);
+		newHeightMap = modules.generateRiver(newHeightMap, myHeightMap);
 
 
 		//MOUNTAINS: 		////////////
-		myHeightMap = modules.gaussian(myHeightMap, 200); //gauss
-		colorScanScript.printBinary(myHeightMap); //printing to plane
-        myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.0f, 0);
-        myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.0f, 0);
-        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.0f, 0);
-        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 0.5f, 0);
-        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 0.5f, 0);
-        myHeightMap = mg.midpointDisplacement(128, myHeightMap, 0.5f, 0);
-
-        myHeightMap = mg.finalMap(mg.mountainRemove(myHeightMap, modules.boolToFloat(inputColorImage)), 5);
-		myHeightMap = modules.perlin(myHeightMap); 
+		myHeightMap = modules.gaussian(myHeightMap, 0); //gauss
+//		colorScanScript.printBinary(myHeightMap); //printing to plane
+//        myHeightMap = mg.midpointDisplacement(3, myHeightMap, 1.0f, 0);
+//        myHeightMap = mg.midpointDisplacement(8, myHeightMap, 1.0f, 0);
+//        myHeightMap = mg.midpointDisplacement(16, myHeightMap, 1.0f, 0);
+//        myHeightMap = mg.midpointDisplacement(32, myHeightMap, 0.5f, 0);
+//        myHeightMap = mg.midpointDisplacement(64, myHeightMap, 0.5f, 0);
+//        myHeightMap = mg.midpointDisplacement(128, myHeightMap, 0.5f, 0);
+//
+//        myHeightMap = mg.finalMap(mg.mountainRemove(myHeightMap, modules.boolToFloat(inputColorImage)), 5);
+//		myHeightMap = modules.perlin(myHeightMap); 
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
     }
@@ -87,6 +94,8 @@ public class MapCreator : MonoBehaviour
 				stop = true;
 			}
         }
+
+
     }
 
 }
