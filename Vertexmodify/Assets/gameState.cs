@@ -2,16 +2,18 @@
 using UnityEngine.UI;
 using System.Collections;
 using System;
-public class gameState {
+
+public class gameState : MonoBehaviour {
 
 	void Awake(){
 		Debug.Log("gamestate init");
+		GameObject.DontDestroyOnLoad (this.gameObject);
 	}
     
-	public static Texture2D image;
+	public Texture2D image;
 
-	public static string test = "yo";
-    public static string chosenImage = "";
+	public string test = "yo";
+    public string chosenImage = "";
 
 
 }

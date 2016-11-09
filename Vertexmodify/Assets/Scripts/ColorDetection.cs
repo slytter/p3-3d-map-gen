@@ -12,14 +12,28 @@ public class ColorDetection : MonoBehaviour
 
     //imageProcModules m;
     void Start () {
+		Texture2D originalTexture;
+		Texture2D newTexture; 
+		Texture2D webcamImage;
 
 
+
+		if (GameObject.Find("gameState") == null) {
+			print("no image chosen, using test image");
+			originalTexture = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+		}else {
+
+			//we = (Texture2D)Resources.LoadAssetAtPath(texture, typeof(Texture2D)
+			//webcamImage = Resources.Load("WebcamBilleder/05-11-2016-18-47-36") as Texture2D;
+			originalTexture = (GameObject.Find("gameState").GetComponent<gameState>()).image;
+			originalTexture.Resize(512, 512);
+			originalImage = originalTexture.GetPixels();
+		}
 
         //m = GetComponent<imageProcModules>();
-        Texture2D originalTexture;
-		Texture2D newTexture; 
 
-		originalTexture = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+
+
 		newTexture = new Texture2D (originalTexture.width, originalTexture.height);
 		GetComponent<Renderer> ().material.mainTexture = newTexture;
 
@@ -34,21 +48,9 @@ public class ColorDetection : MonoBehaviour
 		widthOfTex = originalTexture.width;
 		heightOfTex = originalTexture.height;
 
-        Texture2D webcamImage;
 
-		if (gameState.image == null)
-        {
-            print("no image chosen, using test image");
-        }
-        else
-        {
-            print(gameState.chosenImage);
-			//we = (Texture2D)Resources.LoadAssetAtPath(texture, typeof(Texture2D)
-			//webcamImage = Resources.Load("WebcamBilleder/05-11-2016-18-47-36") as Texture2D;
-			webcamImage = gameState.image;
-            webcamImage.Resize(512, 512);
-            originalImage = webcamImage.GetPixels();
-        }
+
+
 
 
 

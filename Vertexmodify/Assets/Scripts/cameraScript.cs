@@ -59,10 +59,11 @@ public class cameraScript : MonoBehaviour {
 
 
     public void choose() {
-		gameState.image = Texture2D.Instantiate(outputImage);
+		
+		(GameObject.Find("gameState").GetComponent<gameState>()).image = (outputImage);
 		//Array.Copy(outputImage, gameState.image)
 		//gameState.image = outputImage;
-        gameState.chosenImage = currentImageName;
+       // gameState.chosenImage = currentImageName;
         print("image chosen: " + currentImageName);
         Application.LoadLevel("sagen");
     }

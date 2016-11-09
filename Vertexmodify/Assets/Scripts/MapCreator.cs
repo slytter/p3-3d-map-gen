@@ -32,7 +32,7 @@ public class MapCreator : MonoBehaviour
 
 
 		//GENERATION: 		////////////
-		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from i	nput image
+		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0f, 0f); // getting colors from i	nput image
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
 		//fixing texturescale issue:
