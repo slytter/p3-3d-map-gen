@@ -14,7 +14,7 @@ public class MapCreator : MonoBehaviour
 	public int heightOfMap = 100;
 	public float [,] newHeightMap;
 	public float[,] river;
-
+	public float riverButtom = 0.2f;
 	public TreeInstance tree;
 
     void Start() {
@@ -43,25 +43,35 @@ public class MapCreator : MonoBehaviour
 		bool[,] green = colorScanScript.colorDetection(colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
 
 
+		float[,] perlin = modules.perlin (myHeightMap);
+		float[,] mountains = generateMountains (yellow); 
 
-		float[,] mountains = generateMountains (yellow);
-		colorScanScript.printBinary (mountains);
-		currentTerrain.terrainData.SetHeights (0, 0, mountains);
+
+		float[,] rivers = generateRivers(red, perlin , riverButtom);
+
+
+		colorScanScript.printBinary (modules.add(rivers, mountains));
+		currentTerrain.terrainData.SetHeights (0, 0, rivers);
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
     }
 
 
 
+
+
+	/// <summary>
+	/// Generates the mountains.
+	/// </summary>
+	/// <returns>The mountains.</returns>
+	/// <param name="area">Area.</param>
 	float[,] generateMountains(bool[,] area){
 		area = modules.dilation (area);
 		area = modules.floodFill (area);
 
-
 		float[,] mountainArea = new float[area.GetLength(0),area.GetLength(1)];
 		mountainArea = modules.boolToFloat (area);
-		mountainArea = modules.gaussian (mountainArea, 50);
-
+		mountainArea = modules.gaussian (mountainArea, 10);
 
 		float[,] randomMountains = new float[area.GetLength(0),area.GetLength(1)];
         randomMountains = mg.midpointDisplacement(3, randomMountains, 0.5f, 0);
@@ -70,25 +80,23 @@ public class MapCreator : MonoBehaviour
         randomMountains = mg.midpointDisplacement(32, randomMountains, 0.3f, 0);
         randomMountains = mg.midpointDisplacement(64, randomMountains, 0.3f, 0);
 		randomMountains = mg.midpointDisplacement(128, randomMountains, 0.2f, 0);
-		randomMountains = modules.gaussian (randomMountains, 10);
-
+		randomMountains = modules.gaussian (randomMountains, 5);
 
 		return mg.mountainRemove(randomMountains, mountainArea);
 	}
 
 
 
-
-
-
-
+	float[,] generateRivers(bool[,] area, float[,] heightmap, float riverButtom){
+		return modules.riverGenerate (heightmap, modules.gaussian (modules.boolToFloat (modules.floodFill (area)), 10), riverButtom); //restructure
+	}
 
 
 
     bool stop = false;
 
     void Update() {
-        if (!stop){
+        if (!stop && false){
             if (frame % 2 == 0) {
                 for (int i = 0; i < drawMap.GetLength(0); i++) {
                     for (int j = 0; j < drawMap.GetLength(1); j++) {

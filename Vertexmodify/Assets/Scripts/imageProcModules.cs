@@ -18,7 +18,7 @@ public class imageProcModules : MonoBehaviour {
 			for (int y = 0; y < inp.GetLength (1); y++) {
 				px = (float)x / pixelAmount;
 				py = (float)y / pixelAmount;
-				inp [x, y] += Mathf.PerlinNoise (px, py) / 2;
+				inp [x, y] += Mathf.PerlinNoise (px, py) / 8 + 0.2f;
 			}
 		}
 		return inp;
@@ -245,15 +245,58 @@ public class imageProcModules : MonoBehaviour {
 		return boolArrayToBeFramed; 
 	}
 
-	public float [,] generateRiver (float[,] inputHeightmap, float[,] riverArea)
-	{
-		for (int y = 0; y < inputHeightmap.GetLength(1); y ++) {
-			for (int x = 0; x < inputHeightmap.GetLength(0); x++) {
 
-				inputHeightmap[x,y] -= riverArea[x,y];
+
+
+	/// <summary>
+	/// Subtract the specified .
+	/// </summary>
+	/// <param name="Base">Base.</param>
+	/// <param name="subtract">Subtract.</param>
+	public float [,] subtract (float[,] Base, float[,] subtract)
+	{
+		for (int y = 0; y < Base.GetLength(1); y ++) {
+			for (int x = 0; x < Base.GetLength(0); x++) {
+
+				Base[x,y] -= subtract[x,y];
 
 			}
 		}
-		return inputHeightmap;
+		return Base;
 	}
+
+
+
+
+	/// <summary>
+	/// Add the specified Base and add.
+	/// </summary>
+	/// <param name="Base">Base.</param>
+	/// <param name="add">Add.</param>
+	public float [,] add (float[,] Base, float[,] add)
+	{
+		for (int y = 0; y < Base.GetLength(1); y ++) {
+			for (int x = 0; x < Base.GetLength(0); x++) {
+
+				Base[x,y] += add[x,y];
+
+			}
+		}
+		return Base;
+	}
+
+
+
+	public float [,] riverGenerate (float[,] Base, float[,] river, float riverButtom) {
+		for (int y = 0; y < Base.GetLength(1); y ++) {
+			for (int x = 0; x < Base.GetLength(0); x++) {
+				Base[x,y] -= (river[x,y]) * Base[x,y] * 0.8f;
+			}
+		}
+		return Base;
+	}
+
+
+
+
 }
