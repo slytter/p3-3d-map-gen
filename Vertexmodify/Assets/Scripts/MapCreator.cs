@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic; 
 
 
 
@@ -17,9 +18,14 @@ public class MapCreator : MonoBehaviour
 	public int heightOfMap = 100;
 
 	public TreeInstance tree;
+	public TreeInstance baseTree;
+
 	public TreePrototype TheTree; 
 
+
+
     void Start() {
+
 
 		//INITIALIZING: 	////////////
 		modules = GetComponent<imageProcModules> ();
@@ -49,10 +55,10 @@ public class MapCreator : MonoBehaviour
 		myHeightMap = modules.boolToFloat(inputColorImage);//float convertion
 
 
-		int[,] treePositions1 = modules.generateTrees (myHeightMap);
+		float[,] treePositions1 = modules.generateTrees (myHeightMap);
 
 
-		generateTrees(treePositions1); 
+		generateTreesTest(treePositions1); 
 
 
 
@@ -90,13 +96,33 @@ public class MapCreator : MonoBehaviour
 			}
 		}
 	}
-		void generateTreesTest(int[,] treePositions){
-		for (int x = 0; x < treePositions.GetLength (1); x++) {
 
-				GameObject.Instantiate (tree1, new Vector3 (treePositions [0, x], 200, treePositions [1, x]), Quaternion.identity); 
+	// Trying different stuff out... 
+		void generateTreesTest(float[,] treePositions){
 
+
+		TreeInstance[] reset = new TreeInstance[0]; 
+
+		currentTerrain.terrainData.treeInstances = reset; 
+
+		print (currentTerrain.terrainData.GetSteepness (treePositions [0, 10], treePositions [1, 20])); 
+		List <TreeInstance> treeList = new List<TreeInstance> (currentTerrain.terrainData.treeInstances); 
+		for (int x = 0; x < treePositions.GetLength(1); x++) {
+
+			if (treePositions [0, x] != null || treePositions [1, x] != null){
+				if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f) {
+					tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
+					tree.color = Color.yellow; 
+					tree.lightmapColor = Color.yellow; 
+					tree.prototypeIndex = 0; 
+					tree.widthScale = 1; 
+					tree.heightScale = 1; 
+					treeList.Add (tree);
+				}
 			}
 		}
+		currentTerrain.terrainData.treeInstances = treeList.ToArray(); 
+	}
 
 	
 

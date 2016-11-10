@@ -210,27 +210,28 @@ public class imageProcModules : MonoBehaviour {
 		return outputBoolArray; 
 	}
 
-	public int[,] generateTrees(float [,] inputArea){
+	public float[,] generateTrees(float [,] inputArea){
 		
 		// int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
-		int[,] treepositions1 = new int[2, 10000]; 
+		float[,] treepositions1 = new float[2, 10000]; 
+		print (inputArea.GetLength (1)); 
 
-		int nextXPosition = UnityEngine.Random.Range(2,5); 
-		int nextYPosition = UnityEngine.Random.Range(2,5); 
+		float nextXPosition = UnityEngine.Random.Range(2f,5f); 
+		float nextYPosition = UnityEngine.Random.Range(2f,5f); 
 
 		int index = 0; 
 
-		for (int y = 0; y < inputArea.GetLength(1); y+=4) {
-			for (int x = 0; x < inputArea.GetLength(0); x+=4) {
+		for (int y = 0; y < inputArea.GetLength(1); y+=6) {
+			for (int x = 0; x < inputArea.GetLength(0); x+=6) {
 				// Check if the pixel scanned is white. If so, generate a tree. 
-				if (inputArea [x, y] == 1f) {
+				if (inputArea [x, y] == 1f && x+nextXPosition <=512f && y+nextYPosition <= 512f) {
 					//treePositions [x + nextXPosition, y + nextYPosition] = 1; 
-					treepositions1 [0,index] = x + nextXPosition; 
-					treepositions1 [1,index] = y + nextYPosition; 
-
+					treepositions1 [0,index] = ((float)x + nextXPosition)/inputArea.GetLength(0); 
+					treepositions1 [1,index] = ((float)y + nextYPosition)/inputArea.GetLength(1);
 					index++; 
-					nextXPosition = UnityEngine.Random.Range(2,5); 
-					nextYPosition = UnityEngine.Random.Range(2,5);
+
+					nextXPosition = UnityEngine.Random.Range(2f,5f); 
+					nextYPosition = UnityEngine.Random.Range(2f,5f);
 				} 
 			}
 		}
