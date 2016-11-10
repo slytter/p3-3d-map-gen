@@ -65,10 +65,10 @@ public class MountainGeneration : MonoBehaviour
     /// <returns>Clean heightmap.</returns>
     /// <param name="heightMap">Height map.</param>
     /// <param name="whereMoutainsShouldBe">Where moutains should be.</param>
-    public float[,] mountainRemove(float[,] heightMap, float[,] moutainArea) {
+	public float[,] mountainRemove(float[,] heightMap, float[,] moutainArea, float mountainHeight) {
         for (int x = 0; x < heightMap.GetLength (0); x++) {
             for (int y = 0; y < heightMap.GetLength (1); y++) {
-                heightMap[x,y] = heightMap [x, y] * (moutainArea [x, y]);
+				heightMap[x,y] = heightMap [x, y] * (moutainArea [x, y]) * mountainHeight;
             }
         }
         return heightMap;
