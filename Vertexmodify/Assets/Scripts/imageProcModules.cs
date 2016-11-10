@@ -215,8 +215,8 @@ public class imageProcModules : MonoBehaviour {
 		// int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
 		int[,] treepositions1 = new int[2, 10000]; 
 
-		//int nextXPosition = UnityEngine.Random.Range(2,5); 
-		//int nextYPosition = UnityEngine.Random.Range(2,5); 
+		int nextXPosition = UnityEngine.Random.Range(2,5); 
+		int nextYPosition = UnityEngine.Random.Range(2,5); 
 
 		int index = 0; 
 
@@ -225,10 +225,12 @@ public class imageProcModules : MonoBehaviour {
 				// Check if the pixel scanned is white. If so, generate a tree. 
 				if (inputArea [x, y] == 1f) {
 					//treePositions [x + nextXPosition, y + nextYPosition] = 1; 
-					treepositions1 [0,index] = x; 
-					treepositions1 [1,index] = y; 
+					treepositions1 [0,index] = x + nextXPosition; 
+					treepositions1 [1,index] = y + nextYPosition; 
 
 					index++; 
+					nextXPosition = UnityEngine.Random.Range(2,5); 
+					nextYPosition = UnityEngine.Random.Range(2,5);
 				} 
 			}
 		}

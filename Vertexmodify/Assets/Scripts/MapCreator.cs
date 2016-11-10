@@ -78,10 +78,10 @@ public class MapCreator : MonoBehaviour
     }
 
 	void generateTrees(int[,] treePositions){
-		for (int x = 0; x < treePositions.GetLength(1); x++) {
+		for (int x = 0; x < 150; x++) {
 
 			RaycastHit rcHit = new RaycastHit (); 
-			Ray theRay = new Ray (new Vector3(treePositions[0,x], 100, treePositions[1,x]), Vector3.down);
+			Ray theRay = new Ray (new Vector3 (treePositions [0, x], 100, treePositions [1, x]), Vector3.down);
 
 			if (Physics.Raycast (theRay, out rcHit, 10000)) {
 
@@ -90,6 +90,15 @@ public class MapCreator : MonoBehaviour
 			}
 		}
 	}
+		void generateTreesTest(int[,] treePositions){
+		for (int x = 0; x < treePositions.GetLength (1); x++) {
+
+				GameObject.Instantiate (tree1, new Vector3 (treePositions [0, x], 200, treePositions [1, x]), Quaternion.identity); 
+
+			}
+		}
+
+	
 
 
     bool stop = false;
