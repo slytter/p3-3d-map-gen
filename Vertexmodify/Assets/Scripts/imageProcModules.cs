@@ -11,6 +11,7 @@ public class imageProcModules : MonoBehaviour {
 	/// </summary>
 	/// <param name="inp">Inp.</param>
 	public float [,] perlin(float [,] inp, float baseHeight, float intensity, float density){
+		TimingModule.timer ("perlinModule", "start");
 		float px, py;
 		for (int x = 0; x < inp.GetLength (0); x++) {
 			for (int y = 0; y < inp.GetLength (1); y++) {
@@ -19,10 +20,69 @@ public class imageProcModules : MonoBehaviour {
 				inp [x, y] += Mathf.PerlinNoise (px, py) / intensity + baseHeight;
 			}
 		}
+		TimingModule.timer ("perlinModule", "end");
+
 		return inp;
 	}
 
 
+	public bool [,] floodFillQueue (bool [,] inputPicture)
+	{
+		TimingModule.timer ("floodFillModule", "start");
+		inputPicture = blackFrame (inputPicture);
+		bool[,] inputPictureEdge = new bool[inputPicture.GetLength (0), inputPicture.GetLength (1)];
+		Buffer.BlockCopy (inputPicture, 0, inputPictureEdge, 0, inputPicture.Length * sizeof(bool));
+
+		Queue<int> qX = new Queue<int> ();
+		Queue<int> qY = new Queue<int> ();
+
+		qX.Enqueue (1);
+		qY.Enqueue (1);
+
+		int[] kernelX = { 0, 1, 0, -1 };
+		int[] kernelY = { -1, 0, 1, 0 };
+
+		while (qX.Count != 0 && qY.Count != 0)
+		{
+			int numberOfIterations = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				if (qX.Peek () < inputPicture.GetLength (0) - 2 && qX.Peek () > 0 && qY.Peek () < inputPicture.GetLength (1) - 2 && qY.Peek () > 0)
+				{
+					if (inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] == false)
+					{
+						qX.Enqueue (qX.Peek () + kernelX [i]);
+						qY.Enqueue (qY.Peek () + kernelY [i]);
+						inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] = true;
+					}
+				}
+
+			}
+			qX.Dequeue();
+			qY.Dequeue();
+
+			numberOfIterations++;
+
+			if (qX.Count == 0)
+			{
+				Debug.Log ("Du skal lave ny exit statement! Den stoppede efter " + numberOfIterations + " iterationer");
+			}
+		}
+
+		for (int y = 2; y < inputPicture.GetLength (0) - 2; y++)
+		{
+			for (int x = 2; x < inputPicture.GetLength(1) - 2; x++)
+			{
+				if (inputPictureEdge [x, y] == true && inputPicture[x, y] == true)
+				{
+					inputPicture [x, y] = false;
+				}
+				
+			}
+		}
+		TimingModule.timer ("floodFillModule", "end");
+		return invert (inputPicture);
+	}
 
 	/// <summary>
 	/// Flood fills.
@@ -30,10 +90,11 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The fill.</returns>
 	/// <param name="inputPicture">Input picture.</param>
 	public bool [,] floodFill (bool[,] inputPicture) {
+		TimingModule.timer ("oldFloodFillModule", "start");
+
 		inputPicture = blackFrame (inputPicture);
 		bool[,] inputPictureEdge = new bool[inputPicture.GetLength(0), inputPicture.GetLength(1)];
 		Buffer.BlockCopy (inputPicture, 0, inputPictureEdge, 0, inputPicture.Length * sizeof(bool));
-		Debug.Log ("længden af inputPicture: " + inputPicture.Length + "længden af edge array: " + inputPictureEdge.Length);
 
 
 		List<int> xPos = new List<int> ();
@@ -70,6 +131,7 @@ public class imageProcModules : MonoBehaviour {
 				}
 			}	
 		}
+		TimingModule.timer ("oldFloodFillModule", "end");
 
 		return invert(inputPicture);
 	}
@@ -81,11 +143,14 @@ public class imageProcModules : MonoBehaviour {
 	/// </summary>
 	/// <param name="boolArray">Bool array.</param>
 	public bool[,] invert (bool [,] boolArray){
+		TimingModule.timer ("invertModule", "start");
 		for (int x = 0; x < boolArray.GetLength(0); x++) {
 			for (int y = 0; y < boolArray.GetLength(1); y++) {
 				boolArray [x, y] = !boolArray [x, y];
 			}
 		}
+		TimingModule.timer ("invertModule", "end");
+
 		return boolArray;
 	}
 
@@ -97,12 +162,15 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="height">Height.</param>
 	/// <param name="length">Length.</param>
 	public float[,] randomValGen(int height, int length){
+		TimingModule.timer ("randomValueGenerator", "start");
 		float[,] randomValues = new float[height, length];
 		for (int i = 0; i < randomValues.GetLength (0); i++) {
 			for (int j = 0; j < randomValues.GetLength (1); j++) {
 				randomValues [i,j] = UnityEngine.Random.Range (0f, 1f);
 			}
 		}
+		TimingModule.timer ("randomValueGenerator", "end");
+
 		return randomValues;
 	}
 
@@ -114,6 +182,7 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="heightMap">2D float height map.</param>
 	/// <param name="smoothing">Number of iterations.</param>
 	public float[,] gaussian(float[,] heightMap, int smoothing){
+		TimingModule.timer ("gaussianModule", "start");
 		for (int k = 0; k < smoothing; k++) {
 			for (int i = 1; i < heightMap.GetLength (0)-1; i++) {
 				for (int j = 1; j < heightMap.GetLength (1)-1; j++) {
@@ -136,6 +205,8 @@ public class imageProcModules : MonoBehaviour {
 				}
 			}
 		}
+		TimingModule.timer ("gaussianModule", "end");
+
 		return heightMap;
 	}
 
@@ -146,6 +217,8 @@ public class imageProcModules : MonoBehaviour {
 	/// </summary>
 	/// <param name="bools">Bools.</param>
 	public bool[,] dilation (bool[,] bools){
+		TimingModule.timer ("dilationModule", "start");
+
 		bool[,] returnedBools = new bool[bools.GetLength(0),bools.GetLength(1)];
 
 		for (int y = 1; y < bools.GetLength(1)-2; y++) {
@@ -164,6 +237,8 @@ public class imageProcModules : MonoBehaviour {
 				}
 			}
 		}
+		TimingModule.timer ("dilationModule", "end");
+
 		return returnedBools;
 	}
 
@@ -175,6 +250,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The to float.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
 	public float [,] boolToFloat(bool[,] toBeConverted){
+		TimingModule.timer ("boolToFloatModule", "start");
+
 		float[,] outputFloatArray = new float[toBeConverted.GetLength (0), toBeConverted.GetLength (1)]; 
 		for (int x = 0; x < toBeConverted.GetLength(0); x++) {
 			for (int y = 0; y < toBeConverted.GetLength(1); y++) {
@@ -183,6 +260,8 @@ public class imageProcModules : MonoBehaviour {
 				}
 			}
 		}
+		TimingModule.timer ("boolToFloatModule", "end");
+
 		return outputFloatArray; 
 	}
 
@@ -194,6 +273,9 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The to bool.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
 	public bool [,] floatToBool(float [,] toBeConverted){
+		TimingModule.timer ("floatToBoolModule", "start");
+
+
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
 		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
 			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
@@ -203,6 +285,7 @@ public class imageProcModules : MonoBehaviour {
 				}
 			}
 		}
+		TimingModule.timer ("floatToBoolModule", "end");
 
 		return outputBoolArray; 
 	}
@@ -215,6 +298,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
 	private bool [,] blackFrame(bool[,] boolArrayToBeFramed) {
+		TimingModule.timer ("blackframeModule", "start");
+
 		for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
 			for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
 
@@ -240,6 +325,8 @@ public class imageProcModules : MonoBehaviour {
 
 			}
 		}
+		TimingModule.timer ("blackframeModule", "end");
+
 		return boolArrayToBeFramed; 
 	}
 
@@ -253,6 +340,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="subtract">Subtract.</param>
 	public float [,] subtract (float[,] Base, float[,] subtract)
 	{
+		TimingModule.timer ("subtractModule", "start");
+
 		for (int y = 0; y < Base.GetLength(1); y ++) {
 			for (int x = 0; x < Base.GetLength(0); x++) {
 
@@ -260,6 +349,9 @@ public class imageProcModules : MonoBehaviour {
 
 			}
 		}
+		TimingModule.timer ("subtractModule", "end");
+
+
 		return Base;
 	}
 
@@ -273,6 +365,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="add">Add.</param>
 	public float [,] add (float[,] Base, float[,] add)
 	{
+		TimingModule.timer ("addModule", "start");
+
 		for (int y = 0; y < Base.GetLength(1); y ++) {
 			for (int x = 0; x < Base.GetLength(0); x++) {
 
@@ -280,6 +374,8 @@ public class imageProcModules : MonoBehaviour {
 
 			}
 		}
+		TimingModule.timer ("addModule", "end");
+
 		return Base;
 	}
 
@@ -292,12 +388,61 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="river">River.</param>
 	/// <param name="riverButtom">River buttom.</param>
 	public float [,] riverGenerate (float[,] Base, float[,] river, float riverButtom) {
+		TimingModule.timer ("riverGenerateModule", "start");
+
 		for (int y = 0; y < Base.GetLength(1); y ++) {
 			for (int x = 0; x < Base.GetLength(0); x++) {
 				Base[x,y] -= (river[x,y]) * Base[x,y] * 0.8f;
 			}
 		}
+		TimingModule.timer ("riverGenerateModule", "end");
+
 		return Base;
+	}
+
+
+
+
+}
+
+public class TimingModule
+{
+	static float startTimeOfModule;
+	static float endTimeOfModule;
+
+	static float startTimeOfProgram;
+	static float endTimeOfProgram;
+
+	/// <summary>
+	/// Timer the specified name and status.
+	/// </summary>
+	/// <param name="name">Name.</param>
+	/// <param name="status">Status.</param>
+	public static void timer (string name, string status)
+	{
+		if (name == "program" && status == "start")
+		{
+			startTimeOfProgram = Time.realtimeSinceStartup;
+		}
+
+		if (name == "program" && status == "end")
+		{
+			endTimeOfProgram = Time.realtimeSinceStartup;
+			Debug.Log (name + " took " + (endTimeOfProgram - startTimeOfProgram) * 1000 + " miliseconds");
+		}
+
+		if (name != "program" && status == "start")
+		{
+			startTimeOfModule = Time.realtimeSinceStartup;
+		}
+
+		if (name != "program" && status == "end")
+		{
+			endTimeOfModule = Time.realtimeSinceStartup;
+			Debug.Log (name + " took " + (endTimeOfModule - startTimeOfModule) * 1000 + " miliseconds");
+		}
+
+
 	}
 
 

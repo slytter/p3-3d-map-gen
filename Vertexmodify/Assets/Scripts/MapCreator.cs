@@ -21,6 +21,8 @@ public class MapCreator : MonoBehaviour
 
     void Start() {
 
+		TimingModule.timer ("program", "start");
+
 		//INITIALIZING: 	////////////
 		modules = GetComponent<imageProcModules> ();
 		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
@@ -31,8 +33,6 @@ public class MapCreator : MonoBehaviour
 		//fixing texture scale issue:
 		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-
-		float startit = Time.realtimeSinceStartup; //starting milli counter
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
 		int biggestDimention = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
@@ -56,14 +56,15 @@ public class MapCreator : MonoBehaviour
 	
 		currentTerrain.terrainData.SetHeights (0, 0, mg.finalMap( modules.add(rivers, mountains), 5));
 
-        Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
+		TimingModule.timer("program", "end");
+
     }
 
 
 
 	float[,] generateRivers(bool[,] area, float[,] heightmap, float riverButtom){
 
-		area = modules.floodFill (area);
+		area = modules.floodFillQueue (area);
 		float[,] river = modules.boolToFloat (area);
 		river = modules.gaussian (river, 10);
 		river = modules.riverGenerate (heightmap, river, riverButtom);
@@ -79,7 +80,7 @@ public class MapCreator : MonoBehaviour
 	/// <param name="area">Area.</param>
 	float[,] generateMountains(bool[,] area, float mountainHeight){
 		area = modules.dilation (area);
-		area = modules.floodFill (area);
+		area = modules.floodFillQueue (area);
 
 		float[,] mountainArea = new float[area.GetLength(0),area.GetLength(1)];
 		mountainArea = modules.boolToFloat (area);
@@ -96,7 +97,6 @@ public class MapCreator : MonoBehaviour
 
 		return mg.mountainRemove(randomMountains, mountainArea, mountainHeight);
 	}
-
 
 
 
