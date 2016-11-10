@@ -119,9 +119,7 @@ public class MapCreator : MonoBehaviour
 
 	
 
-	float[,] generateRivers (bool[,] area, float[,] heightmap, float riverButtom)
-	{
-
+	float[,] generateRivers (bool[,] area, float[,] heightmap, float riverButtom){
 		area = modules.floodFillQueue (area);
 		float[,] river = modules.boolToFloat (area);
 		river = modules.gaussian (river, 10);
