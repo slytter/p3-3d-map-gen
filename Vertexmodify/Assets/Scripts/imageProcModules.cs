@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.IO; 
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,9 +61,9 @@ public class imageProcModules : MonoBehaviour {
 		}
 
 		//adds the edges
-		for (int y = 2; y < inputPicture.GetLength(1) - 2; y++)
+		for (int x = 2; x < inputPicture.GetLength(0) - 2; x++)
 		{
-			for (int x = 2; x < inputPicture.GetLength(0) - 2; x++)
+			for (int y = 2; y < inputPicture.GetLength(1) - 2; y++)
 			{
 				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true)
 				{
@@ -98,9 +99,9 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="length">Length.</param>
 	public float[,] randomValGen(int height, int length){
 		float[,] randomValues = new float[height, length];
-		for (int i = 0; i < randomValues.GetLength (0); i++) {
-			for (int j = 0; j < randomValues.GetLength (1); j++) {
-				randomValues [i,j] = UnityEngine.Random.Range (0f, 1f);
+		for (int x = 0; x < randomValues.GetLength (0); x++) {
+			for (int y = 0; y < randomValues.GetLength (1); y++) {
+				randomValues [x, y] = UnityEngine.Random.Range (0f, 1f);
 			}
 		}
 		return randomValues;
@@ -148,8 +149,8 @@ public class imageProcModules : MonoBehaviour {
 	public bool[,] dilation (bool[,] bools){
 		bool[,] returnedBools = new bool[bools.GetLength(0),bools.GetLength(1)];
 
-		for (int y = 1; y < bools.GetLength(1)-2; y++) {
-			for (int x = 1; x < bools.GetLength(0)-2; x++) {
+		for (int x = 1; x < bools.GetLength(0)-2; x++) {
+			for (int y = 1; y < bools.GetLength(1)-2; y++) {
 				bool hit = false;
 				for (int i = -1; i < 2; i++) {
 					for (int j = -1; j < 2; j++) {
@@ -195,8 +196,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="toBeConverted">To be converted.</param>
 	public bool [,] floatToBool(float [,] toBeConverted){
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
-		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
-			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
+		for (int x = 0; x < toBeConverted.GetLength (0); x++) {
+			for (int y = 0; y < toBeConverted.GetLength (1); y++) {
 
 				if (toBeConverted [x, y] > 0.5f) {
 					outputBoolArray [x, y] = true; 
@@ -207,6 +208,34 @@ public class imageProcModules : MonoBehaviour {
 		return outputBoolArray; 
 	}
 
+	public float[,] generateTrees(float [,] inputArea){
+		
+		// int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
+		float[,] treepositions1 = new float[2, 10000]; 
+		print (inputArea.GetLength (1)); 
+
+		float nextXPosition = UnityEngine.Random.Range(2f,5f); 
+		float nextYPosition = UnityEngine.Random.Range(2f,5f); 
+
+		int index = 0; 
+
+		for (int x = 0; x < inputArea.GetLength(0); x+=6) {
+			for (int y = 0; y < inputArea.GetLength(1); y+=6) {
+				// Check if the pixel scanned is white. If so, generate a tree. 
+				if (inputArea [x, y] == 1f && x+nextXPosition <=512f && y+nextYPosition <= 512f) {
+					//treePositions [x + nextXPosition, y + nextYPosition] = 1; 
+					treepositions1 [0,index] = ((float)x + nextXPosition)/inputArea.GetLength(0); 
+					treepositions1 [1,index] = ((float)y + nextYPosition)/inputArea.GetLength(1);
+					index++; 
+
+					nextXPosition = UnityEngine.Random.Range(2f,5f); 
+					nextYPosition = UnityEngine.Random.Range(2f,5f);
+				} 
+			}
+		}
+		return treepositions1; 
+	}
+
 
 
 	/// <summary>
@@ -215,8 +244,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
 	private bool [,] blackFrame(bool[,] boolArrayToBeFramed) {
-		for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
-			for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
+		for (int x = 0; x < boolArrayToBeFramed.GetLength(0); x++) {
+			for (int y = 0; y < boolArrayToBeFramed.GetLength(1); y++) {
 
 				if (y == 0)
 					boolArrayToBeFramed [x, y] = true; 
@@ -253,8 +282,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="subtract">Subtract.</param>
 	public float [,] subtract (float[,] Base, float[,] subtract)
 	{
-		for (int y = 0; y < Base.GetLength(1); y ++) {
-			for (int x = 0; x < Base.GetLength(0); x++) {
+		for (int x = 0; x < Base.GetLength(0); x++) {
+			for (int y = 0; y < Base.GetLength(1); y ++) {
 
 				Base[x,y] -= subtract[x,y];
 
@@ -273,8 +302,8 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="add">Add.</param>
 	public float [,] add (float[,] Base, float[,] add)
 	{
-		for (int y = 0; y < Base.GetLength(1); y ++) {
-			for (int x = 0; x < Base.GetLength(0); x++) {
+		for (int x = 0; x < Base.GetLength(0); x++) {
+			for (int y = 0; y < Base.GetLength(1); y ++) {
 
 				Base[x,y] += add[x,y];
 
@@ -292,14 +321,23 @@ public class imageProcModules : MonoBehaviour {
 	/// <param name="river">River.</param>
 	/// <param name="riverButtom">River buttom.</param>
 	public float [,] riverGenerate (float[,] Base, float[,] river, float riverButtom) {
-		for (int y = 0; y < Base.GetLength(1); y ++) {
-			for (int x = 0; x < Base.GetLength(0); x++) {
+		for (int x = 0; x < Base.GetLength(0); x++) {
+			for (int y = 0; y < Base.GetLength(1); y ++) {
 				Base[x,y] -= (river[x,y]) * Base[x,y] * 0.8f;
 			}
 		}
 		return Base;
 	}
 
+
+	public float[,] flip(float[,] inp){
+		for (int x = 0; x < inp.GetLength(1); x++) {
+			for (int y = 0; y < inp.GetLength (0); y++) {
+				inp [x, y] = inp [x, y];
+			}
+		}
+		return inp;
+	}
 
 
 

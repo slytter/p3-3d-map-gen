@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic; 
+
+
 
 public class MapCreator : MonoBehaviour
 {
+	public GameObject tree1; 
     imageProcModules modules;
     ColorDetection colorScanScript;
     MountainGeneration mg;
@@ -16,10 +20,16 @@ public class MapCreator : MonoBehaviour
 	public float[,] river;
 	public float riverButtom = 0.2f;
 	public TreeInstance tree;
+
+	public TreeInstance baseTree;
+
+	public TreePrototype TheTree; 
+
 	public float baseHeight, intensity, density, mountainHeight;
 
 
     void Start() {
+
 
 		//INITIALIZING: 	////////////
 		modules = GetComponent<imageProcModules> ();
@@ -32,6 +42,8 @@ public class MapCreator : MonoBehaviour
 		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
+		//GENERATION: 		////////////
+		bool[,] inputColorImage = colorScanScript.colorDetection(colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from input image
 		float startit = Time.realtimeSinceStartup; //starting milli counter
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
@@ -44,22 +56,63 @@ public class MapCreator : MonoBehaviour
 
 		//GENERATION: 		////////////
 		bool[,] yellow = colorScanScript.colorDetection(colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.5f); // getting colors from input image
-		bool[,] red = colorScanScript.colorDetection(colorScanScript.originalImage, 0.94f, 0.02f, 0.25f, 0.5f); // getting colors from input image
+		bool[,] red = colorScanScript.colorDetection(colorScanScript.originalImage, 0.94f, 0.05f, 0.25f, 0.5f); // getting colors from input image
 		bool[,] green = colorScanScript.colorDetection(colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
+		bool[,] blue = colorScanScript.colorDetection(colorScanScript.originalImage, 0.40f, 0.69f, 0.1f, 0.5f); // getting colors from input image
 
 
 		float[,] perlin = modules.perlin (emptyMap, baseHeight/2, intensity, density);
 				 perlin = modules.perlin (emptyMap, baseHeight/2, intensity*6, density/4);//two perlin noises to create more 'real' density
 
-		float[,] mountains = generateMountains (yellow, mountainHeight);
+		float[,] mountains = (generateMountains (blue, mountainHeight));
 		float[,] rivers = generateRivers(red, perlin, riverButtom); //generate rivers into base perlin map
-	
-		currentTerrain.terrainData.SetHeights (0, 0, mg.finalMap( modules.add(rivers, mountains), 5));
+		float[,] finalMap = modules.flip (mg.finalMap (modules.add (rivers, mountains), 5));
+		generateTrees(green); 
+
+		currentTerrain.terrainData.SetHeights (0, 0, finalMap);
+
+
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
+
+
+	
     }
 
 
+	void generateTrees(bool[,] binaryTreeArea){
+		
+		binaryTreeArea = modules.dilation(modules.dilation (binaryTreeArea));
+		binaryTreeArea = modules.floodFill (binaryTreeArea);
+		float[,] treeArea = modules.boolToFloat (binaryTreeArea);
+
+		float[,] treePositions = modules.generateTrees (treeArea);
+
+
+		TreeInstance[] reset = new TreeInstance[0]; 
+
+		currentTerrain.terrainData.treeInstances = reset; 
+
+		print (currentTerrain.terrainData.GetSteepness (treePositions [0, 10], treePositions [1, 20])); 
+		List <TreeInstance> treeList = new List<TreeInstance> (currentTerrain.terrainData.treeInstances); 
+		for (int x = 0; x < treePositions.GetLength(1); x++) {
+
+			if (treePositions [0, x] != null || treePositions [1, x] != null){
+				if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f) {
+					tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
+					tree.color = Color.yellow; 
+					tree.lightmapColor = Color.yellow; 
+					tree.prototypeIndex = 0; 
+					tree.widthScale = 1; 
+					tree.heightScale = 1; 
+					treeList.Add (tree);
+				}
+			}
+		}
+		currentTerrain.terrainData.treeInstances = treeList.ToArray(); 
+	}
+
+	
 
 	float[,] generateRivers(bool[,] area, float[,] heightmap, float riverButtom){
 
@@ -81,6 +134,8 @@ public class MapCreator : MonoBehaviour
 		area = modules.dilation (area);
 		area = modules.floodFill (area);
 
+		colorScanScript.printBinary (area);
+
 		float[,] mountainArea = new float[area.GetLength(0),area.GetLength(1)];
 		mountainArea = modules.boolToFloat (area);
 		mountainArea = modules.gaussian (mountainArea, 10);
@@ -94,7 +149,7 @@ public class MapCreator : MonoBehaviour
 		randomMountains = mg.midpointDisplacement(128, randomMountains, 0.2f, 0);
 		randomMountains = modules.gaussian (randomMountains, 5);
 
-		return mg.mountainRemove(randomMountains, mountainArea, mountainHeight);
+		return (mg.mountainRemove(randomMountains, mountainArea, mountainHeight));
 	}
 
 
