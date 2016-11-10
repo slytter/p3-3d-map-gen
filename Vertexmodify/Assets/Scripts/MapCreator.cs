@@ -16,6 +16,8 @@ public class MapCreator : MonoBehaviour
 	public float[,] river;
 	public float riverButtom = 0.2f;
 	public TreeInstance tree;
+	public float baseHeight, intensity, density, mountainHeight;
+
 
     void Start() {
 
@@ -46,18 +48,27 @@ public class MapCreator : MonoBehaviour
 		bool[,] green = colorScanScript.colorDetection(colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
 
 
-		float[,] perlin = modules.perlin (emptyMap);
-		float[,] mountains = generateMountains (yellow);
-		float[,] rivers = generateRivers(red, perlin, riverButtom);
+		float[,] perlin = modules.perlin (emptyMap, baseHeight/2, intensity, density);
+				 perlin = modules.perlin (emptyMap, baseHeight/2, intensity*6, density/4);//two perlin noises to create more 'real' density
 
-
-		colorScanScript.printBinary (modules.add(rivers, mountains));
-		currentTerrain.terrainData.SetHeights (0, 0, rivers);
+		float[,] mountains = generateMountains (yellow, mountainHeight);
+		float[,] rivers = generateRivers(red, perlin, riverButtom); //generate rivers into base perlin map
+	
+		currentTerrain.terrainData.SetHeights (0, 0, mg.finalMap( modules.add(rivers, mountains), 5));
 
         Debug.Log("Total millis for all recursions: " + ((Time.realtimeSinceStartup - startit) * 1000));
     }
 
 
+
+	float[,] generateRivers(bool[,] area, float[,] heightmap, float riverButtom){
+
+		area = modules.floodFill (area);
+		float[,] river = modules.boolToFloat (area);
+		river = modules.gaussian (river, 10);
+		river = modules.riverGenerate (heightmap, river, riverButtom);
+		return river;
+	}
 
 
 
@@ -66,7 +77,7 @@ public class MapCreator : MonoBehaviour
 	/// </summary>
 	/// <returns>The mountains.</returns>
 	/// <param name="area">Area.</param>
-	float[,] generateMountains(bool[,] area){
+	float[,] generateMountains(bool[,] area, float mountainHeight){
 		area = modules.dilation (area);
 		area = modules.floodFill (area);
 
@@ -83,14 +94,11 @@ public class MapCreator : MonoBehaviour
 		randomMountains = mg.midpointDisplacement(128, randomMountains, 0.2f, 0);
 		randomMountains = modules.gaussian (randomMountains, 5);
 
-		return mg.mountainRemove(randomMountains, mountainArea);
+		return mg.mountainRemove(randomMountains, mountainArea, mountainHeight);
 	}
 
 
 
-	float[,] generateRivers(bool[,] area, float[,] heightmap, float riverButtom){
-		return modules.riverGenerate (heightmap, modules.gaussian (modules.boolToFloat (modules.floodFill (area)), 10), riverButtom); //restructure
-	}
 
 
 

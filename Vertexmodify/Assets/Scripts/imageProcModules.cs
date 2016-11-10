@@ -10,15 +10,13 @@ public class imageProcModules : MonoBehaviour {
 	/// Perlin the specified inp.
 	/// </summary>
 	/// <param name="inp">Inp.</param>
-	public float [,] perlin(float [,] inp){
-		float pixelAmount = 50;
-		print (pixelAmount);
+	public float [,] perlin(float [,] inp, float baseHeight, float intensity, float density){
 		float px, py;
 		for (int x = 0; x < inp.GetLength (0); x++) {
 			for (int y = 0; y < inp.GetLength (1); y++) {
-				px = (float)x / pixelAmount;
-				py = (float)y / pixelAmount;
-				inp [x, y] += Mathf.PerlinNoise (px, py) / 8 + 0.2f;
+				px = (float)x / density;
+				py = (float)y / density;
+				inp [x, y] += Mathf.PerlinNoise (px, py) / intensity + baseHeight;
 			}
 		}
 		return inp;
@@ -286,7 +284,13 @@ public class imageProcModules : MonoBehaviour {
 	}
 
 
-
+	/// <summary>
+	/// Rivers the generate.
+	/// </summary>
+	/// <returns>The generate.</returns>
+	/// <param name="Base">Base.</param>
+	/// <param name="river">River.</param>
+	/// <param name="riverButtom">River buttom.</param>
 	public float [,] riverGenerate (float[,] Base, float[,] river, float riverButtom) {
 		for (int y = 0; y < Base.GetLength(1); y ++) {
 			for (int x = 0; x < Base.GetLength(0); x++) {
