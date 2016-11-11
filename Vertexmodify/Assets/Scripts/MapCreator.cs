@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class MapCreator : MonoBehaviour
 {
-	public GameObject tree1;
+
 	imageProcModules modules;
 	ColorDetection colorScanScript;
 	MountainGeneration mg;
@@ -19,12 +19,7 @@ public class MapCreator : MonoBehaviour
 	public float[,] newHeightMap;
 	public float[,] river;
 	public float riverButtom = 0.2f;
-	public TreeInstance tree;
-
-	public TreeInstance baseTree;
-
-	public TreePrototype TheTree;
-
+	TreeInstance tree;
 	public float baseHeight, intensity, density, mountainHeight;
 
 
