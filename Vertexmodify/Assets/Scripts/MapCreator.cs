@@ -41,8 +41,6 @@ public class MapCreator : MonoBehaviour
 		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
 		bool[,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from input image
-		float startit = Time.realtimeSinceStartup; //starting milli counter
-
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
 		int biggestDimention = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
@@ -68,7 +66,6 @@ public class MapCreator : MonoBehaviour
 		generateTrees (green); 
 
 		currentTerrain.terrainData.SetHeights (0, 0, finalMap);
-
 
 
 		TimingModule.timer ("program", "end");

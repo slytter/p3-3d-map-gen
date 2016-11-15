@@ -65,13 +65,6 @@ public class imageProcModules : MonoBehaviour
 			}
 			qX.Dequeue ();
 			qY.Dequeue ();
-
-			numberOfIterations++;
-
-			if (qX.Count == 0)
-			{
-				Debug.Log ("Du skal lave ny exit statement! Den stoppede efter " + numberOfIterations + " iterationer");
-			}
 		}
 
 		for (int y = 2; y < inputPicture.GetLength (0) - 2; y++)
