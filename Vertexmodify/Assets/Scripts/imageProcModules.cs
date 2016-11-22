@@ -65,13 +65,6 @@ public class imageProcModules : MonoBehaviour
 			}
 			qX.Dequeue ();
 			qY.Dequeue ();
-
-			numberOfIterations++;
-
-			if (qX.Count == 0)
-			{
-				Debug.Log ("Du skal lave ny exit statement! Den stoppede efter " + numberOfIterations + " iterationer");
-			}
 		}
 
 		for (int y = 2; y < inputPicture.GetLength (0) - 2; y++)
@@ -327,26 +320,27 @@ public class imageProcModules : MonoBehaviour
 
 	public float[,] generateTrees (float[,] inputArea)
 	{
-		
-		// int[,] treePositions = new int[inputArea.GetLength(1),inputArea.GetLength(0)];
-		float[,] treepositions1 = new float[2, 10000]; 
-		print (inputArea.GetLength (1)); 
-
+		// when treePositions[0,something], a tree's x position is accessed
+        // when treePositions[1,something], a tree's y position is accessed
+        // the y index is set to 10000 to ensure that there are space for enough trees to be spawned
+		float[,] treePositions = new float[2, 10000];
+        // Ensures that trees look randomly placed
 		float nextXPosition = UnityEngine.Random.Range (2f, 5f); 
-		float nextYPosition = UnityEngine.Random.Range (2f, 5f); 
-
+        float nextYPosition = UnityEngine.Random.Range(2f, 5f);
+        // ensures that the trees are not too close to each other
+        int treeSpace = 6; 
+        // keeps track of how many trees are spawned
 		int index = 0; 
 
-		for (int y = 0; y < inputArea.GetLength (1); y += 6)
+        for (int y = 0; y < inputArea.GetLength (1); y += treeSpace)
 		{
-			for (int x = 0; x < inputArea.GetLength (0); x += 6)
+            for (int x = 0; x < inputArea.GetLength (0); x += treeSpace)
 			{
-				// Check if the pixel scanned is white. If so, generate a tree. 
-				if (inputArea [x, y] == 1f && x + nextXPosition <= 512f && y + nextYPosition <= 512f)
+				// Checks if the pixel scanned is white, and if the x and y positions are within the map
+                if (inputArea [x, y] == 1f && x + nextXPosition <= inputArea.GetLength(0) && y + nextYPosition <= inputArea.GetLength(1))
 				{
-					//treePositions [x + nextXPosition, y + nextYPosition] = 1; 
-					treepositions1 [0, index] = ((float)x + nextXPosition) / inputArea.GetLength (0); 
-					treepositions1 [1, index] = ((float)y + nextYPosition) / inputArea.GetLength (1);
+					treePositions [0, index] = ((float)x + nextXPosition) / inputArea.GetLength (0); 
+					treePositions [1, index] = ((float)y + nextYPosition) / inputArea.GetLength (1);
 					index++; 
 
 					nextXPosition = UnityEngine.Random.Range (2f, 5f); 
@@ -354,7 +348,14 @@ public class imageProcModules : MonoBehaviour
 				} 
 			}
 		}
-		return treepositions1; 
+        // The array is resized to the number of tree's that are spawned, so 10000 trees are not spawned everytime.w
+        float[,] output = new float[2,index];
+        for (int i = 0; i < output.GetLength(1); i++)
+        {
+            output[0, i] = treePositions[0, i];
+            output[1, i] = treePositions[1, i];
+        }
+        return output;
 	}
 
 
