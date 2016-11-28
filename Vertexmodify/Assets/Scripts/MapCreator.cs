@@ -40,6 +40,7 @@ public class MapCreator : MonoBehaviour
 		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 		//drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
+
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
 		int biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
 		currentTerrain.terrainData.size = new Vector3 (biggestDimension, heightOfMap, biggestDimension); //setting size

@@ -16,6 +16,7 @@ public class cameraScript : MonoBehaviour {
 	public Texture2D outputImage;
     string currentImageName;
 
+	gameState gameState;
 
 	void Start () {
 
@@ -58,24 +59,22 @@ public class cameraScript : MonoBehaviour {
 
     public void choose() {
 		
-		(GameObject.Find("gameState").GetComponent<gameState>()).image = (outputImage);
-		//Array.Copy(outputImage, gameState.image)
-		//gameState.image = outputImage;
-       // gameState.chosenImage = currentImageName;
+//		(GameObject.Find("gameState").GetComponent<gameState>()).image = (outputImage);
+//		Array.Copy(outputImage, gameState.image)
+//		gameState.image = outputImage;
+		gameState = GameObject.Find("gameState").GetComponent<gameState>();
+        gameState.chosenImage = currentImageName;
         print("image chosen: " + currentImageName);
         Application.LoadLevel("sagen");
     }
 
 
 	IEnumerator fixBug(){
-		Debug.Log ("Jeg er her"); 
 		webcamTexture = new WebCamTexture();
 		webcamTexture.Play();
 
 		if (webcamTexture.width <= 16 || webcamTexture.height <= 16) {		
-			Debug.Log ("Så for satan!");
 			while (!webcamTexture.didUpdateThisFrame) {
-				Debug.Log ("Så for satan!");
 				yield return new WaitForEndOfFrame (); 
 			}
 
@@ -84,7 +83,6 @@ public class cameraScript : MonoBehaviour {
 			webcamTexture.Stop (); 
 
 			yield return new WaitForEndOfFrame ();
-			Debug.Log ("Så for satan!"); 
 			webcamTexture.Play (); 
 
 

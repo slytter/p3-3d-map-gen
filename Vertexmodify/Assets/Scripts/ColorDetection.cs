@@ -1,45 +1,70 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor; 
 using System.Collections;
 using System;
+
 
 public class ColorDetection : MonoBehaviour
 {
 	public Color[] originalImage;
 	public int widthOfTex;
 	public int heightOfTex;
+	TextureImporter importer; 
+	string path = "WebcamBilleder/25-11-2016-13-51-24.png"; 
+	Texture2D originalTexture;
 
+	gameState gameState;
 
     //imageProcModules m;
-    void Start () {
-		Texture2D originalTexture;
-		Texture2D newTexture; 
-		Texture2D webcamImage;
+
+	void Awake(){
+		try{
+			gameState = GameObject.Find("gameState").GetComponent<gameState>();
+			path = "WebcamBilleder/" + gameState.chosenImage;
+			print ("Assets/Resources/" + path);
+			AssetDatabase.Refresh ();
+			importer = (TextureImporter)TextureImporter.GetAtPath("Assets/Resources/" + path);
+			importer.textureType = TextureImporterType.Advanced;
+			importer.textureFormat = TextureImporterFormat.ARGB32; 
+			importer.isReadable = true;
+			importer.maxTextureSize = 512; 
+		}
+		catch{
+			print ("no image scanned, using the test image");
+		}
+	
 
 
 
-		if (GameObject.Find("gameState") == null) {
-			print("no image chosen, using test image");
+	}
+    void Start () { 
+	 
+
+		gameState = GameObject.Find("gameState").GetComponent<gameState>();
+
+		if (gameState.chosenImage != "") {
+			originalTexture = Resources.Load ("WebcamBilleder/" + gameState.chosenImage, typeof(Texture2D)) as Texture2D; 
+			print ("looking for image in: " + "WebcamBilleder/" + gameState.chosenImage);
+			print (Resources.Load ("WebcamBilleder/25-11-2016-13-51-24")); 
+			//originalTexture.Resize(512, 512);
+			//originalTexture.Apply (); 
+
+
+			GetComponent<Renderer> ().material.mainTexture = originalTexture; 
+
+		}else{
 			originalTexture = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
-		}else {
-
-			//we = (Texture2D)Resources.LoadAssetAtPath(texture, typeof(Texture2D)
-			//webcamImage = Resources.Load("WebcamBilleder/05-11-2016-18-47-36") as Texture2D;
-			originalTexture = (GameObject.Find("gameState").GetComponent<gameState>()).image;
-			originalTexture.Resize(512, 512);
 			originalImage = originalTexture.GetPixels();
 		}
 
-        //m = GetComponent<imageProcModules>();
+		//newTexture = new Texture2D (originalTexture.width, originalTexture.height);
+		//GetComponent<Renderer> ().material.mainTexture = newTexture;
 
+		//originalImage = originalTexture.GetPixels ();
+		//newTexture.SetPixels (originalImage);
+		//newTexture.Apply ();
 
-
-		newTexture = new Texture2D (originalTexture.width, originalTexture.height);
-		GetComponent<Renderer> ().material.mainTexture = newTexture;
-
-		originalImage = originalTexture.GetPixels ();
-		newTexture.SetPixels (originalImage);
-		newTexture.Apply ();
 
         //Texture2D backupImage = GetComponent<Renderer> ().material.mainTexture;
         // colorDetection (pixN, newIm, 0.23f, 0.15f, 0.25f, 0.5f); //yellow

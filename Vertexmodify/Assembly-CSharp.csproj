@@ -49,8 +49,8 @@
      <Compile Include="Assets\Scripts\MapCreator.cs" />
      <Compile Include="Assets\Scripts\MountainGeneration.cs" />
      <Compile Include="Assets\Scripts\cameraScript.cs" />
+     <Compile Include="Assets\Scripts\gameState.cs" />
      <Compile Include="Assets\Scripts\imageProcModules.cs" />
-     <Compile Include="Assets\gameState.cs" />
      <Compile Include="Assets\misc\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs" />
      <Compile Include="Assets\misc\Standard Assets\Characters\FirstPersonCharacter\Scripts\HeadBob.cs" />
      <Compile Include="Assets\misc\Standard Assets\Characters\FirstPersonCharacter\Scripts\MouseLook.cs" />
