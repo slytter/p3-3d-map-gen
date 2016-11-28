@@ -74,13 +74,13 @@ public class MountainGeneration : MonoBehaviour
 	/// <returns>Clean heightmap.</returns>
 	/// <param name="heightMap">Height map.</param>
 	/// <param name="whereMoutainsShouldBe">Where moutains should be.</param>
-	public float[,] mountainRemove (float[,] heightMap, float[,] moutainArea, float mountainHeight)
+	public float[,] mountainRemove (float[,] heightMap, float[,] mountainArea, float mountainHeight)
 	{
 		for (int y = 0; y < heightMap.GetLength (1); y++)
 		{
 			for (int x = 0; x < heightMap.GetLength (0); x++)
 			{
-				heightMap [x, y] = heightMap [x, y] * (moutainArea [x, y]) * mountainHeight;
+				heightMap [x, y] = heightMap [x, y] * (mountainArea [x, y]) * mountainHeight;
 			}
 		}
 		return heightMap;
@@ -92,14 +92,14 @@ public class MountainGeneration : MonoBehaviour
 	/// </summary>
 	/// <returns>Final heightmap.</returns>
 	/// <param name="heightMap">Height map.</param>
-	public float[,] finalMap (float[,] heightMap, int smoothing)
+	public float[,] finalizeMap (float[,] heightMap, int smoothing)
 	{
 		heightMap = modules.gaussian (heightMap, smoothing);
 		for (int j = 0; j < heightMap.GetLength (1); j++)
 		{
 			for (int i = 0; i < heightMap.GetLength (0); i++)
 			{
-				heightMap [i, j] = heightMap [i, j] / max_val;
+				heightMap [i, j] = heightMap [i, j] / max_val; //global tissemand
 			}
 		}
 		return heightMap;

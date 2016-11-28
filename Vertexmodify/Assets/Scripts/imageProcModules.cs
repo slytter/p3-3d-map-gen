@@ -49,7 +49,6 @@ public class imageProcModules : MonoBehaviour
 
 		while (qX.Count != 0 && qY.Count != 0)
 		{
-			int numberOfIterations = 0;
 			for (int i = 0; i < 4; i++)
 			{
 				if (qX.Peek () < inputPicture.GetLength (0) - 2 && qX.Peek () > 0 && qY.Peek () < inputPicture.GetLength (1) - 2 && qY.Peek () > 0)
@@ -81,64 +80,7 @@ public class imageProcModules : MonoBehaviour
 		TimingModule.timer ("floodFillModule", "end");
 		return invert (inputPicture);
 	}
-
-	/// <summary>
-	/// Flood fills.
-	/// </summary>
-	/// <returns>The fill.</returns>
-	/// <param name="inputPicture">Input picture.</param>
-	public bool [,] floodFill (bool[,] inputPicture)
-	{
-		TimingModule.timer ("oldFloodFillModule", "start");
-
-		inputPicture = blackFrame (inputPicture);
-		bool[,] inputPictureEdge = new bool[inputPicture.GetLength (0), inputPicture.GetLength (1)];
-		Buffer.BlockCopy (inputPicture, 0, inputPictureEdge, 0, inputPicture.Length * sizeof(bool));
-
-
-		List<int> xPos = new List<int> ();
-		List<int> yPos = new List<int> ();
-
-		xPos.Add (1);
-		yPos.Add (1);
-
-		int listIndex = 0;
-		int[] kernelX = { 0, 1, 0, -1 };
-		int[] kernelY = { -1, 0, 1, 0 };
-
-		while (listIndex != xPos.Count && listIndex != yPos.Count)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				if (xPos.ElementAt (listIndex) < inputPicture.GetLength (0) - 2 && xPos.ElementAt (listIndex) > 0 && yPos.ElementAt (listIndex) < inputPicture.GetLength (1) - 2 && yPos.ElementAt (listIndex) > 0)
-				{
-					if (inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] == false)
-					{
-						xPos.Add (xPos.ElementAt (listIndex) + kernelX [i]);
-						yPos.Add (yPos.ElementAt (listIndex) + kernelY [i]);
-						inputPicture [xPos.ElementAt (listIndex) + kernelX [i], yPos.ElementAt (listIndex) + kernelY [i]] = true;
-					}
-				}
-			}
-			listIndex++;
-		}
-
-		//adds the edges
-		for (int y = 2; y < inputPicture.GetLength (1) - 2; y++)
-		{
-			for (int x = 2; x < inputPicture.GetLength (0) - 2; x++)
-			{
-				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true)
-				{
-					inputPicture [x, y] = false;
-				}
-			}	
-		}
-		TimingModule.timer ("oldFloodFillModule", "end");
-
-		return invert (inputPicture);
-	}
-
+		
 
 
 	/// <summary>
@@ -318,7 +260,7 @@ public class imageProcModules : MonoBehaviour
 		return outputBoolArray; 
 	}
 
-	public float[,] generateTrees (float[,] inputArea)
+	public float[,] generateTrees (float[,] inputArea, int treeSpace)
 	{
 		// when treePositions[0,something], a tree's x position is accessed
         // when treePositions[1,something], a tree's y position is accessed
@@ -328,7 +270,7 @@ public class imageProcModules : MonoBehaviour
 		float nextXPosition = UnityEngine.Random.Range (2f, 5f); 
         float nextYPosition = UnityEngine.Random.Range(2f, 5f);
         // ensures that the trees are not too close to each other
-        int treeSpace = 6; 
+   
         // keeps track of how many trees are spawned
 		int index = 0; 
 
@@ -455,14 +397,13 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	/// <summary>
-	/// Rivers the generate.
-	/// </summary>
-	/// <returns>The generate.</returns>
-	/// <param name="Base">Base.</param>
-	/// <param name="river">River.</param>
-	/// <param name="riverButtom">River buttom.</param>
-	public float [,] riverGenerate (float[,] Base, float[,] river, float riverButtom)
+/// <summary>
+/// Compressing and subtracting subtractor from base.
+/// </summary>
+/// <returns>The and subtract.</returns>
+/// <param name="Base">Base.</param>
+/// <param name="subtractor">Subtractor.</param>
+	public float [,] compressAndSubtract (float[,] Base, float[,] subtractor)
 	{
 		TimingModule.timer ("riverGenerateModule", "start");
 
@@ -470,7 +411,7 @@ public class imageProcModules : MonoBehaviour
 		{
 			for (int x = 0; x < Base.GetLength (0); x++)
 			{
-				Base [x, y] -= (river [x, y]) * Base [x, y] * 0.8f;
+				Base [x, y] -= (subtractor [x, y]) * Base [x, y];
 			}
 		}
 		TimingModule.timer ("riverGenerateModule", "end");
@@ -481,11 +422,11 @@ public class imageProcModules : MonoBehaviour
 
 	public float[,] flip (float[,] inp)
 	{
-		for (int y = 0; y < inp.GetLength (0); y++)
+		for (int y = 0; y < inp.GetLength (1); y++)
 		{
-			for (int x = 0; x < inp.GetLength (1); x++)
+			for (int x = 0; x < inp.GetLength (0); x++)
 			{
-				inp [x, y] = inp [x, y];
+				inp [x, y] = inp [y, x];
 			}
 		}
 		return inp;

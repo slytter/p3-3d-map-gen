@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class MapCreator : MonoBehaviour
 {
-
+	TreeInstance tree;
 	imageProcModules modules;
 	ColorDetection colorScanScript;
 	MountainGeneration mg;
@@ -19,7 +19,7 @@ public class MapCreator : MonoBehaviour
 	public float[,] newHeightMap;
 	public float[,] river;
 	public float riverButtom = 0.2f;
-	TreeInstance tree;
+
 	public float baseHeight, intensity, density, mountainHeight;
 
 
@@ -38,13 +38,11 @@ public class MapCreator : MonoBehaviour
 
 		//fixing texture scale issue:
 		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-		drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-
-		bool[,] inputColorImage = colorScanScript.colorDetection (colorScanScript.originalImage, 0.20f, 0.15f, 0.57f, 0.5f); // getting colors from input image
+		//drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
-		int biggestDimention = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
-		currentTerrain.terrainData.size = new Vector3 (biggestDimention, heightOfMap, biggestDimention); //setting size
+		int biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
+		currentTerrain.terrainData.size = new Vector3 (biggestDimension, heightOfMap, biggestDimension); //setting size
 
 
 
@@ -57,13 +55,13 @@ public class MapCreator : MonoBehaviour
 		bool[,] blue = colorScanScript.colorDetection (colorScanScript.originalImage, 0.40f, 0.69f, 0.1f, 0.5f); // getting colors from input image
 
 
-		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density);
-		perlin = modules.perlin (emptyMap, baseHeight / 2, intensity * 6, density / 4);//two perlin noises to create more 'real' density
+		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
+		perlin = modules.perlin (perlin, baseHeight / 2, intensity * 6, density / 4);//two perlin noises to create more 'real' density
 
-		float[,] mountains = (generateMountains (green, mountainHeight));
-		float[,] rivers = generateRivers (red, perlin, riverButtom); //generate rivers into base perlin map
-		float[,] finalMap = modules.flip (mg.finalMap (modules.add (rivers, mountains), 5));
-		generateTrees (green); 
+		float[,] mountains = generateMountains (red, mountainHeight);
+		float[,] rivers = generateRivers (green, perlin); //generate rivers into base perlin map
+		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
+		generateTrees (green);
 
 		currentTerrain.terrainData.SetHeights (0, 0, finalMap);
 
@@ -72,28 +70,26 @@ public class MapCreator : MonoBehaviour
 
 	}
 
-
 	void generateTrees (bool[,] binaryTreeArea)
 	{
 		
 		binaryTreeArea = modules.dilation (modules.dilation (binaryTreeArea));
-		binaryTreeArea = modules.floodFill (binaryTreeArea);
+		binaryTreeArea = modules.floodFillQueue (binaryTreeArea);
 		float[,] treeArea = modules.boolToFloat (binaryTreeArea);
 
-		float[,] treePositions = modules.generateTrees (treeArea);
+		float[,] treePositions = modules.generateTrees (treeArea, 6);
 
 
 		TreeInstance[] reset = new TreeInstance[0]; 
 
 		currentTerrain.terrainData.treeInstances = reset; 
 
-		print (currentTerrain.terrainData.GetSteepness (treePositions [0, 10], treePositions [1, 20])); 
 		List <TreeInstance> treeList = new List<TreeInstance> (currentTerrain.terrainData.treeInstances); 
 		for (int x = 0; x < treePositions.GetLength (1); x++)
 		{
 
-			if (treePositions [0, x] != null || treePositions [1, x] != null)
-			{
+			//if (treePositions [0, x] != null || treePositions [1, x] != null)
+			//{
 				if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f)
 				{
 					tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
@@ -104,18 +100,23 @@ public class MapCreator : MonoBehaviour
 					tree.heightScale = 1; 
 					treeList.Add (tree);
 				}
-			}
+			//}
 		}
 		currentTerrain.terrainData.treeInstances = treeList.ToArray (); 
 	}
 
 	
-
-	float[,] generateRivers (bool[,] area, float[,] heightmap, float riverButtom){
+	/// <summary>
+	/// Generates the rivers.
+	/// </summary>
+	/// <returns>The rivers.</returns>
+	/// <param name="area">Area.</param>
+	/// <param name="basemap">Basemap.</param>
+	float[,] generateRivers (bool[,] area, float[,] basemap){
 		area = modules.floodFillQueue (area);
 		float[,] river = modules.boolToFloat (area);
 		river = modules.gaussian (river, 10);
-		river = modules.riverGenerate (heightmap, river, riverButtom);
+		river = modules.compressAndSubtract (basemap, river);
 		return river;
 	}
 
@@ -128,7 +129,7 @@ public class MapCreator : MonoBehaviour
 	/// <param name="area">Area.</param>
 	float[,] generateMountains (bool[,] area, float mountainHeight)
 	{
-		area = modules.dilation (area);
+		area = modules.dilation (area); //area = where red is.
 		area = modules.floodFillQueue (area);
 
 		colorScanScript.printBinary (area);
