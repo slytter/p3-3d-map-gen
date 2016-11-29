@@ -18,12 +18,17 @@ public class cameraScript : MonoBehaviour {
 
 	gameState gameState;
 
+	public GameObject chooseButton, retakeButton, snapButton;
+
 	void Start () {
 
 		savePath = Application.dataPath + "/Resources/WebcamBilleder/";
         print(savePath);
-		StartCoroutine (fixBug ());  //AD HVOR KLAMT 
-		 
+		StartCoroutine (initWebcam ()); 
+
+		chooseButton.SetActive (false);
+		retakeButton.SetActive (false);
+		snapButton.SetActive (true);
     }
 	
 
@@ -46,22 +51,24 @@ public class cameraScript : MonoBehaviour {
 		pixFromSnap = tex1.GetPixels (); 
 		outputImage = tex1;
 		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
+
+		chooseButton.SetActive (true);
+		retakeButton.SetActive (true);
+		snapButton.SetActive (false);
+
 	}
 
 
 	public void retake(){
-
 		rawimage.enabled = true; 
 		webcamTexture.Play ();
-
+		chooseButton.SetActive (false);
+		retakeButton.SetActive (false);
+		snapButton.SetActive (true);
     }
 
 
     public void choose() {
-		
-//		(GameObject.Find("gameState").GetComponent<gameState>()).image = (outputImage);
-//		Array.Copy(outputImage, gameState.image)
-//		gameState.image = outputImage;
 		gameState = GameObject.Find("gameState").GetComponent<gameState>();
         gameState.chosenImage = currentImageName;
         print("image chosen: " + currentImageName);
@@ -69,7 +76,7 @@ public class cameraScript : MonoBehaviour {
     }
 
 
-	IEnumerator fixBug(){
+	IEnumerator initWebcam(){
 		webcamTexture = new WebCamTexture();
 		webcamTexture.Play();
 
@@ -89,7 +96,7 @@ public class cameraScript : MonoBehaviour {
 		}
 			
 		rawimage.texture = webcamTexture;
-		rawimage.material.mainTexture = webcamTexture;
+		//rawimage.material.mainTexture = webcamTexture;
 
 		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
 

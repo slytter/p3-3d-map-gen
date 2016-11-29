@@ -42,8 +42,19 @@ public class MapCreator : MonoBehaviour
 
 
 		currentTerrain = Terrain.activeTerrain; // getting terrain data
-		int biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement 
+
+		float res = 0.5f;
+
+		int biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement ¨
 		currentTerrain.terrainData.size = new Vector3 (biggestDimension, heightOfMap, biggestDimension); //setting size
+		currentTerrain.terrainData.RefreshPrototypes();	
+
+		print(currentTerrain.terrainData.size.x + " :yo " + currentTerrain.terrainData.size.z);
+
+		currentTerrain.terrainData.heightmapResolution = (biggestDimension + 1); 
+		currentTerrain.terrainData.SetHeights(0,0, new float[biggestDimension, biggestDimension]);
+
+
 
 
 
@@ -60,7 +71,7 @@ public class MapCreator : MonoBehaviour
 		perlin = modules.perlin (perlin, baseHeight / 2, intensity * 6, density / 4);//two perlin noises to create more 'real' density
 
 		float[,] mountains = generateMountains (red, mountainHeight);
-		float[,] rivers = generateRivers (green, perlin); //generate rivers into base perlin map
+		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
 		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
 		generateTrees (green);
 

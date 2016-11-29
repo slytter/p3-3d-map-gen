@@ -14,7 +14,7 @@ SceneSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 7
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
@@ -295,7 +295,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10, y: 75}
+  m_AnchoredPosition: {x: 10, y: 11}
   m_SizeDelta: {x: 160, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &360457344
@@ -601,7 +601,7 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 10, y: 139.49998}
+  m_AnchoredPosition: {x: 10, y: 76}
   m_SizeDelta: {x: 160, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &946525575
@@ -792,7 +792,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3600
+  orthographic size: 3500
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1054,6 +1054,9 @@ MonoBehaviour:
   targetPlane: {fileID: 1320900283}
   rawimage: {fileID: 1920935824}
   outputImage: {fileID: 0}
+  chooseButton: {fileID: 946525573}
+  retakeButton: {fileID: 360457342}
+  snapButton: {fileID: 559080566}
 --- !u!1 &2128559885
 GameObject:
   m_ObjectHideFlags: 0

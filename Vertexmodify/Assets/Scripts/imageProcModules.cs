@@ -66,9 +66,9 @@ public class imageProcModules : MonoBehaviour
 			qY.Dequeue ();
 		}
 
-		for (int y = 2; y < inputPicture.GetLength (0) - 2; y++)
+		for (int y = 2; y < inputPicture.GetLength (1) - 2; y++)
 		{
-			for (int x = 2; x < inputPicture.GetLength (1) - 2; x++)
+			for (int x = 2; x < inputPicture.GetLength (0) - 2; x++)
 			{
 				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true)
 				{
@@ -201,6 +201,22 @@ public class imageProcModules : MonoBehaviour
 		}
 		TimingModule.timer ("dilationModule", "end");
 
+		return returnedBools;
+	}
+
+
+	bool[,] erosion (bool[,] bools){
+		bool[,] returnedBools = new bool[bools.GetLength(0), bools.GetLength(1)];
+		Array.Copy (bools, returnedBools,0);
+		for (int y = 1; y < bools.GetLength(1)-1; y++) {
+			for (int x = 1; x < bools.GetLength(0)-1; x++) {
+				if (bools [x - 1, y - 1] && bools [x - 1, y] && bools [x, y - 1] && bools [x + 1, y - 1] && bools [x - 1, y + 1] && bools [x + 1, y + 1] && bools [x + 1, y] && bools [x, y + 1] && bools [x, y]) {
+					returnedBools [x, y] = true;
+				} else {
+					returnedBools [x, y] = false;
+				}
+			}
+		}
 		return returnedBools;
 	}
 
@@ -422,6 +438,7 @@ public class imageProcModules : MonoBehaviour
 
 	public float[,] flip (float[,] inp)
 	{
+		return inp;
 		for (int y = 0; y < inp.GetLength (1); y++)
 		{
 			for (int x = 0; x < inp.GetLength (0); x++)
