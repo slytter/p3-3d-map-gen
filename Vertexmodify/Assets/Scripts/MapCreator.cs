@@ -70,12 +70,14 @@ public class MapCreator : MonoBehaviour
 		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
 		perlin = modules.perlin (perlin, baseHeight / 2, intensity * 6, density / 4);//two perlin noises to create more 'real' density
 
-		float[,] mountains = generateMountains (red, mountainHeight);
-		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
-		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
-		generateTrees (green);
+//		float[,] mountains = generateMountains (red, mountainHeight);
+//		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
+//		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
+//		generateTrees (green);
 
-		currentTerrain.terrainData.SetHeights (0, 0, finalMap);
+		modules.grassFire (modules.floodFillQueue(modules.dilation(modules.dilation (yellow))));
+
+		//currentTerrain.terrainData.SetHeights (0, 0, finalMap);
 
 
 		TimingModule.timer ("program", "end");

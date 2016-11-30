@@ -80,7 +80,7 @@ public class imageProcModules : MonoBehaviour
 		TimingModule.timer ("floodFillModule", "end");
 		return invert (inputPicture);
 	}
-		
+
 
 
 	/// <summary>
@@ -205,14 +205,19 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	bool[,] erosion (bool[,] bools){
-		bool[,] returnedBools = new bool[bools.GetLength(0), bools.GetLength(1)];
-		Array.Copy (bools, returnedBools,0);
-		for (int y = 1; y < bools.GetLength(1)-1; y++) {
-			for (int x = 1; x < bools.GetLength(0)-1; x++) {
-				if (bools [x - 1, y - 1] && bools [x - 1, y] && bools [x, y - 1] && bools [x + 1, y - 1] && bools [x - 1, y + 1] && bools [x + 1, y + 1] && bools [x + 1, y] && bools [x, y + 1] && bools [x, y]) {
+	bool[,] erosion (bool[,] bools)
+	{
+		bool[,] returnedBools = new bool[bools.GetLength (0), bools.GetLength (1)];
+		Array.Copy (bools, returnedBools, 0);
+		for (int y = 1; y < bools.GetLength (1) - 1; y++)
+		{
+			for (int x = 1; x < bools.GetLength (0) - 1; x++)
+			{
+				if (bools [x - 1, y - 1] && bools [x - 1, y] && bools [x, y - 1] && bools [x + 1, y - 1] && bools [x - 1, y + 1] && bools [x + 1, y + 1] && bools [x + 1, y] && bools [x, y + 1] && bools [x, y])
+				{
 					returnedBools [x, y] = true;
-				} else {
+				} else
+				{
 					returnedBools [x, y] = false;
 				}
 			}
@@ -279,23 +284,23 @@ public class imageProcModules : MonoBehaviour
 	public float[,] generateTrees (float[,] inputArea, int treeSpace)
 	{
 		// when treePositions[0,something], a tree's x position is accessed
-        // when treePositions[1,something], a tree's y position is accessed
-        // the y index is set to 10000 to ensure that there are space for enough trees to be spawned
+		// when treePositions[1,something], a tree's y position is accessed
+		// the y index is set to 10000 to ensure that there are space for enough trees to be spawned
 		float[,] treePositions = new float[2, 10000];
-        // Ensures that trees look randomly placed
+		// Ensures that trees look randomly placed
 		float nextXPosition = UnityEngine.Random.Range (2f, 5f); 
-        float nextYPosition = UnityEngine.Random.Range(2f, 5f);
-        // ensures that the trees are not too close to each other
+		float nextYPosition = UnityEngine.Random.Range (2f, 5f);
+		// ensures that the trees are not too close to each other
    
-        // keeps track of how many trees are spawned
+		// keeps track of how many trees are spawned
 		int index = 0; 
 
-        for (int y = 0; y < inputArea.GetLength (1); y += treeSpace)
+		for (int y = 0; y < inputArea.GetLength (1); y += treeSpace)
 		{
-            for (int x = 0; x < inputArea.GetLength (0); x += treeSpace)
+			for (int x = 0; x < inputArea.GetLength (0); x += treeSpace)
 			{
 				// Checks if the pixel scanned is white, and if the x and y positions are within the map
-                if (inputArea [x, y] == 1f && x + nextXPosition <= inputArea.GetLength(0) && y + nextYPosition <= inputArea.GetLength(1))
+				if (inputArea [x, y] == 1f && x + nextXPosition <= inputArea.GetLength (0) && y + nextYPosition <= inputArea.GetLength (1))
 				{
 					treePositions [0, index] = ((float)x + nextXPosition) / inputArea.GetLength (0); 
 					treePositions [1, index] = ((float)y + nextYPosition) / inputArea.GetLength (1);
@@ -306,14 +311,14 @@ public class imageProcModules : MonoBehaviour
 				} 
 			}
 		}
-        // The array is resized to the number of tree's that are spawned, so 10000 trees are not spawned everytime.w
-        float[,] output = new float[2,index];
-        for (int i = 0; i < output.GetLength(1); i++)
-        {
-            output[0, i] = treePositions[0, i];
-            output[1, i] = treePositions[1, i];
-        }
-        return output;
+		// The array is resized to the number of tree's that are spawned, so 10000 trees are not spawned everytime.w
+		float[,] output = new float[2, index];
+		for (int i = 0; i < output.GetLength (1); i++)
+		{
+			output [0, i] = treePositions [0, i];
+			output [1, i] = treePositions [1, i];
+		}
+		return output;
 	}
 
 
@@ -413,12 +418,12 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-/// <summary>
-/// Compressing and subtracting subtractor from base.
-/// </summary>
-/// <returns>The and subtract.</returns>
-/// <param name="Base">Base.</param>
-/// <param name="subtractor">Subtractor.</param>
+	/// <summary>
+	/// Compressing and subtracting subtractor from base.
+	/// </summary>
+	/// <returns>The and subtract.</returns>
+	/// <param name="Base">Base.</param>
+	/// <param name="subtractor">Subtractor.</param>
 	public float [,] compressAndSubtract (float[,] Base, float[,] subtractor)
 	{
 		TimingModule.timer ("riverGenerateModule", "start");
@@ -450,8 +455,137 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
+	public class Blob
+	{
+		public int number;
+		public int area;
+		public Vector2 CenterOfMass = new Vector2 (0, 0);
+	}
 
+
+	public Blob[] grassFire (bool[,] inputPicture)
+	{
+		ColorDetection colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
+
+		float[,] blobsGradient = new float[inputPicture.GetLength (0), inputPicture.GetLength (1)];
+		float[,] blobsEdges = new float[inputPicture.GetLength (0), inputPicture.GetLength (1)];
+
+		int blobTag = 1; //0 is background
+
+		Queue<int> qX = new Queue<int> ();
+		Queue<int> qY = new Queue<int> ();
+		
+		int[] kernelX = { 0, 1, 0, -1 };
+		int[] kernelY = { -1, 0, 1, 0 };
+		
+		for (int y = 2; y < inputPicture.GetLength (1) - 2; y++)
+		{
+			for (int x = 2; x < inputPicture.GetLength (0) - 2; x++)
+			{
+				if (inputPicture [x, y] == true)
+				{
+					
+					qX.Enqueue (x);
+					qY.Enqueue (y);
+					inputPicture [x, y] = false;
+					blobsGradient [x, y] = blobTag;
+
+					while (qX.Count != 0 && qY.Count != 0)
+					{
+						for (int i = 0; i < 4; i++)
+						{
+							if (inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]])
+							{
+
+								qX.Enqueue (qX.Peek () + kernelX [i]);
+								qY.Enqueue (qY.Peek () + kernelY [i]);
+
+								inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] = false;
+								blobsGradient [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] = (float)blobTag / 10f;
+							
+							} else if (blobsGradient [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] == 0)
+							{
+								blobsEdges [qX.Peek (), qY.Peek ()] = (float)blobTag;
+							}
+
+		
+						}
+
+						qX.Dequeue ();
+						qY.Dequeue ();
+					}
+					blobTag += 1;
+				}
+			}
+		}
+
+		Blob[] blobs = new Blob[blobTag]; //creating new blobs
+
+		for (int i = 1; i < blobs.GetLength (0); i++)
+		{ //counting trough all blobs
+			blobs [i] = new Blob ();
+
+			for (int y = 2; y < inputPicture.GetLength (1) - 2; y++)
+			{
+				for (int x = 2; x < inputPicture.GetLength (0) - 2; x++)
+				{
+
+
+					if (i == blobsGradient [x, y])
+					{
+						blobs [i].CenterOfMass.y += y;
+						blobs [i].CenterOfMass.x += x;
+						blobs [i].area++;
+					}
+
+
+				}
+			}
+			blobs [i].CenterOfMass.x /= blobs [i].area;
+			blobs [i].CenterOfMass.y /= blobs [i].area;
+		}
+
+		int incr = 0;
+		float[] lengths = new float[10000];
+		float[] angles = new float[10000];
+
+		for (int y = 0; y < blobsEdges.GetLength (1); y++)
+		{
+			for (int x = 0; x < blobsEdges.GetLength (0); x++)
+			{
+				if (blobsEdges [x, y] != 0f)
+				{
+					Vector2 edge = new Vector2 (x, y);
+					int tag = (int)blobsEdges [x, y];
+					Vector2 cm = new Vector2 (blobs [tag].CenterOfMass.x, blobs [tag].CenterOfMass.y);
+					lengths [incr] = Vector2.Distance (cm, edge);
+					angles [incr] = Vector2.Angle (cm, edge);
+					incr++;
+					Debug.DrawLine (new Vector3 (edge.x, 60, edge.y), new Vector3 (cm.x, 60, cm.y), Color.red);
+				}
+			}
+		}
+		for (int i = 0; i < incr; i++)
+		{
+			print (i + "angles: " + angles [i]);
+			print ("lengths: " + lengths [i]);
+		}
+			
+
+		colorScanScript.printBinary (blobsEdges);
+		return blobs;
+	}
 }
+
+
+
+
+
+
+
+
+
+
 
 public class TimingModule
 {
