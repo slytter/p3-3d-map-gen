@@ -205,7 +205,7 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	bool[,] erosion (bool[,] bools){
+	bool[,] erosion (bool[,] bools){ // UNTESTED
 		bool[,] returnedBools = new bool[bools.GetLength(0), bools.GetLength(1)];
 		Array.Copy (bools, returnedBools,0);
 		for (int y = 1; y < bools.GetLength(1)-1; y++) {
@@ -278,8 +278,8 @@ public class imageProcModules : MonoBehaviour
 
 	public float[,] generateTrees (float[,] inputArea, int treeSpace)
 	{
-		// when treePositions[0,something], a tree's x position is accessed
-        // when treePositions[1,something], a tree's y position is accessed
+		// when treePositions[0, x_value], a tree's x position is accessed
+        // when treePositions[1, y_value], a tree's y position is accessed
         // the y index is set to 10000 to ensure that there are space for enough trees to be spawned
 		float[,] treePositions = new float[2, 10000];
         // Ensures that trees look randomly placed

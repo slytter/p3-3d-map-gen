@@ -61,10 +61,10 @@ public class MapCreator : MonoBehaviour
 
 
 		//GENERATION: 		////////////
-		bool[,] yellow = colorScanScript.colorDetection (colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.5f); // getting colors from input image
-		bool[,] red = colorScanScript.colorDetection (colorScanScript.originalImage, 0.94f, 0.05f, 0.25f, 0.5f); // getting colors from input image
-		bool[,] green = colorScanScript.colorDetection (colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.5f); // getting colors from input image
-		bool[,] blue = colorScanScript.colorDetection (colorScanScript.originalImage, 0.40f, 0.69f, 0.1f, 0.5f); // getting colors from input image
+		bool[,] yellow = colorScanScript.colorDetection (colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.9f); // getting colors from input image
+		bool[,] red = colorScanScript.colorDetection (colorScanScript.originalImage, 0.90f, 0.10f, 0.7f, 0.9f); // getting colors from input image
+		bool[,] green = colorScanScript.colorDetection (colorScanScript.originalImage, 0.24f, 0.42f, 0.20f, 0.8f); // getting colors from input image
+		bool[,] blue = colorScanScript.colorDetection (colorScanScript.originalImage, 0.40f, 0.69f, 0.5f, 0.8f); // getting colors from input image
 
 
 		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
@@ -102,9 +102,9 @@ public class MapCreator : MonoBehaviour
 
 			//if (treePositions [0, x] != null || treePositions [1, x] != null)
 			//{
-				if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f)
+				if (currentTerrain.terrainData.GetSteepness (treePositions [1, x], treePositions [0, x]) < 45f) // 1 & 0 has been flipped to mirror trees.
 				{
-					tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
+					tree.position = new Vector3 (treePositions [1, x], 0f, treePositions [0, x]); 
 					tree.color = Color.yellow; 
 					tree.lightmapColor = Color.yellow; 
 					tree.prototypeIndex = 0; 

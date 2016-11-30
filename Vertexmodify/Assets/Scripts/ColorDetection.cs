@@ -12,7 +12,7 @@ public class ColorDetection : MonoBehaviour
 	public int widthOfTex;
 	public int heightOfTex;
 	TextureImporter importer; 
-	string path = "WebcamBilleder/25-11-2016-13-51-24.png"; 
+	string path;
 	Texture2D originalTexture;
 
 	gameState gameState;
@@ -29,7 +29,7 @@ public class ColorDetection : MonoBehaviour
 			importer.textureType = TextureImporterType.Advanced;
 			importer.textureFormat = TextureImporterFormat.ARGB32;
 			importer.isReadable = true;
-			importer.maxTextureSize = 1028;
+			importer.maxTextureSize = 512;
 			importer.npotScale = TextureImporterNPOTScale.ToSmaller;
 			importer.SaveAndReimport();
 			AssetDatabase.Refresh ();
@@ -51,7 +51,7 @@ public class ColorDetection : MonoBehaviour
 			originalTexture = Resources.Load ("WebcamBilleder/" + Path.GetFileNameWithoutExtension(path), typeof(Texture2D)) as Texture2D; 
 			print ("looking for image in: " + "WebcamBilleder/" + gameState.chosenImage);
 
-			GetComponent<Renderer> ().material.mainTexture = originalTexture; 
+			GetComponent<Renderer> ().material.mainTexture = originalTexture;
 			originalImage = originalTexture.GetPixels ();
 		}
 
