@@ -47,12 +47,12 @@ public class MapCreator : MonoBehaviour
 
 		int biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement ¨
 		currentTerrain.terrainData.size = new Vector3 (biggestDimension, heightOfMap, biggestDimension); //setting size
-		currentTerrain.terrainData.RefreshPrototypes();	
+		currentTerrain.terrainData.RefreshPrototypes ();	
 
-		print(currentTerrain.terrainData.size.x + " :yo " + currentTerrain.terrainData.size.z);
+		print (currentTerrain.terrainData.size.x + " :yo " + currentTerrain.terrainData.size.z);
 
 		currentTerrain.terrainData.heightmapResolution = (biggestDimension + 1); 
-		currentTerrain.terrainData.SetHeights(0,0, new float[biggestDimension, biggestDimension]);
+		currentTerrain.terrainData.SetHeights (0, 0, new float[biggestDimension, biggestDimension]);
 
 
 
@@ -75,7 +75,7 @@ public class MapCreator : MonoBehaviour
 //		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
 //		generateTrees (green);
 
-		modules.grassFire (modules.floodFillQueue(modules.dilation(modules.dilation (yellow))));
+		modules.grassFire (modules.floodFillQueue (modules.dilation (modules.dilation (green))));
 
 		//currentTerrain.terrainData.SetHeights (0, 0, finalMap);
 
@@ -99,21 +99,19 @@ public class MapCreator : MonoBehaviour
 		currentTerrain.terrainData.treeInstances = reset; 
 
 		List <TreeInstance> treeList = new List<TreeInstance> (currentTerrain.terrainData.treeInstances); 
-		for (int x = 0; x < treePositions.GetLength (1); x++)
-		{
+		for (int x = 0; x < treePositions.GetLength (1); x++) {
 
 			//if (treePositions [0, x] != null || treePositions [1, x] != null)
 			//{
-				if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f)
-				{
-					tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
-					tree.color = Color.yellow; 
-					tree.lightmapColor = Color.yellow; 
-					tree.prototypeIndex = 0; 
-					tree.widthScale = 1; 
-					tree.heightScale = 1; 
-					treeList.Add (tree);
-				}
+			if (currentTerrain.terrainData.GetSteepness (treePositions [0, x], treePositions [1, x]) < 45f) {
+				tree.position = new Vector3 (treePositions [0, x], 0f, treePositions [1, x]); 
+				tree.color = Color.yellow; 
+				tree.lightmapColor = Color.yellow; 
+				tree.prototypeIndex = 0; 
+				tree.widthScale = 1; 
+				tree.heightScale = 1; 
+				treeList.Add (tree);
+			}
 			//}
 		}
 		currentTerrain.terrainData.treeInstances = treeList.ToArray (); 
@@ -126,7 +124,8 @@ public class MapCreator : MonoBehaviour
 	/// <returns>The rivers.</returns>
 	/// <param name="area">Area.</param>
 	/// <param name="basemap">Basemap.</param>
-	float[,] generateRivers (bool[,] area, float[,] basemap){
+	float[,] generateRivers (bool[,] area, float[,] basemap)
+	{
 		area = modules.floodFillQueue (area);
 		float[,] river = modules.boolToFloat (area);
 		river = modules.gaussian (river, 10);
@@ -172,25 +171,24 @@ public class MapCreator : MonoBehaviour
 
 	void Update ()
 	{
-		if (!stop && false)
-		{
-			if (frame % 2 == 0)
-			{
-				for (int j = 0; j < drawMap.GetLength (1); j++)
-				{
-					for (int i = 0; i < drawMap.GetLength (0); i++)
-					{
+//		for (int i = 0; i < 1000; i++) {
+//			Debug.DrawLine (lineDrawVars.fromPoint [i], lineDrawVars.toPoint [i], Color.red, 1000f);
+//		}
+
+
+		if (!stop && false) {
+			if (frame % 2 == 0) {
+				for (int j = 0; j < drawMap.GetLength (1); j++) {
+					for (int i = 0; i < drawMap.GetLength (0); i++) {
 						drawMap [i, j] = emptyMap [i, j] * update * 0.5f;
 					}
 				}
 				currentTerrain.terrainData.SetHeights (0, 0, drawMap);
 			}
 			frame++;
-			if (update < 1f)
-			{
+			if (update < 1f) {
 				update += 0.01f;
-			} else
-			{
+			} else {
 				print (drawMap.GetLength (0) + ", " + drawMap.GetLength (0));
 				stop = true;
 			}
