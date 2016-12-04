@@ -490,6 +490,9 @@ public class imageProcModules : MonoBehaviour
 		}
 
 
+
+
+
 		//FINDING CENTER OF MASS & AREA:
 		for (int y = 2; y < blobsGradient.GetLength (1) - 2; y++) {
 			for (int x = 2; x < blobsGradient.GetLength (0) - 2; x++) {
@@ -522,7 +525,7 @@ public class imageProcModules : MonoBehaviour
 
 		for (int y = 0; y < blobsEdges.GetLength (1); y++) {
 			for (int x = 0; x < blobsEdges.GetLength (0); x++) {
-				if (blobsEdges [x, y] == 3) {
+				if (blobsEdges [x, y] == 1) {
 					Vector2 edge = new Vector2 (x, y);
 					int tag = (int)blobsEdges [x, y];
 					Vector2 cm = new Vector2 (blobs [tag].CenterOfMass.x, blobs [tag].CenterOfMass.y);
@@ -538,7 +541,7 @@ public class imageProcModules : MonoBehaviour
 		Array.Resize<float> (ref angles, incr);
 		Array.Resize<float> (ref lengths, incr);
 
-		float[] meanLength = 0f;
+		float meanLength = 0f;
 
 		float[] sortedAngles = new float[incr];
 		Array.Copy (angles, sortedAngles, incr);
@@ -552,14 +555,34 @@ public class imageProcModules : MonoBehaviour
 			int unsortedIndex = findIndex (angles, sortedAngles [i]);
 
 			sortedLengths [i] = lengths [unsortedIndex];
-
+			meanLength += sortedLengths [i];
 
 			print (lengths [unsortedIndex]);
 		}
 
+		meanLength /= sortedLengths.Length;
+
+		bool under = true;
+		int crossingTheMean = 0;
+
+		if (sortedLengths [0] > meanLength) {
+			under = false;
+		}
+
+
+		Debug.DrawLine (new Vector3 (0, 60f, meanLength), new Vector3 (sortedAngles.Length, 60f, meanLength), Color.green, 10000f);
+
+
+
 		for (int x = 0; x < sortedAngles.Length; x++) {
+			if ((under && sortedLengths [x] > meanLength + 2f) || (!under && sortedLengths [x] < meanLength - 2f)) {
+				under = !under;
+				crossingTheMean++;
+			}
+
 			Debug.DrawLine (new Vector3 (x, 60f, 0), new Vector3 (x, 60f, sortedLengths [x]), Color.blue, 10000f);
 		}
+		Debug.Log ("Number of sides: " + (crossingTheMean / 2));
 
 
 		colorScanScript.printBinary (blobsEdges);
