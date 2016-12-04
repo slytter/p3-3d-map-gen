@@ -75,7 +75,7 @@ public class MapCreator : MonoBehaviour
 //		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
 //		generateTrees (green);
 
-		modules.grassFire (modules.floodFillQueue (modules.dilation (modules.dilation (green))));
+		modules.grassFire (green);
 
 		//currentTerrain.terrainData.SetHeights (0, 0, finalMap);
 
@@ -171,9 +171,6 @@ public class MapCreator : MonoBehaviour
 
 	void Update ()
 	{
-//		for (int i = 0; i < 1000; i++) {
-//			Debug.DrawLine (lineDrawVars.fromPoint [i], lineDrawVars.toPoint [i], Color.red, 1000f);
-//		}
 
 
 		if (!stop && false) {

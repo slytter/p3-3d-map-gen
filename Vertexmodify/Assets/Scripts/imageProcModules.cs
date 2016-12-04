@@ -519,6 +519,8 @@ public class imageProcModules : MonoBehaviour
 
 
 
+
+		//
 		int incr = 0;
 		float[] lengths = new float[10000]; //set to edge area!!
 		float[] angles = new float[10000];
@@ -604,15 +606,6 @@ public class imageProcModules : MonoBehaviour
 
 
 
-
-
-
-
-public static class lineDrawVars
-{
-	public static Vector3[] fromPoint = new Vector3[3000];
-	public static Vector3[] toPoint = new Vector3[3000];
-}
 
 
 
