@@ -16,10 +16,8 @@ public class imageProcModules : MonoBehaviour
 	{
 		TimingModule.timer ("perlinModule", "start");
 		float px, py;
-		for (int y = 0; y < inp.GetLength (1); y++)
-		{
-			for (int x = 0; x < inp.GetLength (0); x++)
-			{
+		for (int y = 0; y < inp.GetLength (1); y++) {
+			for (int x = 0; x < inp.GetLength (0); x++) {
 				px = (float)x / density;
 				py = (float)y / density;
 				inp [x, y] += Mathf.PerlinNoise (px, py) / intensity + baseHeight;
@@ -47,14 +45,10 @@ public class imageProcModules : MonoBehaviour
 		int[] kernelX = { 0, 1, 0, -1 };
 		int[] kernelY = { -1, 0, 1, 0 };
 
-		while (qX.Count != 0 && qY.Count != 0)
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				if (qX.Peek () < inputPicture.GetLength (0) - 2 && qX.Peek () > 0 && qY.Peek () < inputPicture.GetLength (1) - 2 && qY.Peek () > 0)
-				{
-					if (inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] == false)
-					{
+		while (qX.Count != 0 && qY.Count != 0) {
+			for (int i = 0; i < 4; i++) {
+				if (qX.Peek () < inputPicture.GetLength (0) - 2 && qX.Peek () > 0 && qY.Peek () < inputPicture.GetLength (1) - 2 && qY.Peek () > 0) {
+					if (inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] == false) {
 						qX.Enqueue (qX.Peek () + kernelX [i]);
 						qY.Enqueue (qY.Peek () + kernelY [i]);
 						inputPicture [qX.Peek () + kernelX [i], qY.Peek () + kernelY [i]] = true;
@@ -66,12 +60,9 @@ public class imageProcModules : MonoBehaviour
 			qY.Dequeue ();
 		}
 
-		for (int y = 2; y < inputPicture.GetLength (1) - 2; y++)
-		{
-			for (int x = 2; x < inputPicture.GetLength (0) - 2; x++)
-			{
-				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true)
-				{
+		for (int y = 2; y < inputPicture.GetLength (1) - 2; y++) {
+			for (int x = 2; x < inputPicture.GetLength (0) - 2; x++) {
+				if (inputPictureEdge [x, y] == true && inputPicture [x, y] == true) {
 					inputPicture [x, y] = false;
 				}
 				
@@ -80,7 +71,7 @@ public class imageProcModules : MonoBehaviour
 		TimingModule.timer ("floodFillModule", "end");
 		return invert (inputPicture);
 	}
-		
+
 
 
 	/// <summary>
@@ -90,10 +81,8 @@ public class imageProcModules : MonoBehaviour
 	public bool[,] invert (bool[,] boolArray)
 	{
 		TimingModule.timer ("invertModule", "start");
-		for (int y = 0; y < boolArray.GetLength (1); y++)
-		{
-			for (int x = 0; x < boolArray.GetLength (0); x++)
-			{
+		for (int y = 0; y < boolArray.GetLength (1); y++) {
+			for (int x = 0; x < boolArray.GetLength (0); x++) {
 				boolArray [x, y] = !boolArray [x, y];
 			}
 		}
@@ -113,10 +102,8 @@ public class imageProcModules : MonoBehaviour
 	{
 		TimingModule.timer ("randomValueGenerator", "start");
 		float[,] randomValues = new float[height, length];
-		for (int y = 0; y < randomValues.GetLength (1); y++)
-		{
-			for (int x = 0; x < randomValues.GetLength (0); x++)
-			{
+		for (int y = 0; y < randomValues.GetLength (1); y++) {
+			for (int x = 0; x < randomValues.GetLength (0); x++) {
 				randomValues [x, y] = UnityEngine.Random.Range (0f, 1f);
 			}
 		}
@@ -135,12 +122,9 @@ public class imageProcModules : MonoBehaviour
 	public float[,] gaussian (float[,] heightMap, int smoothing)
 	{
 		TimingModule.timer ("gaussianModule", "start");
-		for (int k = 0; k < smoothing; k++)
-		{
-			for (int i = 1; i < heightMap.GetLength (0) - 1; i++)
-			{
-				for (int j = 1; j < heightMap.GetLength (1) - 1; j++)
-				{
+		for (int k = 0; k < smoothing; k++) {
+			for (int i = 1; i < heightMap.GetLength (0) - 1; i++) {
+				for (int j = 1; j < heightMap.GetLength (1) - 1; j++) {
 					float blur = (
 					                 heightMap [i, j]
 
@@ -177,20 +161,14 @@ public class imageProcModules : MonoBehaviour
 
 		bool[,] returnedBools = new bool[bools.GetLength (0), bools.GetLength (1)];
 
-		for (int y = 1; y < bools.GetLength (1) - 2; y++)
-		{
-			for (int x = 1; x < bools.GetLength (0) - 2; x++)
-			{
+		for (int y = 1; y < bools.GetLength (1) - 2; y++) {
+			for (int x = 1; x < bools.GetLength (0) - 2; x++) {
 				bool hit = false;
-				for (int i = -1; i < 2; i++)
-				{
-					for (int j = -1; j < 2; j++)
-					{
-						if (hit)
-						{
+				for (int i = -1; i < 2; i++) {
+					for (int j = -1; j < 2; j++) {
+						if (hit) {
 							returnedBools [x - j, y - i] = true;
-						} else if (bools [x - j, y - i])
-						{
+						} else if (bools [x - j, y - i]) {
 							hit = true;
 							i = -1;
 							j = -1;
@@ -205,11 +183,12 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	bool[,] erosion (bool[,] bools){ // UNTESTED
-		bool[,] returnedBools = new bool[bools.GetLength(0), bools.GetLength(1)];
-		Array.Copy (bools, returnedBools,0);
-		for (int y = 1; y < bools.GetLength(1)-1; y++) {
-			for (int x = 1; x < bools.GetLength(0)-1; x++) {
+	public bool[,] erosion (bool[,] bools)
+	{ // UNTESTED
+		bool[,] returnedBools = new bool[bools.GetLength (0), bools.GetLength (1)];
+		Array.Copy (bools, returnedBools, 0);
+		for (int y = 1; y < bools.GetLength (1) - 1; y++) {
+			for (int x = 1; x < bools.GetLength (0) - 1; x++) {
 				if (bools [x - 1, y - 1] && bools [x - 1, y] && bools [x, y - 1] && bools [x + 1, y - 1] && bools [x - 1, y + 1] && bools [x + 1, y + 1] && bools [x + 1, y] && bools [x, y + 1] && bools [x, y]) {
 					returnedBools [x, y] = true;
 				} else {
@@ -232,12 +211,9 @@ public class imageProcModules : MonoBehaviour
 		TimingModule.timer ("boolToFloatModule", "start");
 
 		float[,] outputFloatArray = new float[toBeConverted.GetLength (0), toBeConverted.GetLength (1)]; 
-		for (int y = 0; y < toBeConverted.GetLength (1); y++)
-		{
-			for (int x = 0; x < toBeConverted.GetLength (0); x++)
-			{
-				if (toBeConverted [x, y] == true)
-				{
+		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
+			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
+				if (toBeConverted [x, y] == true) {
 					outputFloatArray [x, y] = 1; 
 				}
 			}
@@ -260,13 +236,10 @@ public class imageProcModules : MonoBehaviour
 
 
 		bool[,] outputBoolArray = new bool[toBeConverted.GetLength (1), toBeConverted.GetLength (0)];
-		for (int y = 0; y < toBeConverted.GetLength (1); y++)
-		{
-			for (int x = 0; x < toBeConverted.GetLength (0); x++)
-			{
+		for (int y = 0; y < toBeConverted.GetLength (1); y++) {
+			for (int x = 0; x < toBeConverted.GetLength (0); x++) {
 
-				if (toBeConverted [x, y] > 0.5f)
-				{
+				if (toBeConverted [x, y] > 0.5f) {
 					outputBoolArray [x, y] = true; 
 				}
 			}
@@ -279,24 +252,21 @@ public class imageProcModules : MonoBehaviour
 	public float[,] generateTrees (float[,] inputArea, int treeSpace)
 	{
 		// when treePositions[0, x_value], a tree's x position is accessed
-        // when treePositions[1, y_value], a tree's y position is accessed
-        // the y index is set to 10000 to ensure that there are space for enough trees to be spawned
+		// when treePositions[1, y_value], a tree's y position is accessed
+		// the y index is set to 10000 to ensure that there are space for enough trees to be spawned
 		float[,] treePositions = new float[2, 10000];
-        // Ensures that trees look randomly placed
+		// Ensures that trees look randomly placed
 		float nextXPosition = UnityEngine.Random.Range (2f, 5f); 
-        float nextYPosition = UnityEngine.Random.Range(2f, 5f);
-        // ensures that the trees are not too close to each other
+		float nextYPosition = UnityEngine.Random.Range (2f, 5f);
+		// ensures that the trees are not too close to each other
    
-        // keeps track of how many trees are spawned
+		// keeps track of how many trees are spawned
 		int index = 0; 
 
-        for (int y = 0; y < inputArea.GetLength (1); y += treeSpace)
-		{
-            for (int x = 0; x < inputArea.GetLength (0); x += treeSpace)
-			{
+		for (int y = 0; y < inputArea.GetLength (1); y += treeSpace) {
+			for (int x = 0; x < inputArea.GetLength (0); x += treeSpace) {
 				// Checks if the pixel scanned is white, and if the x and y positions are within the map
-                if (inputArea [x, y] == 1f && x + nextXPosition <= inputArea.GetLength(0) && y + nextYPosition <= inputArea.GetLength(1))
-				{
+				if (inputArea [x, y] == 1f && x + nextXPosition <= inputArea.GetLength (0) && y + nextYPosition <= inputArea.GetLength (1)) {
 					treePositions [0, index] = ((float)x + nextXPosition) / inputArea.GetLength (0); 
 					treePositions [1, index] = ((float)y + nextYPosition) / inputArea.GetLength (1);
 					index++; 
@@ -306,14 +276,13 @@ public class imageProcModules : MonoBehaviour
 				} 
 			}
 		}
-        // The array is resized to the number of tree's that are spawned, so 10000 trees are not spawned everytime.w
-        float[,] output = new float[2,index];
-        for (int i = 0; i < output.GetLength(1); i++)
-        {
-            output[0, i] = treePositions[0, i];
-            output[1, i] = treePositions[1, i];
-        }
-        return output;
+		// The array is resized to the number of tree's that are spawned, so 10000 trees are not spawned everytime.w
+		float[,] output = new float[2, index];
+		for (int i = 0; i < output.GetLength (1); i++) {
+			output [0, i] = treePositions [0, i];
+			output [1, i] = treePositions [1, i];
+		}
+		return output;
 	}
 
 
@@ -327,10 +296,8 @@ public class imageProcModules : MonoBehaviour
 	{
 		TimingModule.timer ("blackframeModule", "start");
 
-		for (int y = 0; y < boolArrayToBeFramed.GetLength (1); y++)
-		{
-			for (int x = 0; x < boolArrayToBeFramed.GetLength (0); x++)
-			{
+		for (int y = 0; y < boolArrayToBeFramed.GetLength (1); y++) {
+			for (int x = 0; x < boolArrayToBeFramed.GetLength (0); x++) {
 
 				if (y == 0)
 					boolArrayToBeFramed [x, y] = true; 
@@ -371,10 +338,8 @@ public class imageProcModules : MonoBehaviour
 	{
 		TimingModule.timer ("subtractModule", "start");
 
-		for (int y = 0; y < Base.GetLength (1); y++)
-		{
-			for (int x = 0; x < Base.GetLength (0); x++)
-			{
+		for (int y = 0; y < Base.GetLength (1); y++) {
+			for (int x = 0; x < Base.GetLength (0); x++) {
 
 				Base [x, y] -= subtract [x, y];
 
@@ -398,10 +363,8 @@ public class imageProcModules : MonoBehaviour
 	{
 		TimingModule.timer ("addModule", "start");
 
-		for (int y = 0; y < Base.GetLength (1); y++)
-		{
-			for (int x = 0; x < Base.GetLength (0); x++)
-			{
+		for (int y = 0; y < Base.GetLength (1); y++) {
+			for (int x = 0; x < Base.GetLength (0); x++) {
 
 				Base [x, y] += add [x, y];
 
@@ -413,20 +376,18 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-/// <summary>
-/// Compressing and subtracting subtractor from base.
-/// </summary>
-/// <returns>The and subtract.</returns>
-/// <param name="Base">Base.</param>
-/// <param name="subtractor">Subtractor.</param>
+	/// <summary>
+	/// Compressing and subtracting subtractor from base.
+	/// </summary>
+	/// <returns>The and subtract.</returns>
+	/// <param name="Base">Base.</param>
+	/// <param name="subtractor">Subtractor.</param>
 	public float [,] compressAndSubtract (float[,] Base, float[,] subtractor)
 	{
 		TimingModule.timer ("riverGenerateModule", "start");
 
-		for (int y = 0; y < Base.GetLength (1); y++)
-		{
-			for (int x = 0; x < Base.GetLength (0); x++)
-			{
+		for (int y = 0; y < Base.GetLength (1); y++) {
+			for (int x = 0; x < Base.GetLength (0); x++) {
 				Base [x, y] -= (subtractor [x, y]) * Base [x, y];
 			}
 		}
@@ -439,10 +400,8 @@ public class imageProcModules : MonoBehaviour
 	public float[,] flip (float[,] inp)
 	{
 		return inp;
-		for (int y = 0; y < inp.GetLength (1); y++)
-		{
-			for (int x = 0; x < inp.GetLength (0); x++)
-			{
+		for (int y = 0; y < inp.GetLength (1); y++) {
+			for (int x = 0; x < inp.GetLength (0); x++) {
 				inp [x, y] = inp [y, x];
 			}
 		}
@@ -468,24 +427,20 @@ public class TimingModule
 	/// <param name="status">Status.</param>
 	public static void timer (string name, string status)
 	{
-		if (name == "program" && status == "start")
-		{
+		if (name == "program" && status == "start") {
 			startTimeOfProgram = Time.realtimeSinceStartup;
 		}
 
-		if (name == "program" && status == "end")
-		{
+		if (name == "program" && status == "end") {
 			endTimeOfProgram = Time.realtimeSinceStartup;
 			Debug.Log (name + " took " + (endTimeOfProgram - startTimeOfProgram) * 1000 + " miliseconds");
 		}
 
-		if (name != "program" && status == "start")
-		{
+		if (name != "program" && status == "start") {
 			startTimeOfModule = Time.realtimeSinceStartup;
 		}
 
-		if (name != "program" && status == "end")
-		{
+		if (name != "program" && status == "end") {
 			endTimeOfModule = Time.realtimeSinceStartup;
 			Debug.Log (name + " took " + (endTimeOfModule - startTimeOfModule) * 1000 + " miliseconds");
 		}
