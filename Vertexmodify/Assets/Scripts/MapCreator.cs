@@ -20,6 +20,7 @@ public class MapCreator : MonoBehaviour
 	public float[,] river;
 	public float riverButtom = 0.2f;
 	public Terrain Grass;
+    public GameObject Key;
 
 	public float baseHeight, intensity, density, mountainHeight;
 	int biggestDimension;
@@ -88,6 +89,7 @@ public class MapCreator : MonoBehaviour
 
 		Grass.terrainData.SetHeights (0, 0, grass);
 
+        SpawnPrefab(255, 255, mainTerrain);
 
 		TimingModule.timer ("program", "end");
 
@@ -203,6 +205,13 @@ public class MapCreator : MonoBehaviour
 
 		return (mg.mountainRemove (randomMountains, mountainArea, mountainHeight));
 	}
+
+    void SpawnPrefab(int x, int y, Terrain heightmap)
+    {
+        float currentHeight = heightmap.terrainData.GetHeight(x, y);
+        GameObject.Instantiate(Key, new Vector3(x, currentHeight + 2, y), Quaternion.identity);
+
+    }
 
 
 
