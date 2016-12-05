@@ -62,10 +62,10 @@ public class MapCreator : MonoBehaviour
 
 
 		//GENERATION: 		////////////
-		//bool[,] yellow = colorScanScript.colorDetection (colorScanScript.originalImage, 0.15f, 0.23f, 0.20f, 0.9f); // getting colors from input image
-		bool[,] red = colorScanScript.colorDetection (colorScanScript.originalImage, 0.97f, 0.1f, 0.40f, 0.55f); // getting colors from input image
-		bool[,] green = colorScanScript.colorDetection (colorScanScript.originalImage, 0.14f, 0.52f, 0.17f, 0.2f); // getting colors from input image
-		bool[,] blue = colorScanScript.colorDetection (colorScanScript.originalImage, 0.55f, 0.65f, 0.13f, 0.3f); // getting colors from input image
+		bool[,] yellow = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.15f, 0.23f, 0.20f, 0.9f); // getting colors from input image
+		bool[,] red = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.97f, 0.1f, 0.40f, 0.55f); // getting colors from input image
+		bool[,] green = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.14f, 0.52f, 0.17f, 0.2f); // getting colors from input image
+		bool[,] blue = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.55f, 0.65f, 0.13f, 0.3f); // getting colors from input image
 
 
 		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
@@ -76,11 +76,21 @@ public class MapCreator : MonoBehaviour
 		float[,] mountains = generateMountains (red, mountainHeight);
 		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
 
+		Blob[] blobs = blobClassify.grassFire (modules.floodFillQueue (green));
+		for (int i = 0; i < blobs.Length; i++) {
+			print (blobs [i].type);
+			if (blobs [i].type == "Triangle") {
+				print ("spawning player at: " + blobs [i].CenterOfMass.x + ", " + blobs [i].CenterOfMass.y + " with the angle: " + blobs [i].angle);
+			}
+		}
+
+
+
 		float[,] grass = new float[perlin.GetLength (0), perlin.GetLength (1)];
 		Buffer.BlockCopy (rivers, 0, grass, 0, rivers.Length * sizeof(float));
 
 		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
-		generateTrees (green);
+
 
 		Terrain mainTerrain = GameObject.Find ("Terrain").GetComponent <Terrain> ();
 		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
@@ -88,7 +98,9 @@ public class MapCreator : MonoBehaviour
 
 		Grass.terrainData.SetHeights (0, 0, grass);
 
+		generateTrees (yellow);
 
+		colorScanScript.printBinary (blue);
 		TimingModule.timer ("program", "end");
 
 	}

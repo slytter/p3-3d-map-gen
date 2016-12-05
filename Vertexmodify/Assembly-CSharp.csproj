@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\ColorDetection.cs" />
      <Compile Include="Assets\Scripts\MapCreator.cs" />
      <Compile Include="Assets\Scripts\MountainGeneration.cs" />
+     <Compile Include="Assets\Scripts\blobClassify.cs" />
      <Compile Include="Assets\Scripts\cameraScript.cs" />
      <Compile Include="Assets\Scripts\gameState.cs" />
      <Compile Include="Assets\Scripts\imageProcModules.cs" />

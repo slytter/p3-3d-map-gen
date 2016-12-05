@@ -8,6 +8,18 @@ using System.Linq;
 public class imageProcModules : MonoBehaviour
 {
 
+	public Color[] RBGNormalize (Color[] inputImg)
+	{
+		Color[] output = new Color[inputImg.Length];
+		for (int i = 0; i < inputImg.Length; i++) {
+			float RGBTotal = inputImg [i].r + inputImg [i].g + inputImg [i].b;
+			output [i].r = inputImg [i].r / RGBTotal;
+			output [i].g = inputImg [i].g / RGBTotal;
+			output [i].b = inputImg [i].b / RGBTotal;
+		}
+		return  output;
+	}
+
 	/// <summary>
 	/// Perlin the specified inp.
 	/// </summary>
