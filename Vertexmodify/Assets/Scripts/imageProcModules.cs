@@ -464,13 +464,4 @@ public class TimingModule
 }
 
 
-public class Blob
-{
-	public int number;
-	public int area;
-	public Vector2 CenterOfMass = new Vector2 (0, 0);
-	public string type;
-	public int corners;
-	public float angle;
-}
 
