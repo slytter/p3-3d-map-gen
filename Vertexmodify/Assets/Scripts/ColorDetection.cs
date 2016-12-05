@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor; 
+using UnityEditor;
 using System.Collections;
 using System;
 using System.IO;
@@ -11,52 +11,50 @@ public class ColorDetection : MonoBehaviour
 	public Color[] originalImage;
 	public int widthOfTex;
 	public int heightOfTex;
-	TextureImporter importer; 
-	string path = "WebcamBilleder/25-11-2016-13-51-24.png"; 
+	TextureImporter importer;
+	string path;
 	Texture2D originalTexture;
 
 	gameState gameState;
 
-    //imageProcModules m;
+	//imageProcModules m;
 
-	void Awake(){
-		try{
-			gameState = GameObject.Find("gameState").GetComponent<gameState>();
+	void Awake ()
+	{
+		try {
+			gameState = GameObject.Find ("gameState").GetComponent<gameState> ();
 			path = "WebcamBilleder/" + gameState.chosenImage;
 			print ("Assets/Resources/" + path);
 			AssetDatabase.Refresh ();
-			importer = (TextureImporter)TextureImporter.GetAtPath("Assets/Resources/" + path);
+			importer = (TextureImporter)TextureImporter.GetAtPath ("Assets/Resources/" + path);
 			importer.textureType = TextureImporterType.Advanced;
 			importer.textureFormat = TextureImporterFormat.ARGB32;
 			importer.isReadable = true;
-			importer.maxTextureSize = 1028;
+			importer.maxTextureSize = 512;
 			importer.npotScale = TextureImporterNPOTScale.ToSmaller;
-			importer.SaveAndReimport();
+			importer.SaveAndReimport ();
 			AssetDatabase.Refresh ();
-		}
-
-		catch{
+		} catch {
 			print ("Could not import webcam image from Awake()");
 		}
 
 
 	}
-    void Start () { 
+
+	void Start ()
+	{ 
 
 		Texture2D newTexture;
 
-		try{
-			gameState = GameObject.Find("gameState").GetComponent<gameState>();
+		try {
+			gameState = GameObject.Find ("gameState").GetComponent<gameState> ();
 
-			originalTexture = Resources.Load ("WebcamBilleder/" + Path.GetFileNameWithoutExtension(path), typeof(Texture2D)) as Texture2D; 
+			originalTexture = Resources.Load ("WebcamBilleder/" + Path.GetFileNameWithoutExtension (path), typeof(Texture2D)) as Texture2D; 
 			print ("looking for image in: " + "WebcamBilleder/" + gameState.chosenImage);
 
-			GetComponent<Renderer> ().material.mainTexture = originalTexture; 
+			GetComponent<Renderer> ().material.mainTexture = originalTexture;
 			originalImage = originalTexture.GetPixels ();
-		}
-
-
-		catch{
+		} catch {
 			print ("gameState object non existing, using test img");
 		}
 
@@ -74,9 +72,9 @@ public class ColorDetection : MonoBehaviour
 		widthOfTex = originalTexture.width;
 		heightOfTex = originalTexture.height;
 		
-		print (widthOfTex  + ", h: " + heightOfTex);
+		print (widthOfTex + ", h: " + heightOfTex);
 
-    }
+	}
 
 
 	/// <summary>
@@ -88,7 +86,8 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="hueMin">Hue minimum.</param>
 	/// <param name="sat">Sat.</param>
 	/// <param name="val">Value.</param>
-	public bool [,] colorDetection (Color[] pixN, float hueMin, float hueMax, float sat, float val) {
+	public bool [,] colorDetection (Color[] pixN, float hueMin, float hueMax, float sat, float val)
+	{
 
 		Texture2D newIm = new Texture2D (widthOfTex, heightOfTex); // Only used for width & height.
 
@@ -124,7 +123,6 @@ public class ColorDetection : MonoBehaviour
 				}
 			}
 		}
-		printBinary (pixelPosOutput); 
 		return (pixelPosOutput); 
 	}
 
@@ -136,15 +134,16 @@ public class ColorDetection : MonoBehaviour
 	/// <param name="input">Input.</param>
 	/// <param name="pixN">Pix n.</param>
 	/// <param name="newIm">New im.</param>
-	public void printBinary (bool[,] input) {
+	public void printBinary (bool[,] input)
+	{
 		Color[] pixN = new Color[input.GetLength (0) * input.GetLength (1)];
-		for (int y = 0; y < input.GetLength(1); y++) {
-			for (int x = 0; x < input.GetLength(0); x++) {
+		for (int y = 0; y < input.GetLength (1); y++) {
+			for (int x = 0; x < input.GetLength (0); x++) {
 
 				if (input [x, y]) {
-					pixN [y * input.GetLength(0) + x] = new Color (1, 1, 1);
+					pixN [y * input.GetLength (0) + x] = new Color (1, 1, 1);
 				} else {
-					pixN [y * input.GetLength(0) + x] = new Color (0, 0, 0);
+					pixN [y * input.GetLength (0) + x] = new Color (0, 0, 0);
 				}
 			}
 		}
@@ -153,10 +152,11 @@ public class ColorDetection : MonoBehaviour
 		image.Apply ();	
 	}
 
-	public void printBinary (float[,] input) {
+	public void printBinary (float[,] input)
+	{
 		Color[] pixN = new Color[input.GetLength (0) * input.GetLength (1)];
-		for (int y = 0; y < input.GetLength(1); y++) {
-			for (int x = 0; x < input.GetLength(0); x++) {
+		for (int y = 0; y < input.GetLength (1); y++) {
+			for (int x = 0; x < input.GetLength (0); x++) {
 				pixN [y * input.GetLength (0) + x].r = input [x, y];
 				pixN [y * input.GetLength (0) + x].g = input [x, y];
 				pixN [y * input.GetLength (0) + x].b = input [x, y];
