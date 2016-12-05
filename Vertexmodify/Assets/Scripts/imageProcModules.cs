@@ -519,8 +519,6 @@ public class imageProcModules : MonoBehaviour
 
 
 
-
-		//
 		int incr = 0;
 		float[] lengths = new float[10000]; //set to edge area!!
 		float[] angles = new float[10000];
@@ -553,16 +551,15 @@ public class imageProcModules : MonoBehaviour
 
 
 		for (int i = 0; i < sortedAngles.Length; i++) {
-			print ("angle: " + sortedAngles [i]);
 			int unsortedIndex = findIndex (angles, sortedAngles [i]);
 
 			sortedLengths [i] = lengths [unsortedIndex];
 			meanLength += sortedLengths [i];
-
-			print (lengths [unsortedIndex]);
 		}
+			
 
 		meanLength /= sortedLengths.Length;
+
 
 		bool under = true;
 		int crossingTheMean = 0;
@@ -574,22 +571,24 @@ public class imageProcModules : MonoBehaviour
 
 		Debug.DrawLine (new Vector3 (0, 60f, meanLength), new Vector3 (sortedAngles.Length, 60f, meanLength), Color.green, 10000f);
 
-
-
 		for (int x = 0; x < sortedAngles.Length; x++) {
 			if ((under && sortedLengths [x] > meanLength + 2f) || (!under && sortedLengths [x] < meanLength - 2f)) {
 				under = !under;
 				crossingTheMean++;
 			}
-
 			Debug.DrawLine (new Vector3 (x, 60f, 0), new Vector3 (x, 60f, sortedLengths [x]), Color.blue, 10000f);
 		}
 		Debug.Log ("Number of sides: " + (crossingTheMean / 2));
 
+		if ((int)crossingTheMean % 2 == 1) {
+			Debug.LogError ("Blob has uneven cornercrossings, which resolves in the blob having " + (float)crossingTheMean / 2f + " corners");
+		}
 
 		colorScanScript.printBinary (blobsEdges);
 		return blobs;
 	}
+
+
 
 	public int findIndex (float[] inp, float search)
 	{
@@ -633,7 +632,7 @@ public class TimingModule
 
 		if (name == "program" && status == "end") {
 			endTimeOfProgram = Time.realtimeSinceStartup;
-//			Debug.Log (name + " took " + (endTimeOfProgram - startTimeOfProgram) * 1000 + " miliseconds");
+			Debug.Log (name + " took " + (endTimeOfProgram - startTimeOfProgram) * 1000 + " miliseconds");
 		}
 
 		if (name != "program" && status == "start") {
@@ -657,5 +656,7 @@ public class Blob
 	public int number;
 	public int area;
 	public Vector2 CenterOfMass = new Vector2 (0, 0);
+	public string type;
+	public int corners;
 }
 
