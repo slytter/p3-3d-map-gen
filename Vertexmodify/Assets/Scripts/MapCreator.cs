@@ -19,6 +19,7 @@ public class MapCreator : MonoBehaviour
 	public float[,] newHeightMap;
 	public float[,] river;
 	public float riverButtom = 0.2f;
+	public Terrain Grass;
 
 	public float baseHeight, intensity, density, mountainHeight;
 	int biggestDimension;
@@ -70,13 +71,22 @@ public class MapCreator : MonoBehaviour
 		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
 		perlin = modules.perlin (perlin, baseHeight / 2, intensity * 6, density / 4); //two perlin noises to create more 'real' density
 
-		float[,] mountains = generateMountains (red, mountainHeight);
 
+
+		float[,] mountains = generateMountains (red, mountainHeight);
 		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
+
+		float[,] grass = new float[perlin.GetLength (0), perlin.GetLength (1)];
+		Buffer.BlockCopy (rivers, 0, grass, 0, rivers.Length * sizeof(float));
+
 		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
 		generateTrees (green);
 
-		currentTerrain.terrainData.SetHeights (0, 0, finalMap);
+		Terrain mainTerrain = GameObject.Find ("Terrain").GetComponent <Terrain> ();
+		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
+
+
+		Grass.terrainData.SetHeights (0, 0, grass);
 
 
 		TimingModule.timer ("program", "end");
