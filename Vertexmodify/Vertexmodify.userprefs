@@ -1,10 +1,14 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/blobClassify.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MapCreator.cs">
     <Files>
-      <File FileName="Assets/Scripts/MapCreator.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/imageProcModules.cs" Line="175" Column="1" />
-      <File FileName="Assets/Scripts/blobClassify.cs" Line="226" Column="19" />
+      <File FileName="Assets\Scripts\MapCreator.cs" Line="49" Column="39" />
+      <File FileName="..\..\..\Desktop\using.cs" Line="79" Column="1" />
+      <File FileName="Assets\Scripts\imageProcModules.cs" Line="278" Column="49" />
+      <File FileName="Assets\Scripts\ColorDetection.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\cameraScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MountainGeneration.cs" Line="33" Column="53" />
+      <File FileName="Assets\Scripts\blobClassify.cs" Line="16" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

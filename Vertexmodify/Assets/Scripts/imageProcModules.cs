@@ -7,6 +7,13 @@ using System.Linq;
 
 public class imageProcModules : MonoBehaviour
 {
+	
+	public float[,] blockCopy(float[,] inputArray){
+		float[,] output = new float[inputArray.GetLength (0), inputArray.GetLength (1)];
+		Buffer.BlockCopy (inputArray, 0, output, 0, inputArray.Length * sizeof(float));
+		return output;
+	}
+
 
 	public Color[] RBGNormalize (Color[] inputImg)
 	{
@@ -261,7 +268,7 @@ public class imageProcModules : MonoBehaviour
 		return outputBoolArray; 
 	}
 
-	public float[,] generateTrees (float[,] inputArea, int treeSpace)
+	public float[,] generateTreePositions (float[,] inputArea, int treeSpace)
 	{
 		// when treePositions[0, x_value], a tree's x position is accessed
 		// when treePositions[1, y_value], a tree's y position is accessed
