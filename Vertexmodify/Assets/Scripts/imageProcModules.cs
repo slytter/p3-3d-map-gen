@@ -8,7 +8,7 @@ using System.Linq;
 public class imageProcModules : MonoBehaviour
 {
 
-	public static Color[] RBGNormalize (Color[] inputImg)
+	public Color[] RBGNormalize (Color[] inputImg)
 	{
 		Color[] output = new Color[inputImg.Length];
 		for (int i = 0; i < inputImg.Length; i++) {
@@ -24,7 +24,7 @@ public class imageProcModules : MonoBehaviour
 	/// Perlin the specified inp.
 	/// </summary>
 	/// <param name="inp">Inp.</param>
-	public static float [,] perlin (float[,] inp, float baseHeight, float intensity, float density)
+	public float [,] perlin (float[,] inp, float baseHeight, float intensity, float density)
 	{
 		TimingModule.timer ("perlinModule", "start");
 		float px, py;
@@ -41,7 +41,7 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	public static bool [,] floodFillQueue (bool[,] inputPicture)
+	public bool [,] floodFillQueue (bool[,] inputPicture)
 	{
 		TimingModule.timer ("floodFillModule", "start");
 		inputPicture = blackFrame (inputPicture);
@@ -90,7 +90,7 @@ public class imageProcModules : MonoBehaviour
 	/// Invert the specified boolArray.
 	/// </summary>
 	/// <param name="boolArray">Bool array.</param>
-	public static bool[,] invert (bool[,] boolArray)
+	public bool[,] invert (bool[,] boolArray)
 	{
 		TimingModule.timer ("invertModule", "start");
 		for (int y = 0; y < boolArray.GetLength (1); y++) {
@@ -110,7 +110,7 @@ public class imageProcModules : MonoBehaviour
 	/// <returns>The value gen.</returns>
 	/// <param name="height">Height.</param>
 	/// <param name="length">Length.</param>
-	public static float[,] randomValGen (int height, int length)
+	public float[,] randomValGen (int height, int length)
 	{
 		TimingModule.timer ("randomValueGenerator", "start");
 		float[,] randomValues = new float[height, length];
@@ -131,7 +131,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <param name="heightMap">2D float height map.</param>
 	/// <param name="smoothing">Number of iterations.</param>
-	public static float[,] gaussian (float[,] heightMap, int smoothing)
+	public float[,] gaussian (float[,] heightMap, int smoothing)
 	{
 		TimingModule.timer ("gaussianModule", "start");
 		for (int k = 0; k < smoothing; k++) {
@@ -167,7 +167,7 @@ public class imageProcModules : MonoBehaviour
 	/// Dilate the specified boolean array.
 	/// </summary>
 	/// <param name="bools">Bools.</param>
-	public static bool[,] dilation (bool[,] bools)
+	public bool[,] dilation (bool[,] bools)
 	{
 		TimingModule.timer ("dilationModule", "start");
 
@@ -195,7 +195,7 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	public static bool[,] erosion (bool[,] bools)
+	public bool[,] erosion (bool[,] bools)
 	{ // UNTESTED
 		bool[,] returnedBools = new bool[bools.GetLength (0), bools.GetLength (1)];
 		Array.Copy (bools, returnedBools, 0);
@@ -218,7 +218,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <returns>The to float.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
-	public static float [,] boolToFloat (bool[,] toBeConverted)
+	public float [,] boolToFloat (bool[,] toBeConverted)
 	{
 		TimingModule.timer ("boolToFloatModule", "start");
 
@@ -242,7 +242,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <returns>The to bool.</returns>
 	/// <param name="toBeConverted">To be converted.</param>
-	public static bool [,] floatToBool (float[,] toBeConverted)
+	public bool [,] floatToBool (float[,] toBeConverted)
 	{
 		TimingModule.timer ("floatToBoolModule", "start");
 
@@ -261,7 +261,7 @@ public class imageProcModules : MonoBehaviour
 		return outputBoolArray; 
 	}
 
-	public static float[,] generateTrees (float[,] inputArea, int treeSpace)
+	public float[,] generateTrees (float[,] inputArea, int treeSpace)
 	{
 		// when treePositions[0, x_value], a tree's x position is accessed
 		// when treePositions[1, y_value], a tree's y position is accessed
@@ -304,7 +304,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
-	private static bool [,] blackFrame (bool[,] boolArrayToBeFramed)
+	private bool [,] blackFrame (bool[,] boolArrayToBeFramed)
 	{
 		TimingModule.timer ("blackframeModule", "start");
 
@@ -346,7 +346,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <param name="Base">Base.</param>
 	/// <param name="subtract">Subtract.</param>
-	public static float [,] subtract (float[,] Base, float[,] subtract)
+	public float [,] subtract (float[,] Base, float[,] subtract)
 	{
 		TimingModule.timer ("subtractModule", "start");
 
@@ -394,7 +394,7 @@ public class imageProcModules : MonoBehaviour
 	/// <returns>The and subtract.</returns>
 	/// <param name="Base">Base.</param>
 	/// <param name="subtractor">Subtractor.</param>
-	public static  float [,] compressAndSubtract (float[,] Base, float[,] subtractor)
+	public float [,] compressAndSubtract (float[,] Base, float[,] subtractor)
 	{
 		TimingModule.timer ("riverGenerateModule", "start");
 
@@ -409,7 +409,7 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	public static float[,] flip (float[,] inp)
+	public float[,] flip (float[,] inp)
 	{
 		return inp;
 		for (int y = 0; y < inp.GetLength (1); y++) {
