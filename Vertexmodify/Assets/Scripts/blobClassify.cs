@@ -13,7 +13,7 @@ static public class blobClassify
 	/// </summary>
 	/// <returns>The fire.</returns>
 	/// <param name="inputPicture">Input picture.</param>
-	static public Blob[] grassFire (bool[,] inputPicture)
+	public static Blob[] grassFire (bool[,] inputPicture)
 	{
 		float[,] blobsGradient = new float[inputPicture.GetLength (0), inputPicture.GetLength (1)];
 		float[,] blobsEdges = new float[inputPicture.GetLength (0), inputPicture.GetLength (1)];
