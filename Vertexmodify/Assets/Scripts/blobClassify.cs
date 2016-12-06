@@ -20,6 +20,7 @@ static public class blobClassify
 
 		int blobTag = 1; // 0 is background
 
+
 		Queue<int> qX = new Queue<int> ();
 		Queue<int> qY = new Queue<int> ();
 
@@ -91,6 +92,11 @@ static public class blobClassify
 					blobs [(int)blobsGradient [x, y]].CenterOfMass.x += x;
 					blobs [(int)blobsGradient [x, y]].area++;
 				}
+
+				if (blobsEdges [x, y] != 0f)
+				{
+					blobs [(int)blobsEdges [x, y]].edgeArea++;
+				}
 			}
 		}
 
@@ -123,8 +129,8 @@ static public class blobClassify
 	private static Blob calculateCorners (float[,] blobsEdges, Blob[] blobs, int index)
 	{
 		int incr = 0;
-		float[] lengths = new float[10000]; //set to edge area!!
-		float[] angles = new float[10000];
+		float[] lengths = new float[blobs [index].edgeArea]; //set to edge area!!
+		float[] angles = new float[blobs [index].edgeArea];
 
 		for (int y = 0; y < blobsEdges.GetLength (1); y++) {
 			for (int x = 0; x < blobsEdges.GetLength (0); x++) {
@@ -140,8 +146,6 @@ static public class blobClassify
 				}
 			}
 		}
-		Array.Resize<float> (ref angles, incr);
-		Array.Resize<float> (ref lengths, incr);
 		float meanLength = 0f;
 		float[] sortedAngles = new float[incr];
 		Array.Copy (angles, sortedAngles, incr);
@@ -250,4 +254,5 @@ public class Blob
 	public string type;
 	public int corners;
 	public float angle;
+	public int edgeArea;
 }

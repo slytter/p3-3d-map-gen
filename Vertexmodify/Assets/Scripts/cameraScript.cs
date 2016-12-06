@@ -10,7 +10,8 @@ public class cameraScript : MonoBehaviour {
     public GameObject targetPlane; 
     public RawImage rawimage;
 	protected Color [] pixFromSnap; 
-	Texture2D tex1; 
+	Texture2D originalImageFromWebcam;
+	Texture2D flippedImageFromCamera;
 	WebCamTexture webcamTexture; 
 
 	public Texture2D outputImage;
@@ -30,27 +31,24 @@ public class cameraScript : MonoBehaviour {
 		retakeButton.SetActive (false);
 		snapButton.SetActive (true);
     }
-	
-
-	void Update () {
-
-	}
 
 	public void Snapshot() {
 
-		tex1.SetPixels(webcamTexture.GetPixels()); 
-		tex1.Apply ();
-		targetPlane.GetComponent<Renderer> ().material.mainTexture = tex1; 
+		originalImageFromWebcam.SetPixels(webcamTexture.GetPixels()); 
+		originalImageFromWebcam.Apply ();
+		targetPlane.GetComponent<Renderer> ().material.mainTexture = originalImageFromWebcam; 
 		rawimage.enabled = false;
 
 		currentImageName = System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
 
-        System.IO.File.WriteAllBytes(savePath + currentImageName, tex1.EncodeToPNG());
+		flippedImageFromCamera = flipXAndY (originalImageFromWebcam);
+
+		System.IO.File.WriteAllBytes(savePath + currentImageName, flippedImageFromCamera.EncodeToPNG());
 
 	    
-		pixFromSnap = tex1.GetPixels (); 
-		outputImage = tex1;
-		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
+//		pixFromSnap = originalImageFromWebcam.GetPixels (); 
+//		outputImage = originalImageFromWebcam;
+		originalImageFromWebcam = new Texture2D (webcamTexture.width,webcamTexture.height);
 
 		chooseButton.SetActive (true);
 		retakeButton.SetActive (true);
@@ -75,6 +73,26 @@ public class cameraScript : MonoBehaviour {
         Application.LoadLevel("sagen");
     }
 
+	public Texture2D flipXAndY (Texture2D original)
+	{
+		TimingModule.timer ("flipX&Y", "start");
+		Texture2D flipped = new Texture2D(original.height,original.width);
+
+		int xN = original.width -1;
+		int yN = original.height -1;
+
+
+		for(int i=0;i<xN;i++){
+			for(int j=0;j<yN;j++){
+				flipped.SetPixel(yN - j, xN-i, original.GetPixel(i,j));
+
+			}
+		}
+		flipped.Apply();
+		TimingModule.timer ("flipX&Y", "end");
+
+		return flipped;
+	}
 
 	IEnumerator initWebcam(){
 		webcamTexture = new WebCamTexture();
@@ -98,7 +116,7 @@ public class cameraScript : MonoBehaviour {
 		rawimage.texture = webcamTexture;
 		//rawimage.material.mainTexture = webcamTexture;
 
-		tex1 = new Texture2D (webcamTexture.width,webcamTexture.height);
+		originalImageFromWebcam = new Texture2D (webcamTexture.width,webcamTexture.height);
 
 		Debug.Log ("The height of the webcam is: " + webcamTexture.height + " The width of the webcam is: " + webcamTexture.width); 
 	}
