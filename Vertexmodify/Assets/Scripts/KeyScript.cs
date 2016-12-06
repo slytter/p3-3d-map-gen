@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class KeyScript : MonoBehaviour {
+    
     [SerializeField]
     private float rotateSpeed = 1.0f;
 
@@ -27,7 +28,4 @@ public class KeyScript : MonoBehaviour {
     void Start () {
         StartCoroutine(Spin());
     }
-	void Update () {
-	
-	}
 }

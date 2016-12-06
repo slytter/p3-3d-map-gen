@@ -10,15 +10,25 @@ public class UpdateUI : MonoBehaviour {
     [SerializeField]
     private Text keysLabel;
 
+    [SerializeField]
+    public Text helperText;
+
 	// Use this for initialization
-	void Start () {
-	
+	void Awake() {
+        helperText.GetComponent<Text>().enabled = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        
         timerLabel.text = FormatTime(GameManager.instance.TimeRemaining);
         keysLabel.text = GameManager.instance.NumKeys.ToString();
+        if (GameManager.instance.NumKeys == GameManager.instance.maxKeys)
+        {
+            helperText.GetComponent<Text>().enabled = true;
+
+        }
+
 	}
 
     // Converting the time from seconds to minutes and seconds

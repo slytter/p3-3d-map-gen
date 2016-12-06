@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\CollisionLogic.cs" />
      <Compile Include="Assets\Scripts\ColorDetection.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GateScript.cs" />
      <Compile Include="Assets\Scripts\KeyScript.cs" />
      <Compile Include="Assets\Scripts\MapCreator.cs" />
      <Compile Include="Assets\Scripts\MountainGeneration.cs" />
