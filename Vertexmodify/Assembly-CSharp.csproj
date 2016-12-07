@@ -45,6 +45,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\LowPolyWorld\Scripts\LowPolyMesh.cs" />
+     <Compile Include="Assets\LowPolyWorld\Scripts\LowPolyTerrain.cs" />
+     <Compile Include="Assets\LowPolyWorld\Scripts\LowPolyWater.cs" />
+     <Compile Include="Assets\LowPolyWorld\Scripts\LowPolyWorld.cs" />
      <Compile Include="Assets\Scripts\CollisionLogic.cs" />
      <Compile Include="Assets\Scripts\ColorDetection.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
@@ -162,6 +166,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VignettingShader.shader" />
      <None Include="Assets\misc\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
+     <None Include="Assets\LowPolyWorld\Shaders\StandardVertex.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Tonemapper.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA2.shader" />
