@@ -8,7 +8,8 @@ using System.Linq;
 public class imageProcModules : MonoBehaviour
 {
 	
-	public float[,] blockCopy(float[,] inputArray){
+	public float[,] blockCopy (float[,] inputArray)
+	{
 		float[,] output = new float[inputArray.GetLength (0), inputArray.GetLength (1)];
 		Buffer.BlockCopy (inputArray, 0, output, 0, inputArray.Length * sizeof(float));
 		return output;
@@ -311,7 +312,7 @@ public class imageProcModules : MonoBehaviour
 	/// </summary>
 	/// <returns>The frame.</returns>
 	/// <param name="boolArrayToBeFramed">Bool array to be framed.</param>
-	private bool [,] blackFrame (bool[,] boolArrayToBeFramed)
+	public bool [,] blackFrame (bool[,] boolArrayToBeFramed)
 	{
 		TimingModule.timer ("blackframeModule", "start");
 

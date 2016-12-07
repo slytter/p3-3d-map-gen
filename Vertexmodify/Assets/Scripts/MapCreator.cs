@@ -18,32 +18,35 @@ public class MapCreator : MonoBehaviour
 	public float[,] river;
 	public float riverButtom = 0.2f;
 	public Terrain Grass;
-    public GameObject Key;
+	public GameObject Key;
 	public Terrain mainTerrain;
 	public float baseHeight = 0.2f, intensity = 20f, density = 20f, mountainHeight = 0.5f;
 	int biggestDimension;
 	public GameObject givenObj;
 
 
-	void Start () {
+	void Start ()
+	{
 		init ();
 		mainTerrain = mapSize (mainTerrain);
 
 		//GENERATION: 		////////////
-		bool[,] yellow	= scanModules.colorDetection ( (scanModules.originalImage), 0.1f, 0.19f, 0.5f, 0.3f); // getting colors from input image
-		bool[,] red 	= scanModules.colorDetection ( (scanModules.originalImage), 0.97f, 0.1f, 0.20f, 0.55f); // getting colors from input image
-		bool[,] green 	= scanModules.colorDetection ( (scanModules.originalImage), 0.23f, 0.52f, 0.17f, 0.2f); // getting colors from input image
-		bool[,] blue 	= scanModules.colorDetection ( (scanModules.originalImage), 0.60f, 0.69f, 0.1f, 0.1f); // getting colors from input image
+		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.1f, 0.19f, 0.5f, 0.3f); // getting colors from input image
+		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.97f, 0.1f, 0.20f, 0.55f); // getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.23f, 0.52f, 0.17f, 0.2f); // getting colors from input image
+		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.60f, 0.69f, 0.1f, 0.1f); // getting colors from input image
 
-		float[,] mountains 		= generateMountains (red, mountainHeight);
-		float[,] baseMap 		= imageModules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
-		float[,] riversAndBase 	= generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
+		float[,] mountains = generateMountains (red, mountainHeight);
+		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
+		float[,] riversAndBase = generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
 
 		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
 		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
 
 		blobClassify.debug = true;
-		Blob[] blobs = blobClassify.grassFire ((yellow));
+
+		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (blue));
+
 		for (int i = 0; i < blobs.Length; i++) {
 			print (blobs [i].type);
 			if (blobs [i].type == "Triangle") {
@@ -52,22 +55,25 @@ public class MapCreator : MonoBehaviour
 			}
 		}
 
-        SpawnPrefab(255, 255, mainTerrain);
+		SpawnPrefab (255, 255, mainTerrain);
 
 		generateTrees (mainTerrain, yellow);
 
-		scanModules.printBinary (yellow);
+		scanModules.printBinary (blue);
 
 		TimingModule.timer ("program", "end");
 
 	}
 
-	void Update(){
+	void Update ()
+	{
 		//bool[,] yellow = scanModules.colorDetection ( (scanModules.originalImage), hueMin, humMax, sat, val); // getting colors from input image
 		//scanModules.printBinary (yellow);
 	}
-        
-	void init() {
+
+
+	void init ()
+	{
 		mainTerrain = GameObject.Find ("Terrain").GetComponent <Terrain> ();
 		TimingModule.timer ("program", "start");
 		imageModules = GetComponent<imageProcModules> ();
@@ -77,8 +83,10 @@ public class MapCreator : MonoBehaviour
 		emptyMap = new float[scanModules.widthOfTex, scanModules.heightOfTex]; // getting terrain data
 	}
 
-	Terrain mapSize(Terrain inputTerrain) {
-		inputTerrain.terrainData.size = new Vector3 (512, heightOfMap, 512); /*setting size*/ print (inputTerrain.terrainData.size.x + " :yo " + inputTerrain.terrainData.size.z);
+	Terrain mapSize (Terrain inputTerrain)
+	{
+		inputTerrain.terrainData.size = new Vector3 (512, heightOfMap, 512); /*setting size*/
+		print (inputTerrain.terrainData.size.x + " :yo " + inputTerrain.terrainData.size.z);
 		inputTerrain.terrainData.RefreshPrototypes ();	
 
 		biggestDimension = (scanModules.heightOfTex > scanModules.widthOfTex) ? scanModules.heightOfTex : scanModules.widthOfTex; //Simple if statement 
@@ -127,7 +135,7 @@ public class MapCreator : MonoBehaviour
 			//if (treePositions [0, x] != null || treePositions [1, x] != null)
 			//{
 			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
-				if (mainTerrain.terrainData.GetHeight ( (int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight) ) {
+				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
 					tree.position = new Vector3 (treePositions [1, i] * xScale, 0f, treePositions [0, i] * yScale); 
 					tree.color = Color.yellow; 
 					tree.lightmapColor = Color.yellow; 
@@ -144,12 +152,12 @@ public class MapCreator : MonoBehaviour
 	}
 
 	
-/// <summary>
-/// Generates the rivers into base.
-/// </summary>
-/// <returns>The rivers into base.</returns>
-/// <param name="area">Area.</param>
-/// <param name="basemap">Basemap.</param>
+	/// <summary>
+	/// Generates the rivers into base.
+	/// </summary>
+	/// <returns>The rivers into base.</returns>
+	/// <param name="area">Area.</param>
+	/// <param name="basemap">Basemap.</param>
 	float[,] generateRiversIntoBase (bool[,] area, float[,] basemap)
 	{
 		area = imageModules.dilation (area);
@@ -197,12 +205,12 @@ public class MapCreator : MonoBehaviour
 		return (montainModules.mountainRemove (randomMountains, mountainArea, mountainHeight));
 	}
 
-    void SpawnPrefab(int x, int y, Terrain heightmap)
-    {
-        float currentHeight = heightmap.terrainData.GetHeight(x, y);
-        GameObject.Instantiate(Key, new Vector3(x, currentHeight + 2, y), Quaternion.identity);
+	void SpawnPrefab (int x, int y, Terrain heightmap)
+	{
+		float currentHeight = heightmap.terrainData.GetHeight (x, y);
+		GameObject.Instantiate (Key, new Vector3 (x, currentHeight + 2, y), Quaternion.identity);
 
-    }
+	}
 
 
 
