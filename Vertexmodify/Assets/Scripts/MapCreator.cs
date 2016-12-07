@@ -55,7 +55,7 @@ public class MapCreator : MonoBehaviour
 			}
 		}
 
-		SpawnPrefab (255, 255, mainTerrain);
+		//SpawnPrefab (255, 255, mainTerrain);
 
 		generateTrees (mainTerrain, yellow);
 

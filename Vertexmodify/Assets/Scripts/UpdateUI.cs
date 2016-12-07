@@ -11,21 +11,26 @@ public class UpdateUI : MonoBehaviour {
     private Text keysLabel;
 
     [SerializeField]
-    public Text helperText;
+    public Image checkmark;
+
+
 
 	// Use this for initialization
 	void Awake() {
-        helperText.GetComponent<Text>().enabled = false;
+        //helperText.GetComponent<Text>().enabled = false;
+        checkmark.enabled = false;
+        print(GameManager.instance.NumKeys);
 	}
 	
 	// Update is called once per frame
 	void Update () {
         
-        timerLabel.text = FormatTime(GameManager.instance.TimeRemaining);
+        timerLabel.text = FormatTime(GameManager.instance.countedTime);
         keysLabel.text = GameManager.instance.NumKeys.ToString();
         if (GameManager.instance.NumKeys == GameManager.instance.maxKeys)
         {
-            helperText.GetComponent<Text>().enabled = true;
+            //helperText.GetComponent<Text>().enabled = true;
+            checkmark.enabled = true;
 
         }
 
