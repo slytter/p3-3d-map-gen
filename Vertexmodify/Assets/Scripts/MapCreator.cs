@@ -71,7 +71,7 @@ public class MapCreator : MonoBehaviour
 			}
 			if (blobs [i].type == "Circle") {
 				print ("spawning Gate at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
-				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, gateObj);
+				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, gateObj, new Vector3(90f, 0f, 0f));
 			}
 		}
 
@@ -229,6 +229,13 @@ public class MapCreator : MonoBehaviour
 	{
 		float currentHeight = heightmap.terrainData.GetHeight (x, y);
 		GameObject.Instantiate (obj, new Vector3 (x, currentHeight + 2, y), Quaternion.identity);
+
+	}
+
+	void SpawnPrefab (int x, int y, Terrain heightmap, GameObject obj, Vector3 rot)
+	{
+		float currentHeight = heightmap.terrainData.GetHeight (x, y);
+		GameObject.Instantiate (obj, new Vector3 (x, currentHeight, y), Quaternion.Euler(rot));
 
 	}
 

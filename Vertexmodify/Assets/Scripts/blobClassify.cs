@@ -195,8 +195,12 @@ static public class blobClassify
 
 		if (debug)
 			Debug.Log ("Number of sides: " + (crossingTheMean / 2));
-		if ((int)crossingTheMean % 2 == 1)
+		if (crossingTheMean % 2 == 1)
+		{
 			Debug.LogError ("Blob has uneven cornercrossings, which resolves in the blob having " + (float)crossingTheMean / 2f + " corners");
+			crossingTheMean++;
+		}
+
 		blobs [index].corners = crossingTheMean / 2;
 		blobs [index].type = blobNamer (blobs [index].corners, false);
 		blobs [index].angle = peakAngle;
