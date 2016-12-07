@@ -93,8 +93,7 @@ static public class blobClassify
 					blobs [(int)blobsGradient [x, y]].area++;
 				}
 
-				if (blobsEdges [x, y] != 0f)
-				{
+				if (blobsEdges [x, y] != 0f) {
 					blobs [(int)blobsEdges [x, y]].edgeArea++;
 				}
 			}

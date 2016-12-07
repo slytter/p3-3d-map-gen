@@ -31,7 +31,7 @@ public class ColorDetection : MonoBehaviour
 			importer.textureFormat = TextureImporterFormat.ARGB32;
 			importer.isReadable = true;
 			importer.maxTextureSize = 512;
-			importer.npotScale = TextureImporterNPOTScale.ToSmaller;
+			importer.npotScale = TextureImporterNPOTScale.ToLarger;
 			importer.SaveAndReimport ();
 			AssetDatabase.Refresh ();
 		} catch {

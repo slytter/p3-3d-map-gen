@@ -8,104 +8,92 @@ using System.Collections.Generic;
 public class MapCreator : MonoBehaviour
 {
 	TreeInstance tree;
-	imageProcModules modules;
-	ColorDetection colorScanScript;
-	MountainGeneration mg;
-	Terrain currentTerrain;
+	imageProcModules imageModules;
+	ColorDetection scanModules;
+	MountainGeneration montainModules;
 	float update;
-	int frame = 0;
 	float[,] drawMap, emptyMap;
 	public int heightOfMap = 100;
 	public float[,] newHeightMap;
 	public float[,] river;
 	public float riverButtom = 0.2f;
-	public Terrain Grass;
-
-	public float baseHeight, intensity, density, mountainHeight;
+	public Terrain grass;
+	public Terrain mainTerrain;
+	public float baseHeight = 0.2f, intensity = 20f, density = 20f, mountainHeight = 0.5f;
 	int biggestDimension;
+	public Terrain Grass;
+	public GameObject givenObj;
+
 
 	void Start ()
 	{
-
-		TimingModule.timer ("program", "start");
-
-
-		//INITIALIZING: 	////////////
-		modules = GetComponent<imageProcModules> ();
-		colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
-		mg = GetComponent<MountainGeneration> ();
-
-		Debug.Log (colorScanScript.widthOfTex + ", " + colorScanScript.heightOfTex);
-
-		//fixing texture scale issue:
-		emptyMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-		//drawMap = new float[colorScanScript.widthOfTex, colorScanScript.heightOfTex];
-
-
-		currentTerrain = Terrain.activeTerrain; // getting terrain data
-
-		float res = 0.5f;
-
-		biggestDimension = (colorScanScript.heightOfTex > colorScanScript.widthOfTex) ? colorScanScript.heightOfTex : colorScanScript.widthOfTex; //Simple if statement ¨
-		currentTerrain.terrainData.size = new Vector3 (biggestDimension, heightOfMap, biggestDimension); //setting size
-		currentTerrain.terrainData.RefreshPrototypes ();	
-
-		print (currentTerrain.terrainData.size.x + " :yo " + currentTerrain.terrainData.size.z);
-
-		currentTerrain.terrainData.heightmapResolution = (biggestDimension + 1); 
-		currentTerrain.terrainData.SetHeights (0, 0, new float[biggestDimension, biggestDimension]);
-
-
-
-
-
-
+		init ();
+		mainTerrain = mapSize (mainTerrain);
 
 		//GENERATION: 		////////////
-		bool[,] yellow = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.15f, 0.23f, 0.20f, 0.9f); // getting colors from input image
-		bool[,] red = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.97f, 0.1f, 0.40f, 0.55f); // getting colors from input image
-		bool[,] green = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.14f, 0.52f, 0.17f, 0.2f); // getting colors from input image
-		bool[,] blue = colorScanScript.colorDetection (modules.RBGNormalize (colorScanScript.originalImage), 0.55f, 0.65f, 0.13f, 0.3f); // getting colors from input image
-
-
-		float[,] perlin = modules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
-		perlin = modules.perlin (perlin, baseHeight / 2, intensity * 6, density / 4); //two perlin noises to create more 'real' density
-
-
+		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.1f, 0.19f, 0.5f, 0.3f); // getting colors from input image
+		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.97f, 0.1f, 0.20f, 0.55f); // getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.23f, 0.52f, 0.17f, 0.2f); // getting colors from input image
+		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.60f, 0.69f, 0.1f, 0.1f); // getting colors from input image
 
 		float[,] mountains = generateMountains (red, mountainHeight);
-		float[,] rivers = generateRivers (blue, perlin); //generate rivers into base perlin map
+		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
+		float[,] riversAndBase = generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
 
-		Blob[] blobs = blobClassify.grassFire (modules.floodFillQueue (green));
+		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
+		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
+
+		blobClassify.debug = true;
+
+		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (blue));
+
 		for (int i = 0; i < blobs.Length; i++) {
 			print (blobs [i].type);
 			if (blobs [i].type == "Triangle") {
 				print ("spawning player at: " + blobs [i].CenterOfMass.x + ", " + blobs [i].CenterOfMass.y + " with the angle: " + blobs [i].angle);
+				Instantiate (givenObj, new Vector3 (blobs [i].CenterOfMass.y, 10f, blobs [i].CenterOfMass.x), Quaternion.identity);
 			}
 		}
 
 
 
-		float[,] grass = new float[perlin.GetLength (0), perlin.GetLength (1)];
-		Buffer.BlockCopy (rivers, 0, grass, 0, rivers.Length * sizeof(float));
+		generateTrees (mainTerrain, yellow);
 
-		float[,] finalMap = modules.flip (mg.finalizeMap (modules.add (rivers, mountains), 5));
+		scanModules.printBinary (blue);
 
-
-		Terrain mainTerrain = GameObject.Find ("Terrain").GetComponent <Terrain> ();
-		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
-
-
-		Grass.terrainData.SetHeights (0, 0, grass);
-
-		generateTrees (yellow);
-
-		colorScanScript.printBinary (blue);
 		TimingModule.timer ("program", "end");
 
 	}
 
-	bool[,] red;
+	void Update ()
+	{
+		//bool[,] yellow = scanModules.colorDetection ( (scanModules.originalImage), hueMin, humMax, sat, val); // getting colors from input image
+		//scanModules.printBinary (yellow);
+	}
+
+	void init ()
+	{
+		mainTerrain = GameObject.Find ("Terrain").GetComponent <Terrain> ();
+		TimingModule.timer ("program", "start");
+		imageModules = GetComponent<imageProcModules> ();
+		scanModules = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
+		montainModules = GetComponent<MountainGeneration> ();
+		Debug.Log (scanModules.widthOfTex + ", " + scanModules.heightOfTex);
+		emptyMap = new float[scanModules.widthOfTex, scanModules.heightOfTex]; // getting terrain data
+	}
+
+	Terrain mapSize (Terrain inputTerrain)
+	{
+		inputTerrain.terrainData.size = new Vector3 (512, heightOfMap, 512); /*setting size*/
+		print (inputTerrain.terrainData.size.x + " :yo " + inputTerrain.terrainData.size.z);
+		inputTerrain.terrainData.RefreshPrototypes ();	
+
+		biggestDimension = (scanModules.heightOfTex > scanModules.widthOfTex) ? scanModules.heightOfTex : scanModules.widthOfTex; //Simple if statement 
+		inputTerrain.terrainData.heightmapResolution = (biggestDimension + 1); 
+		inputTerrain.terrainData.SetHeights (0, 0, new float[biggestDimension, biggestDimension]);
+		return inputTerrain;
+	}
+
 
 	[Range (0.0f, 1.0f)]
 	public float hueMin = 0.9f;
@@ -116,71 +104,68 @@ public class MapCreator : MonoBehaviour
 	[Range (0.0f, 1.0f)]
 	public float val = 0.3f;
 
-	//	void Update ()
-	//	{
-	//		//if (frame % 2 == 0) {
-	//		red = colorScanScript.colorDetection (colorScanScript.originalImage, hueMin, humMax, sat, val); // getting colors from input image
-	//		colorScanScript.printBinary (modules.floodFillQueue( modules.erosion( modules.dilation ((red)))));
-	//
-	//		frame++;
-	//		//}
-	//	}
 
 
-
-	void generateTrees (bool[,] binaryTreeArea)
+	void generateTrees (Terrain mainTerrain, bool[,] binaryTreeArea)
 	{
-		float yScale = (float)colorScanScript.widthOfTex / (float)biggestDimension;
-		float xScale = (float)colorScanScript.heightOfTex / (float)biggestDimension;
+		mainTerrain.terrainData.RefreshPrototypes ();	
+		float yScale = (float)scanModules.widthOfTex / (float)biggestDimension;
+		float xScale = (float)scanModules.heightOfTex / (float)biggestDimension;
+
 		print ("xscal:" + xScale);
 		print ("ys" + yScale);
 
-		binaryTreeArea = modules.dilation (modules.dilation (binaryTreeArea));
-		binaryTreeArea = modules.floodFillQueue (binaryTreeArea);
-		colorScanScript.printBinary (binaryTreeArea);
+		binaryTreeArea = imageModules.dilation (imageModules.dilation (binaryTreeArea));
+		binaryTreeArea = imageModules.floodFillQueue (binaryTreeArea);
+		scanModules.printBinary (binaryTreeArea);
 
-		float[,] treeArea = modules.boolToFloat (binaryTreeArea);
-
-		float[,] treePositions = modules.generateTrees (treeArea, 6);
+		float[,] treeArea = imageModules.boolToFloat (binaryTreeArea);
+		float[,] treePositions = imageModules.generateTreePositions (treeArea, 6);
 
 
 		TreeInstance[] reset = new TreeInstance[0]; 
 
-		currentTerrain.terrainData.treeInstances = reset; 
+		mainTerrain.terrainData.treeInstances = reset; 
+		mainTerrain.terrainData.RefreshPrototypes ();	
 
-		List <TreeInstance> treeList = new List<TreeInstance> (currentTerrain.terrainData.treeInstances); 
+		List <TreeInstance> treeList = new List<TreeInstance> (mainTerrain.terrainData.treeInstances); 
 		for (int i = 0; i < treePositions.GetLength (1); i++) {
 
 			//if (treePositions [0, x] != null || treePositions [1, x] != null)
 			//{
-			if (currentTerrain.terrainData.GetSteepness (treePositions [1, i], treePositions [0, i]) < 45f) { // 1 & 0 has been flipped to mirror trees.
-				tree.position = new Vector3 (treePositions [1, i] * xScale, 0f, treePositions [0, i] * yScale); 
-				tree.color = Color.yellow; 
-				tree.lightmapColor = Color.yellow; 
-				tree.prototypeIndex = 0; 
-				tree.widthScale = 1; 
-				tree.heightScale = 1; 
-				treeList.Add (tree);
+			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
+				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
+					tree.position = new Vector3 (treePositions [1, i] * xScale, 0f, treePositions [0, i] * yScale); 
+					tree.color = Color.yellow; 
+					tree.lightmapColor = Color.yellow; 
+					tree.prototypeIndex = 0; 
+					tree.widthScale = 1; 
+					tree.heightScale = 1;
+					tree.rotation = UnityEngine.Random.Range (0f, Mathf.PI);
+					treeList.Add (tree);
+				}
 			}
 			//}
 		}
-		currentTerrain.terrainData.treeInstances = treeList.ToArray (); 
+		mainTerrain.terrainData.treeInstances = treeList.ToArray ();
 	}
 
 	
 	/// <summary>
-	/// Generates the rivers.
+	/// Generates the rivers into base.
 	/// </summary>
-	/// <returns>The rivers.</returns>
+	/// <returns>The rivers into base.</returns>
 	/// <param name="area">Area.</param>
 	/// <param name="basemap">Basemap.</param>
-	float[,] generateRivers (bool[,] area, float[,] basemap)
+	float[,] generateRiversIntoBase (bool[,] area, float[,] basemap)
 	{
-		area = modules.dilation (area);
-		area = modules.floodFillQueue (area);
-		float[,] river = modules.boolToFloat (area);
-		river = modules.gaussian (river, 10);
-		river = modules.compressAndSubtract (basemap, river);
+		area = imageModules.dilation (area);
+		area = imageModules.dilation (area);
+		area = imageModules.erosion (area); 
+		area = imageModules.floodFillQueue (area);
+		float[,] river = imageModules.boolToFloat (area);
+		river = imageModules.gaussian (river, 10);
+		river = imageModules.compressAndSubtract (basemap, river);
 
 		return river;
 	}
@@ -194,26 +179,29 @@ public class MapCreator : MonoBehaviour
 	/// <param name="area">Area.</param>
 	float[,] generateMountains (bool[,] area, float mountainHeight)
 	{
-		area = modules.dilation (area); //area = where red is.
-		area = modules.dilation (area); //area = where red is.
-		area = modules.erosion (area); 
+		area = imageModules.dilation (area); //area = where red is.
+		area = imageModules.dilation (area); //area = where red is.
+		area = imageModules.dilation (area); //area = where red is.
+		area = imageModules.erosion (area); 
+		area = imageModules.erosion (area); 
+		area = imageModules.erosion (area); 
 
-		area = modules.floodFillQueue (area);
-		colorScanScript.printBinary (area);
+		area = imageModules.floodFillQueue (area);
+		scanModules.printBinary (area);
 		float[,] mountainArea = new float[area.GetLength (0), area.GetLength (1)];
-		mountainArea = modules.boolToFloat (area);
-		mountainArea = modules.gaussian (mountainArea, 10);
+		mountainArea = imageModules.boolToFloat (area);
+		mountainArea = imageModules.gaussian (mountainArea, 10);
 
 		float[,] randomMountains = new float[area.GetLength (0), area.GetLength (1)];
-		randomMountains = mg.midpointDisplacement (3, randomMountains, 0.5f, 0);
-		randomMountains = mg.midpointDisplacement (8, randomMountains, 0.5f, 0);
-		randomMountains = mg.midpointDisplacement (16, randomMountains, 0.4f, 0);
-		randomMountains = mg.midpointDisplacement (32, randomMountains, 0.3f, 0);
-		randomMountains = mg.midpointDisplacement (64, randomMountains, 0.3f, 0);
-		randomMountains = mg.midpointDisplacement (128, randomMountains, 0.2f, 0);
-		randomMountains = modules.gaussian (randomMountains, 5);
+		randomMountains = montainModules.midpointDisplacement (3, randomMountains, 0.5f, 0);
+		randomMountains = montainModules.midpointDisplacement (8, randomMountains, 0.5f, 0);
+		randomMountains = montainModules.midpointDisplacement (16, randomMountains, 0.4f, 0);
+		randomMountains = montainModules.midpointDisplacement (32, randomMountains, 0.3f, 0);
+		randomMountains = montainModules.midpointDisplacement (64, randomMountains, 0.3f, 0);
+		randomMountains = montainModules.midpointDisplacement (128, randomMountains, 0.2f, 0);
+		randomMountains = imageModules.gaussian (randomMountains, 5);
 
-		return (mg.mountainRemove (randomMountains, mountainArea, mountainHeight));
+		return (montainModules.mountainRemove (randomMountains, mountainArea, mountainHeight));
 	}
 
 
