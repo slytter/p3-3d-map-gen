@@ -31,10 +31,12 @@ public class MapCreator : MonoBehaviour
 		mainTerrain = mapSize (mainTerrain);
 
 		//GENERATION: 		////////////
-		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.1f, 0.19f, 0.5f, 0.3f); // getting colors from input image
-		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.97f, 0.1f, 0.20f, 0.55f); // getting colors from input image
-		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.23f, 0.52f, 0.17f, 0.2f); // getting colors from input image
-		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.60f, 0.69f, 0.1f, 0.1f); // getting colors from input image
+
+		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.3f, 0.5f); // getting colors from input image
+		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); // getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.17f, 0.3f); // getting colors from input image
+		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.17f, 0.3f); // getting colors from input image
+		bool[,] black = imageModules.invert( scanModules.colorDetection ((scanModules.originalImage), 0f, 1f, 0.0f, 0.31f) );
 
 		float[,] mountains = generateMountains (red, mountainHeight);
 		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
@@ -54,12 +56,14 @@ public class MapCreator : MonoBehaviour
 		blobClassify.debug = true;
 
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
+		bool playerSpawned = false;
 
 		for (int i = 0; i < blobs.Length; i++) {
 			print (blobs [i].type);
-			if (blobs [i].type == "Triangle") {
+			if (blobs [i].type == "Triangle" && !playerSpawned) {
 				print ("spawning player at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
 				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, spawn);
+				playerSpawned = true;
 			}
 			if (blobs [i].type == "Circle") {
 				print ("spawning key at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
@@ -75,7 +79,7 @@ public class MapCreator : MonoBehaviour
 
 		generateTrees (mainTerrain, green);
 
-		//scanModules.printBinary ();
+		scanModules.printBinary (red);
 
 		TimingModule.timer ("program", "end");
 
@@ -195,12 +199,13 @@ public class MapCreator : MonoBehaviour
 	/// <param name="area">Area.</param>
 	float[,] generateMountains (bool[,] area, float mountainHeight)
 	{
-		area = imageModules.dilation (area); //area = where red is.
-		area = imageModules.dilation (area); //area = where red is.
+		area = imageModules.medianFilter (area);
 		area = imageModules.dilation (area); //area = where red is.
 		area = imageModules.erosion (area); 
-		area = imageModules.erosion (area); 
-		area = imageModules.erosion (area); 
+		area = imageModules.dilation (area); //area = where red is.
+		area = imageModules.erosion (area);
+//		area = imageModules.dilation (area); //area = where red is.
+//		area = imageModules.erosion (area); 
 
 		area = imageModules.floodFillQueue (area);
 		scanModules.printBinary (area);

@@ -168,22 +168,29 @@ static public class blobClassify
 		}
 
 		if (debug)
-			Debug.DrawLine (new Vector3 (0, 60f, meanLength), new Vector3 (sortedAngles.Length, 60f, meanLength), Color.green, 10000f);
+			Debug.DrawLine (new Vector3 (0+ (100*index), 60f, meanLength), new Vector3 (sortedAngles.Length+ (100*index), 60f, meanLength), Color.green, 10000f);
 
 		int peak = 0;
 		float peakAngle = 0;
+
+		for (int x = 0; x < sortedAngles.Length; x++) {
+			if (debug)
+				Debug.DrawLine (new Vector3 (x + (100*index), 60f, 0), new Vector3 (x + (100*index), 60f, sortedLengths [x]), Color.green, 10000f);
+		}
+
+		sortedLengths = oneDMeanFilter (sortedLengths);
 
 		for (int x = 0; x < sortedAngles.Length; x++) {
 			if (x > peak) {
 				peak = x;
 				peakAngle = sortedAngles [x];
 			}
-			if ((under && sortedLengths [x] > meanLength + 2f) || (!under && sortedLengths [x] < meanLength - 2f)) {
+			if ((under && sortedLengths [x] > meanLength + 1.3f) || (!under && sortedLengths [x] < meanLength - 1.3f)) {
 				under = !under;
 				crossingTheMean++;
 			}
 			if (debug)
-				Debug.DrawLine (new Vector3 (x, 60f, 0), new Vector3 (x, 60f, sortedLengths [x]), Color.blue, 10000f);
+				Debug.DrawLine (new Vector3 (x + (100*index), 60f, 0), new Vector3 (x + (100*index), 60f, sortedLengths [x]), Color.blue, 10000f);
 		}
 
 		if (debug)
@@ -194,6 +201,13 @@ static public class blobClassify
 		blobs [index].type = blobNamer (blobs [index].corners, false);
 		blobs [index].angle = peakAngle;
 		return blobs [index];
+	}
+
+	public static float[] oneDMeanFilter(float[] inp){
+		for (int i = 1; i < inp.Length-1; i++) {
+			inp [i] = (inp [i - 1] + inp [i] + inp [i + 1]) / 3;
+		}
+		return inp; 
 	}
 
 

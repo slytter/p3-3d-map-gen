@@ -114,7 +114,6 @@ public class cameraScript : MonoBehaviour
 	{
 		webcamTexture = new WebCamTexture ();
 		webcamTexture.Play ();
-
 		if (webcamTexture.width <= 16 || webcamTexture.height <= 16) {		
 			while (!webcamTexture.didUpdateThisFrame) {
 				yield return new WaitForEndOfFrame (); 
