@@ -19,14 +19,14 @@ public class UpdateUI : MonoBehaviour {
 	void Awake() {
         //helperText.GetComponent<Text>().enabled = false;
         checkmark.enabled = false;
-        print(GameManager.instance.NumKeys);
+        print("LALALALALA " + GameManager.instance.maxKeys);
 	}
 	
 	// Update is called once per frame
 	void Update () {
         
         timerLabel.text = FormatTime(GameManager.instance.countedTime);
-        keysLabel.text = GameManager.instance.NumKeys.ToString();
+		keysLabel.text = GameManager.instance.NumKeys.ToString() + "/" + GameManager.instance.maxKeys ;
         if (GameManager.instance.NumKeys == GameManager.instance.maxKeys)
         {
             //helperText.GetComponent<Text>().enabled = true;
