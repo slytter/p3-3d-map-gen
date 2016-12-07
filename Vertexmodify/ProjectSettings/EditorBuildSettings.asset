@@ -33,3 +33,5 @@ EditorBuildSettings:
     path: Assets/Scenes/camera.unity
   - enabled: 1
     path: Assets/Scenes/sagen.unity
+  - enabled: 1
+    path: Assets/Scenes/calibrate.unity
