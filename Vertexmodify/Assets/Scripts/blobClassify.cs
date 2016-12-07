@@ -141,7 +141,7 @@ static public class blobClassify
 					angles [incr] = (float)(Mathf.Atan2 (cm.y - edge.y, cm.x - edge.x)) * Mathf.Rad2Deg + 180f;
 					incr++;
 					if (debug)
-						Debug.DrawLine (new Vector3 (edge.x, 60f, edge.y), new Vector3 (cm.x, 60f, cm.y), Color.red, 10000f);
+						Debug.DrawLine (new Vector3 (edge.y, 60f, edge.x), new Vector3 (cm.y, 60f, cm.x), Color.red, 10000f);
 				}
 			}
 		}
@@ -185,7 +185,7 @@ static public class blobClassify
 				peak = x;
 				peakAngle = sortedAngles [x];
 			}
-			if ((under && sortedLengths [x] > meanLength + 1.3f) || (!under && sortedLengths [x] < meanLength - 1.3f)) {
+			if ((under && sortedLengths [x] > meanLength + 1f) || (!under && sortedLengths [x] < meanLength - 1f)) {
 				under = !under;
 				crossingTheMean++;
 			}
@@ -195,8 +195,12 @@ static public class blobClassify
 
 		if (debug)
 			Debug.Log ("Number of sides: " + (crossingTheMean / 2));
-		if ((int)crossingTheMean % 2 == 1)
+		if (crossingTheMean % 2 == 1)
+		{
 			Debug.LogError ("Blob has uneven cornercrossings, which resolves in the blob having " + (float)crossingTheMean / 2f + " corners");
+			crossingTheMean++;
+		}
+
 		blobs [index].corners = crossingTheMean / 2;
 		blobs [index].type = blobNamer (blobs [index].corners, false);
 		blobs [index].angle = peakAngle;

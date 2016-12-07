@@ -53,7 +53,7 @@ public class cameraScript : MonoBehaviour
 
 		chooseButton.SetActive (true);
 		retakeButton.SetActive (true);
-		calibrateButton.SetActive (true);
+		//calibrateButton.SetActive (true);
 		snapButton.SetActive (false);
 
 	}
