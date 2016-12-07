@@ -43,6 +43,14 @@ public class MapCreator : MonoBehaviour
 		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
 		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
 
+		LowPolySystems.LowPolyWorld lowPoly = GameObject.Find ("lowpoly").GetComponent<LowPolySystems.LowPolyWorld> ();
+		lowPoly.sampleScale = 3.9f;
+		lowPoly.forceSize = true;
+		lowPoly.forceResolution = false;
+		Light sun = GameObject.Find ("Sun").GetComponent<Light> ();
+		lowPoly.sun = sun;
+		lowPoly.Generate ();
+
 		blobClassify.debug = true;
 
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (blue));
@@ -62,6 +70,8 @@ public class MapCreator : MonoBehaviour
 		scanModules.printBinary (blue);
 
 		TimingModule.timer ("program", "end");
+
+
 
 	}
 
@@ -133,7 +143,7 @@ public class MapCreator : MonoBehaviour
 
 			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
 				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
-				tree.position = new Vector3 (treePositions [1, i] * xScale, (mainTerrain.terrainData.GetHeight((int)(treePositions [1, i] * xScale * 512), (int)(treePositions [0, i] * yScale * 512))/100), treePositions [0, i] * yScale); 
+					tree.position = new Vector3 (treePositions [1, i] * xScale, (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale * 512), (int)(treePositions [0, i] * yScale * 512)) / 100), treePositions [0, i] * yScale); 
 					tree.color = Color.yellow; 
 					tree.lightmapColor = Color.yellow; 
 					tree.prototypeIndex = 0; 

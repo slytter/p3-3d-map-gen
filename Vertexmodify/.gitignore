@@ -17,6 +17,8 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/Resources/WebcamBilleder/
+/Assets/LowPolyWorld/
+/Assets/LowPolyWorld.meta
 
 /Assets/AssetStoreTools*
 
