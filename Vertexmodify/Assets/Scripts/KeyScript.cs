@@ -6,6 +6,7 @@ public class KeyScript : MonoBehaviour {
     [SerializeField]
     private float rotateSpeed = 1.0f;
 
+
     void OnTriggerEnter(Collider collider){
         if(collider.gameObject.tag == "Player")
         {
@@ -22,7 +23,9 @@ public class KeyScript : MonoBehaviour {
 
     private void PickUp(){
         GameManager.instance.NumKeys++;
-        Destroy(this.gameObject);
+		Destroy(this.gameObject);
+
+
     }
 
     void Start () {
