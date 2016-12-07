@@ -50,9 +50,6 @@ public class cameraScript : MonoBehaviour
 
 		System.IO.File.WriteAllBytes (savePath + currentImageName, flippedImageFromCamera.EncodeToPNG ());
 
-	    
-//		pixFromSnap = originalImageFromWebcam.GetPixels (); 
-//		outputImage = originalImageFromWebcam;
 		originalImageFromWebcam = new Texture2D (webcamTexture.width, webcamTexture.height);
 
 		chooseButton.SetActive (true);
@@ -84,13 +81,15 @@ public class cameraScript : MonoBehaviour
 	public Texture2D flipXAndY (Texture2D original)
 	{
 		TimingModule.timer ("flipX&Y", "start");
-		Texture2D flipped = new Texture2D (original.height, original.width);
+		Texture2D flipped = new Texture2D (original.height, original.height);
 
-		int xN = original.width - 1;
+		int cropAreaOnEachSide = (original.width - original.height) / 2;
+
+		int xN = original.width - 1 - cropAreaOnEachSide;
 		int yN = original.height - 1;
 
 
-		for (int i = 0; i < xN; i++) {
+		for (int i = cropAreaOnEachSide; i < xN; i++) {
 			for (int j = 0; j < yN; j++) {
 				flipped.SetPixel (yN - j, xN - i, original.GetPixel (i, j));
 
