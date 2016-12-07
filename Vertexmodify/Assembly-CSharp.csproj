@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\UpdateUI.cs" />
      <Compile Include="Assets\Scripts\blobClassify.cs" />
+     <Compile Include="Assets\Scripts\calibrateColor.cs" />
      <Compile Include="Assets\Scripts\cameraScript.cs" />
      <Compile Include="Assets\Scripts\gameState.cs" />
      <Compile Include="Assets\Scripts\imageProcModules.cs" />
