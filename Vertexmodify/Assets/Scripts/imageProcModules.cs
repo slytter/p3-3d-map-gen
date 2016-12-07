@@ -346,7 +346,37 @@ public class imageProcModules : MonoBehaviour
 		return boolArrayToBeFramed; 
 	}
 
+	public bool [,] medianFilter (bool [,] inputpicture)
+	{
+		int[] kernel = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
+		for (int y = 1; y < inputpicture.GetLength(1) - 1; y++)
+		{
+			for (int x = 1; x < inputpicture.GetLength(0) - 1; x++)
+			{
+				int sum = 0;
+
+				for (int ky = 0; ky <= 2; ky++)
+				{
+					for (int kx = 0; kx <= 2; kx++)
+					{
+						if(inputpicture [x + kx - 1, y + ky - 1])
+							sum++;
+
+					}
+				}
+
+				if (sum >= 5)
+					inputpicture [x, y] = true;
+				else
+				{
+					inputpicture [x, y] = false;
+				}
+			}
+		}
+		return inputpicture;
+
+	}
 
 
 	/// <summary>
@@ -462,7 +492,7 @@ public class TimingModule
 
 		if (name != "program" && status == "end") {
 			endTimeOfModule = Time.realtimeSinceStartup;
-			Debug.Log (name + " took " + (endTimeOfModule - startTimeOfModule) * 1000 + " miliseconds");
+			//Debug.Log (name + " took " + (endTimeOfModule - startTimeOfModule) * 1000 + " miliseconds");
 		}
 
 
