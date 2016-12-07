@@ -13,7 +13,7 @@ public class ColorDetection : MonoBehaviour
 	public int heightOfTex;
 	TextureImporter importer;
 	string path;
-	Texture2D originalTexture;
+	public Texture2D originalTexture;
 
 	gameState gameState;
 

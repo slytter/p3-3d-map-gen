@@ -23,7 +23,8 @@ public class MapCreator : MonoBehaviour
 	public float baseHeight = 0.2f, intensity = 20f, density = 20f, mountainHeight = 0.5f;
 	int biggestDimension;
 	public GameObject spawn, gateObj;
-
+	public Texture2D playerIcon;
+	Texture2D HUD;
 
 	void Start ()
 	{
@@ -36,7 +37,7 @@ public class MapCreator : MonoBehaviour
 		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); // getting colors from input image
 		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.17f, 0.3f); // getting colors from input image
 		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.17f, 0.3f); // getting colors from input image
-		bool[,] black = imageModules.invert( scanModules.colorDetection ((scanModules.originalImage), 0f, 1f, 0.0f, 0.31f) );
+		bool[,] black = imageModules.invert (scanModules.colorDetection ((scanModules.originalImage), 0f, 1f, 0.0f, 0.31f));
 
 		float[,] mountains = generateMountains (red, mountainHeight);
 		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density); // iterations?
@@ -71,7 +72,7 @@ public class MapCreator : MonoBehaviour
 			}
 			if (blobs [i].type == "Circle") {
 				print ("spawning Gate at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
-				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, gateObj, new Vector3(90f, 0f, 0f));
+				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, gateObj, new Vector3 (90f, 0f, 0f));
 			}
 		}
 
@@ -80,6 +81,8 @@ public class MapCreator : MonoBehaviour
 		generateTrees (mainTerrain, green);
 
 		scanModules.printBinary (red);
+
+		HUD = flipXAndY (scanModules.originalTexture);
 
 		TimingModule.timer ("program", "end");
 
@@ -235,8 +238,48 @@ public class MapCreator : MonoBehaviour
 	void SpawnPrefab (int x, int y, Terrain heightmap, GameObject obj, Vector3 rot)
 	{
 		float currentHeight = heightmap.terrainData.GetHeight (x, y);
-		GameObject.Instantiate (obj, new Vector3 (x, currentHeight, y), Quaternion.Euler(rot));
+		GameObject.Instantiate (obj, new Vector3 (x, currentHeight, y), Quaternion.Euler (rot));
 
+	}
+
+
+	void OnGUI ()
+	{
+
+		GUI.DrawTexture (new Rect (1920 - 260, 10, 250, 250), HUD, ScaleMode.StretchToFill, true, 0f);
+		int canvasX = 1920 - 260;
+		int canvasY = 10;
+
+		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
+		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
+
+
+		print (canvasPlayerPosX);
+		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
+	}
+
+
+	public Texture2D flipXAndY (Texture2D original)
+	{
+		TimingModule.timer ("flipX&Y", "start");
+		Texture2D flipped = new Texture2D (original.height, original.height);
+
+		int cropAreaOnEachSide = (original.width - original.height) / 2;
+
+		int xN = original.width - 1 - cropAreaOnEachSide;
+		int yN = original.height - 1;
+
+
+		for (int i = cropAreaOnEachSide; i < xN; i++) {
+			for (int j = 0; j < yN; j++) {
+				flipped.SetPixel (yN - j, xN - i, original.GetPixel (i, j));
+
+			}
+		}
+		flipped.Apply ();
+		TimingModule.timer ("flipX&Y", "end");
+
+		return flipped;
 	}
 
 }
