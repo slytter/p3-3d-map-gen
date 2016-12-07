@@ -22,7 +22,7 @@ public class MapCreator : MonoBehaviour
 	public Terrain mainTerrain;
 	public float baseHeight = 0.2f, intensity = 20f, density = 20f, mountainHeight = 0.5f;
 	int biggestDimension;
-	public GameObject givenObj;
+	public GameObject spawn, gateObj;
 
 
 	void Start ()
@@ -53,21 +53,29 @@ public class MapCreator : MonoBehaviour
 
 		blobClassify.debug = true;
 
-		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (blue));
+		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
 
 		for (int i = 0; i < blobs.Length; i++) {
 			print (blobs [i].type);
 			if (blobs [i].type == "Triangle") {
-				print ("spawning player at: " + blobs [i].CenterOfMass.x + ", " + blobs [i].CenterOfMass.y + " with the angle: " + blobs [i].angle);
-				Instantiate (givenObj, new Vector3 (blobs [i].CenterOfMass.y, 10f, blobs [i].CenterOfMass.x), Quaternion.identity);
+				print ("spawning player at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
+				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, spawn);
+			}
+			if (blobs [i].type == "Circle") {
+				print ("spawning key at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
+				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, Key);
+			}
+			if (blobs [i].type == "Square") {
+				print ("spawning Gate at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
+				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, gateObj);
 			}
 		}
 
-		//SpawnPrefab (255, 255, mainTerrain);
+
 
 		generateTrees (mainTerrain, green);
 
-		scanModules.printBinary (blue);
+		//scanModules.printBinary ();
 
 		TimingModule.timer ("program", "end");
 
@@ -147,8 +155,9 @@ public class MapCreator : MonoBehaviour
 					tree.color = Color.yellow; 
 					tree.lightmapColor = Color.yellow; 
 					tree.prototypeIndex = 0; 
-					tree.widthScale = 1; 
-					tree.heightScale = 1;
+					float treeScale = UnityEngine.Random.Range (1.3f, 3.8f);
+					tree.widthScale = treeScale; 
+					tree.heightScale = treeScale;
 					tree.rotation = UnityEngine.Random.Range (0f, Mathf.PI);
 					treeList.Add (tree);
 				}
@@ -202,47 +211,20 @@ public class MapCreator : MonoBehaviour
 		float[,] randomMountains = new float[area.GetLength (0), area.GetLength (1)];
 		randomMountains = montainModules.midpointDisplacement (3, randomMountains, 0.5f, 0);
 		randomMountains = montainModules.midpointDisplacement (8, randomMountains, 0.5f, 0);
-		randomMountains = montainModules.midpointDisplacement (16, randomMountains, 0.4f, 0);
+		randomMountains = montainModules.midpointDisplacement (16, randomMountains, 0.5f, 0);
 		randomMountains = montainModules.midpointDisplacement (32, randomMountains, 0.3f, 0);
 		randomMountains = montainModules.midpointDisplacement (64, randomMountains, 0.3f, 0);
-		randomMountains = montainModules.midpointDisplacement (128, randomMountains, 0.2f, 0);
-		randomMountains = imageModules.gaussian (randomMountains, 5);
+//		randomMountains = montainModules.midpointDisplacement (128, randomMountains, 0.2f, 0);
+		randomMountains = imageModules.gaussian (randomMountains, 0);
 
 		return (montainModules.mountainRemove (randomMountains, mountainArea, mountainHeight));
 	}
 
-	void SpawnPrefab (int x, int y, Terrain heightmap)
+	void SpawnPrefab (int x, int y, Terrain heightmap, GameObject obj)
 	{
 		float currentHeight = heightmap.terrainData.GetHeight (x, y);
-		GameObject.Instantiate (Key, new Vector3 (x, currentHeight + 2, y), Quaternion.identity);
+		GameObject.Instantiate (obj, new Vector3 (x, currentHeight + 2, y), Quaternion.identity);
 
 	}
-
-
-
-
-
-	//	bool stop = false;
-	//
-	//	void Update ()
-	//	{
-	//		if (!stop && false) {
-	//			if (frame % 2 == 0) {
-	//				for (int j = 0; j < drawMap.GetLength (1); j++) {
-	//					for (int i = 0; i < drawMap.GetLength (0); i++) {
-	//						drawMap [i, j] = emptyMap [i, j] * update * 0.5f;
-	//					}
-	//				}
-	//				currentTerrain.terrainData.SetHeights (0, 0, drawMap);
-	//			}
-	//			frame++;
-	//			if (update < 1f) {
-	//				update += 0.01f;
-	//			} else {
-	//				print (drawMap.GetLength (0) + ", " + drawMap.GetLength (0));
-	//				stop = true;
-	//			}
-	//		}
-	//	}
 
 }
