@@ -17,7 +17,6 @@ public class cameraScript : MonoBehaviour
 
 	public Texture2D outputImage;
 	string currentImageName;
-
 	gameState gameState;
 
 	public GameObject chooseButton, retakeButton, snapButton, calibrateButton;
