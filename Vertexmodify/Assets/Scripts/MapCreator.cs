@@ -136,7 +136,8 @@ public class MapCreator : MonoBehaviour
 			//{
 			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
 				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
-					tree.position = new Vector3 (treePositions [1, i] * xScale, 0f, treePositions [0, i] * yScale); 
+					//float height = mainTerrain.terrainData.GetHeight((int)(treePositions [1, i] * xScale * scanModules.)
+					//tree.position = new Vector3 (treePositions [1, i] * xScale, yPos, treePositions [0, i]), treePositions [0, i] * yScale); 
 					tree.color = Color.yellow; 
 					tree.lightmapColor = Color.yellow; 
 					tree.prototypeIndex = 0; 
