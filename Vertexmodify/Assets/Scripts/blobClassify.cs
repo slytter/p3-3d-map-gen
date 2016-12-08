@@ -109,7 +109,7 @@ static public class blobClassify
 			} 
 		}
 		if (debug)
-			colorScanScript.printBinary (blobsEdges);
+			//colorScanScript.printBinary (blobsEdges);
 
 		for (int i = 1; i < blobs.Length; i++) {
 			blobs [i].number = i;

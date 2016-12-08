@@ -35,7 +35,7 @@ public class MapCreator : MonoBehaviour
 
 		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.3f, 0.5f); // getting colors from input image
 		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); // getting colors from input image
-		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.17f, 0.3f); // getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.11f, 0.5f); // getting colors from input image
 		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.17f, 0.3f); // getting colors from input image
 		bool[,] black = imageModules.invert (scanModules.colorDetection ((scanModules.originalImage), 0f, 1f, 0.0f, 0.31f));
 
@@ -76,11 +76,17 @@ public class MapCreator : MonoBehaviour
 			}
 		}
 
+		if (!playerSpawned)
+		{
+			SpawnPrefab (256, 256, mainTerrain, spawn);
+			playerSpawned = true;
+		}
+
 
 
 		generateTrees (mainTerrain, green);
 
-		scanModules.printBinary (red);
+		//scanModules.printBinary (red);
 
 		HUD = flipXAndY (scanModules.originalTexture);
 
@@ -140,6 +146,7 @@ public class MapCreator : MonoBehaviour
 		print ("xscal: " + xScale);
 		print ("yscal: " + yScale);
 
+		//binaryTreeArea = imageModules.medianFilter (binaryTreeArea);
 		binaryTreeArea = imageModules.dilation (imageModules.dilation (binaryTreeArea));
 		binaryTreeArea = imageModules.floodFillQueue (binaryTreeArea);
 		scanModules.printBinary (binaryTreeArea);
@@ -182,9 +189,14 @@ public class MapCreator : MonoBehaviour
 	/// <param name="basemap">Basemap.</param>
 	float[,] generateRiversIntoBase (bool[,] area, float[,] basemap)
 	{
+		//area = imageModules.medianFilter (area);
 		area = imageModules.dilation (area);
 		area = imageModules.dilation (area);
 		area = imageModules.erosion (area); 
+		area = imageModules.dilation (area);
+
+		//scanModules.printBinary (area);
+
 		area = imageModules.floodFillQueue (area);
 		float[,] river = imageModules.boolToFloat (area);
 		river = imageModules.gaussian (river, 10);
@@ -211,7 +223,7 @@ public class MapCreator : MonoBehaviour
 //		area = imageModules.erosion (area); 
 
 		area = imageModules.floodFillQueue (area);
-		scanModules.printBinary (area);
+		//scanModules.printBinary (area);
 		float[,] mountainArea = new float[area.GetLength (0), area.GetLength (1)];
 		mountainArea = imageModules.boolToFloat (area);
 		mountainArea = imageModules.gaussian (mountainArea, 10);
