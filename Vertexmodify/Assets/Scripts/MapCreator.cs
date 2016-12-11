@@ -44,7 +44,7 @@ public class MapCreator : MonoBehaviour
 		float[,] riversAndBase = generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
 
 		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
-		mainTerrain.terrainData.SetHeights (0, 0, finalMap);
+		//mainTerrain.terrainData.SetHeights (0, 0, finalMap);
 
 		LowPolySystems.LowPolyWorld lowPoly = GameObject.Find ("lowpoly").GetComponent<LowPolySystems.LowPolyWorld> ();
 		lowPoly.sampleScale = 3.9f;
@@ -122,7 +122,7 @@ public class MapCreator : MonoBehaviour
 
 		biggestDimension = (scanModules.heightOfTex > scanModules.widthOfTex) ? scanModules.heightOfTex : scanModules.widthOfTex; //Simple if statement 
 		inputTerrain.terrainData.heightmapResolution = (biggestDimension + 1); 
-		inputTerrain.terrainData.SetHeights (0, 0, new float[biggestDimension, biggestDimension]);
+		//inputTerrain.terrainData.SetHeights (0, 0, new float[biggestDimension, biggestDimension]);
 		return inputTerrain;
 	}
 
