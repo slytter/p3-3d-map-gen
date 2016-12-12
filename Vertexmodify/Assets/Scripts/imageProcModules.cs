@@ -5,6 +5,10 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
+
+/// <summary>
+/// Generic modules.
+/// </summary>
 public class imageProcModules : MonoBehaviour
 {
 	
@@ -346,21 +350,17 @@ public class imageProcModules : MonoBehaviour
 		return boolArrayToBeFramed; 
 	}
 
-	public bool [,] medianFilter (bool [,] inputpicture)
+	public bool [,] medianFilter (bool[,] inputpicture)
 	{
 		int[] kernel = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-		for (int y = 1; y < inputpicture.GetLength(1) - 1; y++)
-		{
-			for (int x = 1; x < inputpicture.GetLength(0) - 1; x++)
-			{
+		for (int y = 1; y < inputpicture.GetLength (1) - 1; y++) {
+			for (int x = 1; x < inputpicture.GetLength (0) - 1; x++) {
 				int sum = 0;
 
-				for (int ky = 0; ky <= 2; ky++)
-				{
-					for (int kx = 0; kx <= 2; kx++)
-					{
-						if(inputpicture [x + kx - 1, y + ky - 1])
+				for (int ky = 0; ky <= 2; ky++) {
+					for (int kx = 0; kx <= 2; kx++) {
+						if (inputpicture [x + kx - 1, y + ky - 1])
 							sum++;
 
 					}
@@ -368,8 +368,7 @@ public class imageProcModules : MonoBehaviour
 
 				if (sum >= 5)
 					inputpicture [x, y] = true;
-				else
-				{
+				else {
 					inputpicture [x, y] = false;
 				}
 			}
@@ -460,6 +459,31 @@ public class imageProcModules : MonoBehaviour
 
 
 
+
+	public Texture2D flipXAndY (Texture2D original)
+	{
+		TimingModule.timer ("flipX&Y", "start");
+		Texture2D flipped = new Texture2D (original.height, original.height);
+
+		int cropAreaOnEachSide = (original.width - original.height) / 2;
+
+		int xN = original.width - 1 - cropAreaOnEachSide;
+		int yN = original.height - 1;
+
+
+		for (int i = cropAreaOnEachSide; i < xN; i++) {
+			for (int j = 0; j < yN; j++) {
+				flipped.SetPixel (yN - j, xN - i, original.GetPixel (i, j));
+
+			}
+		}
+		flipped.Apply ();
+		TimingModule.timer ("flipX&Y", "end");
+
+		return flipped;
+	}
+
+
 }
 
 public class TimingModule
@@ -497,7 +521,6 @@ public class TimingModule
 
 
 	}
-
 
 
 

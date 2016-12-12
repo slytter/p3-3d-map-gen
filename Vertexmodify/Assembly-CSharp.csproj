@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\calibrateColor.cs" />
      <Compile Include="Assets\Scripts\cameraScript.cs" />
      <Compile Include="Assets\Scripts\gameState.cs" />
+     <Compile Include="Assets\Scripts\generator.cs" />
      <Compile Include="Assets\Scripts\imageProcModules.cs" />
      <Compile Include="Assets\misc\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs" />
      <Compile Include="Assets\misc\Standard Assets\Characters\FirstPersonCharacter\Scripts\HeadBob.cs" />
