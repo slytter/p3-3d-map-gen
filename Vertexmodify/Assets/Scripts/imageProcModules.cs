@@ -350,6 +350,12 @@ public class imageProcModules : MonoBehaviour
 		return boolArrayToBeFramed; 
 	}
 
+
+	/// <summary>
+	/// Applies median filter.
+	/// </summary>
+	/// <returns>The filter.</returns>
+	/// <param name="inputpicture">Inputpicture.</param>
 	public bool [,] medianFilter (bool[,] inputpicture)
 	{
 		int[] kernel = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
@@ -446,20 +452,12 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	public float[,] flip (float[,] inp)
-	{
-		return inp;
-		for (int y = 0; y < inp.GetLength (1); y++) {
-			for (int x = 0; x < inp.GetLength (0); x++) {
-				inp [x, y] = inp [y, x];
-			}
-		}
-		return inp;
-	}
 
-
-
-
+	/// <summary>
+	/// Flips the X and y.
+	/// </summary>
+	/// <returns>The X and y.</returns>
+	/// <param name="original">Original.</param>
 	public Texture2D flipXAndY (Texture2D original)
 	{
 		TimingModule.timer ("flipX&Y", "start");
@@ -486,6 +484,10 @@ public class imageProcModules : MonoBehaviour
 
 }
 
+
+/// <summary>
+/// Timing module.
+/// </summary>
 public class TimingModule
 {
 	static float startTimeOfModule;
