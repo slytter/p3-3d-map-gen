@@ -31,7 +31,7 @@ public class MapCreator : MonoBehaviour
 	void Start ()
 	{
 		init ();
-		biggestDimension = generator.mapSize (mainTerrain, heightOfMap);
+		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
 		HUD = imageModules.flipXAndY (scanModules.originalTexture);
 
 		// Scanning:
@@ -52,9 +52,14 @@ public class MapCreator : MonoBehaviour
 		generator.generateTrees (mainTerrain, tree, green, biggestDimension, baseHeight);
 
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
-		generator.generateObjects (blobs, "Triangle", mainTerrain, spawn, 0, true);
+
+		if (!generator.generateObjects (blobs, "Triangle", mainTerrain, spawn, 0, true))
+			generator.SpawnPrefab (255, 255, mainTerrain, spawn);
+		
 		generator.generateObjects (blobs, "Square", mainTerrain, Key, 0, false);
-		generator.generateObjects (blobs, "Circle", mainTerrain, gateObj, 0, true);
+
+		if (!generator.generateObjects (blobs, "Circle", mainTerrain, gateObj, 90f, true))
+			generator.SpawnPrefab (255, 255, mainTerrain, gateObj, new Vector3 (90f, 90f, 0f));
 
 	}
 

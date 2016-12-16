@@ -12,7 +12,7 @@ public class generator : MonoBehaviour
 	ColorDetection scanModules;
 	MountainGeneration montainModules;
 
-	void Start ()
+	void Awake ()
 	{
 		imageModules = GetComponent<imageProcModules> ();
 		scanModules = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
@@ -117,7 +117,7 @@ public class generator : MonoBehaviour
 
 	}
 
-	public int mapSize (Terrain inputTerrain, float heightOfMap)
+	public int mapSize (Terrain inputTerrain, float heightOfMap, ColorDetection scanModules)
 	{
 		inputTerrain.terrainData.size = new Vector3 (512, heightOfMap, 512); /*setting size*/
 		print (inputTerrain.terrainData.size.x + " :yo " + inputTerrain.terrainData.size.z);
@@ -129,19 +129,19 @@ public class generator : MonoBehaviour
 		return biggestDimension;
 	}
 
-	public void generateObjects (Blob[] blobs, string figure, Terrain mainTerrain, GameObject Object, float angle, bool once)
+	public bool generateObjects (Blob[] blobs, string figure, Terrain mainTerrain, GameObject Object, float angle, bool once)
 	{
 		bool objectSpawned = false;
 
 		for (int i = 0; i < blobs.Length; i++) {
 			print (blobs [i].type);
 			if (blobs [i].type == figure && !objectSpawned) {
-				print ("spawning player at: " + blobs [i].CenterOfMass.y + ", " + blobs [i].CenterOfMass.x + " with the angle: " + blobs [i].angle);
 				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, Object, new Vector3 (angle, 0f, 0f));
 				if (once)
 					objectSpawned = true;
 			}
 		}
+		return objectSpawned;
 	}
 
 
