@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
 
@@ -74,7 +75,7 @@ public class cameraScript : MonoBehaviour
 		gameState = GameObject.Find ("gameState").GetComponent<gameState> ();
 		gameState.chosenImage = currentImageName;
 		print ("image chosen: " + currentImageName);
-		Application.LoadLevel ("sagen");
+		SceneManager.LoadScene ("sagen");
 	}
 
 	public Texture2D flipXAndY (Texture2D original)
@@ -106,7 +107,7 @@ public class cameraScript : MonoBehaviour
 		gameState = GameObject.Find ("gameState").GetComponent<gameState> ();
 		gameState.chosenImage = currentImageName;
 		print ("image chosen: " + currentImageName);
-		Application.LoadLevel ("calibrate");
+		SceneManager.LoadScene ("calibrate");
 	}
 
 
