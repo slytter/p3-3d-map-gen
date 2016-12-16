@@ -60,7 +60,7 @@ static public class blobClassify
 				}
 			}
 		}
-		Blob[] blobs = classifyBlobs (blobsGradient, blobsEdges, blobTag);
+		Blob[] blobs = BlobFeatures (blobsGradient, blobsEdges, blobTag);
 		return blobs;
 	}
 
@@ -74,10 +74,9 @@ static public class blobClassify
 	/// <param name="blobsGradient">Blobs gradient.</param>
 	/// <param name="blobsEdges">Blobs edges.</param>
 	/// <param name="blobTag">BLOB tag.</param>
-	private static Blob[] classifyBlobs (float[,] blobsGradient, float[,] blobsEdges, int blobTag)
+	private static Blob[] BlobFeatures (float[,] blobsGradient, float[,] blobsEdges, int blobTag)
 	{
 		//INITIALIZING:
-		ColorDetection colorScanScript = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
 		Blob[] blobs = new Blob[blobTag];
 		for (int i = 0; i < blobTag; i++) {
 			blobs [i] = new Blob ();
@@ -87,7 +86,6 @@ static public class blobClassify
 		for (int y = 2; y < blobsGradient.GetLength (1) - 2; y++) {
 			for (int x = 2; x < blobsGradient.GetLength (0) - 2; x++) {
 				if (blobsGradient [x, y] != 0f) {
-					//print ("COM tag: " + blobsGradient [x, y]);
 					blobs [(int)blobsGradient [x, y]].CenterOfMass.y += y;
 					blobs [(int)blobsGradient [x, y]].CenterOfMass.x += x;
 					blobs [(int)blobsGradient [x, y]].area++;
@@ -99,33 +97,30 @@ static public class blobClassify
 			}
 		}
 
-		for (int i = 0; i < blobs.GetLength (0); i++) {
+		for (int i = 0; i < blobs.Length; i++) {
 			blobs [i].CenterOfMass.x = blobs [i].CenterOfMass.x / blobs [i].area;
 			blobs [i].CenterOfMass.y = blobs [i].CenterOfMass.y / blobs [i].area;
-			if ((int)blobs [i].CenterOfMass.x < 512 && (int)blobs [i].CenterOfMass.y < 512) {
-				if ((int)blobs [i].CenterOfMass.x > 0 && (int)blobs [i].CenterOfMass.y > 0) {
-					//	blobsEdges [(int)blobs [i].CenterOfMass.x, (int)blobs [i].CenterOfMass.y] = 1f;
-				}
-			} 
-		}
-		if (debug)
-			//colorScanScript.printBinary (blobsEdges);
 
-		for (int i = 1; i < blobs.Length; i++) {
-			blobs [i].number = i;
-			blobs [i] = calculateCorners (blobsEdges, blobs, i);
+			if (i >= 1)
+			{
+				blobs [i].tagNumber = i;
+				blobs [i] = BlobClassification (blobsEdges, blobs, i);
+			}
 		}
-
+			
 		return blobs;
 	}
 
 
 
-	/// <summary>
-	/// Calculates the corners.
-	/// </summary>
-	/// <returns>The corners.</returns>
-	private static Blob calculateCorners (float[,] blobsEdges, Blob[] blobs, int index)
+/// <summary>
+/// BLOB classification.
+/// </summary>
+/// <returns>The classification.</returns>
+/// <param name="blobsEdges">Blobs edges.</param>
+/// <param name="blobs">Blobs.</param>
+/// <param name="index">Index.</param>
+	private static Blob BlobClassification (float[,] blobsEdges, Blob[] blobs, int index)
 	{
 		int incr = 0;
 		float[] lengths = new float[blobs [index].edgeArea]; //set to edge area!!
@@ -140,18 +135,19 @@ static public class blobClassify
 					lengths [incr] = Vector2.Distance (cm, edge);
 					angles [incr] = (float)(Mathf.Atan2 (cm.y - edge.y, cm.x - edge.x)) * Mathf.Rad2Deg + 180f;
 					incr++;
-					if (debug)
-						Debug.DrawLine (new Vector3 (edge.y, 60f, edge.x), new Vector3 (cm.y, 60f, cm.x), Color.red, 10000f);
+
+					if (debug) Debug.DrawLine (new Vector3 (edge.y, 60f, edge.x), new Vector3 (cm.y, 60f, cm.x), Color.red, 10000f);
 				}
 			}
 		}
+
 		float meanLength = 0f;
 		float[] sortedAngles = new float[incr];
+
 		Array.Copy (angles, sortedAngles, incr);
 		Array.Sort (sortedAngles);
 
 		float[] sortedLengths = new float[incr];
-
 
 		for (int i = 0; i < sortedAngles.Length; i++) {
 			int unsortedIndex = findIndex (angles, sortedAngles [i]);
@@ -160,18 +156,12 @@ static public class blobClassify
 			meanLength += sortedLengths [i];
 		}
 		meanLength /= sortedLengths.Length;
-
+			
 		bool under = true;
 		int crossingTheMean = 0;
 		if (sortedLengths [0] > meanLength) {
 			under = false;
 		}
-
-		if (debug)
-			Debug.DrawLine (new Vector3 (0+ (100*index), 60f, meanLength), new Vector3 (sortedAngles.Length+ (100*index), 60f, meanLength), Color.green, 10000f);
-
-		int peak = 0;
-		float peakAngle = 0;
 
 		for (int x = 0; x < sortedAngles.Length; x++) {
 			if (debug)
@@ -181,10 +171,6 @@ static public class blobClassify
 		sortedLengths = oneDMeanFilter (sortedLengths);
 
 		for (int x = 0; x < sortedAngles.Length; x++) {
-			if (x > peak) {
-				peak = x;
-				peakAngle = sortedAngles [x];
-			}
 			if ((under && sortedLengths [x] > meanLength + 1f) || (!under && sortedLengths [x] < meanLength - 1f)) {
 				under = !under;
 				crossingTheMean++;
@@ -203,7 +189,6 @@ static public class blobClassify
 
 		blobs [index].corners = crossingTheMean / 2;
 		blobs [index].type = blobNamer (blobs [index].corners, false);
-		blobs [index].angle = peakAngle;
 		return blobs [index];
 	}
 
@@ -265,11 +250,10 @@ static public class blobClassify
 
 public class Blob
 {
-	public int number;
+	public int tagNumber;
 	public int area;
 	public Vector2 CenterOfMass = new Vector2 (0, 0);
 	public string type;
 	public int corners;
-	public float angle;
 	public int edgeArea;
 }

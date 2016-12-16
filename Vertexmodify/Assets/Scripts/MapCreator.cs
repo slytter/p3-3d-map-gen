@@ -266,7 +266,7 @@ public class MapCreator : MonoBehaviour
 		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
 
 
-		print (canvasPlayerPosX);
+		//print (canvasPlayerPosX);
 		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
 	}
 
