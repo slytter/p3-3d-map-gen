@@ -24,16 +24,12 @@ public class generator : MonoBehaviour
 		float yScale = (float)scanModules.widthOfTex / (float)biggestDimension;
 		float xScale = (float)scanModules.heightOfTex / (float)biggestDimension;
 
-		print ("xscal: " + xScale);
-		print ("yscal: " + yScale);
-
 		binaryTreeArea = imageModules.dilation (imageModules.dilation (binaryTreeArea));
 		binaryTreeArea = imageModules.floodFillQueue (binaryTreeArea);
 		scanModules.printBinary (binaryTreeArea);
 
 		float[,] treeArea = imageModules.boolToFloat (binaryTreeArea);
 		float[,] treePositions = imageModules.generateTreePositions (treeArea, 6);
-
 
 		TreeInstance[] reset = new TreeInstance[0]; 
 
@@ -44,9 +40,9 @@ public class generator : MonoBehaviour
 			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
 				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
 					tree.position = new Vector3 (treePositions [1, i] * xScale, (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale * 512), (int)(treePositions [0, i] * yScale * 512)) / 100), treePositions [0, i] * yScale); 
-					tree.color = Color.yellow; 
-					tree.lightmapColor = Color.yellow; 
-					tree.prototypeIndex = 0; 
+					tree.color = Color.yellow;
+					tree.lightmapColor = Color.yellow;
+					tree.prototypeIndex = 0;
 					float treeScale = UnityEngine.Random.Range (1.3f, 3.8f);
 					tree.widthScale = treeScale; 
 					tree.heightScale = treeScale;

@@ -132,6 +132,10 @@ static public class blobClassify
 		if (sortedLengths [0] > meanLength) {
 			under = false;
 		}
+
+		if (debug)
+			Debug.DrawLine (new Vector3 (0 + (100 * index), 60f, meanLength), new Vector3 (sortedAngles.Length + (100 * index), 60f, meanLength), Color.green, 10000f);
+
 		for (int x = 0; x < sortedAngles.Length; x++) {
 			if (debug)
 				Debug.DrawLine (new Vector3 (x + (100 * index), 60f, 0), new Vector3 (x + (100 * index), 60f, sortedLengths [x]), Color.green, 10000f);
