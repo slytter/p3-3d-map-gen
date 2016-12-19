@@ -116,7 +116,6 @@ public class generator : MonoBehaviour
 	public int mapSize (Terrain inputTerrain, float heightOfMap, ColorDetection scanModules)
 	{
 		inputTerrain.terrainData.size = new Vector3 (512, heightOfMap, 512); /*setting size*/
-		print (inputTerrain.terrainData.size.x + " :yo " + inputTerrain.terrainData.size.z);
 		inputTerrain.terrainData.RefreshPrototypes ();	
 
 		int biggestDimension = (scanModules.heightOfTex > scanModules.widthOfTex) ? scanModules.heightOfTex : scanModules.widthOfTex; //Simple if statement 
@@ -130,7 +129,8 @@ public class generator : MonoBehaviour
 		bool objectSpawned = false;
 
 		for (int i = 0; i < blobs.Length; i++) {
-			print (blobs [i].type);
+			if (blobClassify.debug)
+				print (blobs [i].type);
 			if (blobs [i].type == figure && !objectSpawned) {
 				SpawnPrefab ((int)blobs [i].CenterOfMass.y, (int)blobs [i].CenterOfMass.x, mainTerrain, Object, new Vector3 (angle, 0f, 0f));
 				if (once)

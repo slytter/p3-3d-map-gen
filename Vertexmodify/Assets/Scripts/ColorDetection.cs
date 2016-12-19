@@ -71,8 +71,6 @@ public class ColorDetection : MonoBehaviour
 
 		widthOfTex = originalTexture.width;
 		heightOfTex = originalTexture.height;
-		
-		print (widthOfTex + ", h: " + heightOfTex);
 
 	}
 

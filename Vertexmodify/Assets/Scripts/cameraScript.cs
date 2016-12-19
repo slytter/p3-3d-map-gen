@@ -75,7 +75,7 @@ public class cameraScript : MonoBehaviour
 		gameState = GameObject.Find ("gameState").GetComponent<gameState> ();
 		gameState.chosenImage = currentImageName;
 		print ("image chosen: " + currentImageName);
-		SceneManager.LoadScene ("sagen");
+		SceneManager.LoadScene ("Mapgenerator");
 	}
 
 	public Texture2D flipXAndY (Texture2D original)

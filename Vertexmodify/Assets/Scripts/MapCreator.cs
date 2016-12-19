@@ -37,8 +37,8 @@ public class MapCreator : MonoBehaviour
 		// Scanning:
 		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.3f, 0.5f); 	// getting colors from input image
 		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); 		// getting colors from input image
-		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.17f, 0.3f); 	// getting colors from input image
-		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.17f, 0.3f); 	// getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.13f, 0.3f); 	// getting colors from input image
+		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.13f, 0.3f); 	// getting colors from input image
 
 		// Generating
 		float[,] mountains = generator.generateMountains (red, mountainHeight);
@@ -51,6 +51,7 @@ public class MapCreator : MonoBehaviour
 		lowPolyFy ();
 		generator.generateTrees (mainTerrain, tree, green, biggestDimension, baseHeight);
 
+		blobClassify.debug = false;
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
 
 		if (!generator.generateObjects (blobs, "Triangle", mainTerrain, spawn, 0, true))
@@ -103,7 +104,6 @@ public class MapCreator : MonoBehaviour
 		int canvasY = 10;
 		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
 		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
-		print (canvasPlayerPosX);
 		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
 	}
 
