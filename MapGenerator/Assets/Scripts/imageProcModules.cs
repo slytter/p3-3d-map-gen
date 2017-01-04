@@ -20,7 +20,7 @@ public class imageProcModules : MonoBehaviour
 	}
 
 
-	public Color[] RBGNormalize (Color[] inputImg)
+	public Color[] RGBNormalize (Color[] inputImg)
 	{
 		Color[] output = new Color[inputImg.Length];
 		for (int i = 0; i < inputImg.Length; i++) {
@@ -29,6 +29,7 @@ public class imageProcModules : MonoBehaviour
 			output [i].g = inputImg [i].g / RGBTotal;
 			output [i].b = inputImg [i].b / RGBTotal;
 		}
+		
 		return  output;
 	}
 

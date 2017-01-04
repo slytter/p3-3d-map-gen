@@ -164,4 +164,11 @@ public class ColorDetection : MonoBehaviour
 		image.SetPixels (pixN);
 		image.Apply ();	
 	}
+
+	public void printTexture (Color[] inp)
+	{
+		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+		image.SetPixels (inp);
+		image.Apply ();	
+	}
 }

@@ -27,15 +27,40 @@ public class MapCreator : MonoBehaviour
 	public Texture2D playerIcon;
 	Texture2D HUD;
 
+	[Range (0.0f, 1.0f)]
+	public float hueMin = 0.9f;
+	[Range (0.0f, 1.0f)]
+	public float humMax = 0.10f;
+	[Range (0.0f, 1.0f)]
+	public float sat = 0.5f;
+	[Range (0.0f, 1.0f)]
+	public float val = 0.3f;
+
+	bool[,] color;
+
+	void Update ()
+	{
+		color = scanModules.colorDetection (imageModules.RGBNormalize (scanModules.originalImage), hueMin, humMax, sat, val);
+		scanModules.printBinary (color);
+	}
 
 	void Start ()
 	{
 		init ();
 		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
 		HUD = imageModules.flipXAndY (scanModules.originalTexture);
+		scanModules.printTexture (imageModules.RGBNormalize (scanModules.originalTexture.GetPixels ()));
+	}
+
+
+	void StartOld ()
+	{
+		init ();
+		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
+		HUD = imageModules.flipXAndY (scanModules.originalTexture);
 
 		// Scanning:
-		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.3f, 0.5f); 	// getting colors from input image
+		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.09, 0f); 	// getting colors from input image
 		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); 		// getting colors from input image
 		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.13f, 0.3f); 	// getting colors from input image
 		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.13f, 0.3f); 	// getting colors from input image
@@ -97,15 +122,15 @@ public class MapCreator : MonoBehaviour
 
 
 
-	void OnGUI ()
-	{
-		GUI.DrawTexture (new Rect (1920 - 260, 10, 250, 250), HUD, ScaleMode.StretchToFill, true, 0f);
-		int canvasX = 1920 - 260;
-		int canvasY = 10;
-		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
-		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
-		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
-	}
+	//	void OnGUI ()
+	//	{
+	//		GUI.DrawTexture (new Rect (1920 - 260, 10, 250, 250), HUD, ScaleMode.StretchToFill, true, 0f);
+	//		int canvasX = 1920 - 260;
+	//		int canvasY = 10;
+	//		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
+	//		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
+	//		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
+	//	}
 
 
 
