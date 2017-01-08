@@ -29,9 +29,94 @@ public class imageProcModules : MonoBehaviour
 			output [i].g = inputImg [i].g / RGBTotal;
 			output [i].b = inputImg [i].b / RGBTotal;
 		}
-		
+
 		return  output;
 	}
+
+	public Color[] cutBlacks (Color[] inputImg, float cut)
+	{
+		Color[] output = new Color[inputImg.Length];
+		for (int i = 0; i < inputImg.Length; i++) {
+			float greyscale = inputImg [i].r + inputImg [i].g + inputImg [i].b / 3;
+			if (greyscale < cut) {
+				output [i].r = 0.1f;
+				output [i].g = 0.1f;
+				output [i].b = 0.1f;
+			} else {
+				output [i] = inputImg [i];
+			}
+
+		}
+
+		return  output;
+	}
+
+	public Color[] cutWhites (Color[] inputImg, float cut)
+	{
+		Color[] output = new Color[inputImg.Length];
+		for (int i = 0; i < inputImg.Length; i++) {
+			float greyscale = inputImg [i].r + inputImg [i].g + inputImg [i].b / 3;
+			if (greyscale > cut) {
+				output [i].r = 1f;
+				output [i].g = 1f;
+				output [i].b = 1f;
+			} else {
+				output [i] = inputImg [i];
+			}
+
+		}
+
+		return  output;
+	}
+
+	public Color[] whiteBalance (Color[] inputImg)
+	{
+		Color[] output = new Color[inputImg.Length];
+		float Rmin = 1f;
+		float Rmax = 0f;
+		float Gmin = 1f;
+		float Gmax = 0f;
+		float Bmin = 1f;
+		float Bmax = 0f;
+
+		for (int i = 0; i < inputImg.Length; i++) {
+			if (inputImg [i].r < Rmin)
+				Rmin = inputImg [i].r;
+			if (inputImg [i].r > Rmax)
+				Rmax = inputImg [i].r;
+			
+			if (inputImg [i].g < Gmin)
+				Gmin = inputImg [i].g;
+			if (inputImg [i].g > Gmax)
+				Gmax = inputImg [i].g;
+
+			if (inputImg [i].b < Bmin)
+				Bmin = inputImg [i].b;
+			if (inputImg [i].b > Bmax)
+				Bmax = inputImg [i].b;
+		}
+
+		for (int i = 0; i < inputImg.Length; i++) {
+			output [i].r = map (inputImg [i].r, 0, Rmax, 0, 1);
+			output [i].g = map (inputImg [i].g, 0, Gmax, 0, 1);
+			output [i].b = map (inputImg [i].b, 0, Bmax, 0, 1);
+
+		}
+
+		print ("Rmax: " + Rmax);
+		print ("Rmin: " + Rmin);
+		print ("Gmax: " + Gmax);
+		print ("Gmin: " + Gmin);
+		print ("Bmax: " + Bmax);
+		print ("Bmin: " + Bmin);
+		return output;
+	}
+
+	private float map (float s, float a1, float a2, float b1, float b2)
+	{
+		return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
+	}
+
 
 	/// <summary>
 	/// Perlin the specified inp.
@@ -359,8 +444,6 @@ public class imageProcModules : MonoBehaviour
 	/// <param name="inputpicture">Inputpicture.</param>
 	public bool [,] medianFilter (bool[,] inputpicture)
 	{
-		int[] kernel = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-
 		for (int y = 1; y < inputpicture.GetLength (1) - 1; y++) {
 			for (int x = 1; x < inputpicture.GetLength (0) - 1; x++) {
 				int sum = 0;
@@ -384,6 +467,30 @@ public class imageProcModules : MonoBehaviour
 
 	}
 
+	public bool [,] medianFilter5x5 (bool[,] inputpicture)
+	{
+		for (int y = 2; y < inputpicture.GetLength (1) - 2; y++) {
+			for (int x = 2; x < inputpicture.GetLength (0) - 2; x++) {
+				int sum = 0;
+
+				for (int ky = 0; ky <= 4; ky++) {
+					for (int kx = 0; kx <= 4; kx++) {
+						if (inputpicture [x + kx - 2, y + ky - 2])
+							sum++;
+
+					}
+				}
+
+				if (sum > 12)
+					inputpicture [x, y] = true;
+				else {
+					inputpicture [x, y] = false;
+				}
+			}
+		}
+		return inputpicture;
+
+	}
 
 	/// <summary>
 	/// Subtract the specified .

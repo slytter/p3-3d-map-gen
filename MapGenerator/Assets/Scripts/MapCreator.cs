@@ -10,6 +10,9 @@ public class MapCreator : MonoBehaviour
 	TreeInstance tree;
 	imageProcModules imageModules;
 	ColorDetection scanModules;
+	ColorDetection display1;
+	ColorDetection display2;
+	ColorDetection display3;
 	MountainGeneration montainModules;
 	generator generator;
 	float update;
@@ -28,20 +31,66 @@ public class MapCreator : MonoBehaviour
 	Texture2D HUD;
 
 	[Range (0.0f, 1.0f)]
-	public float hueMin = 0.9f;
+	public float hueMin = 0.97f;
 	[Range (0.0f, 1.0f)]
-	public float humMax = 0.10f;
+	public float humMax = 0.07f;
 	[Range (0.0f, 1.0f)]
-	public float sat = 0.5f;
+	public float sat = 0.53f;
 	[Range (0.0f, 1.0f)]
 	public float val = 0.3f;
+	public bool whiteB = true;
+	public bool RGBnorm = true;
+	public bool median = true;
+	public bool median2 = true;
+	public float thresh = 0.2f;
+	public float whiteThresh = 1.8f;
+
 
 	bool[,] color;
 
+	int frames = 0;
+
 	void Update ()
 	{
-		color = scanModules.colorDetection (imageModules.RGBNormalize (scanModules.originalImage), hueMin, humMax, sat, val);
-		scanModules.printBinary (color);
+		if (frames % 2 == 0) {
+			Color[] image = scanModules.originalImage;
+			display1.printTexture (image);
+
+
+		
+			if (whiteB) {
+				image = imageModules.whiteBalance (image);
+
+
+			}
+
+			image = imageModules.cutBlacks (image, thresh);
+			image = imageModules.cutWhites (image, whiteThresh);
+			display1.printTexture (image);
+
+			if (RGBnorm) {
+				image = imageModules.RGBNormalize (image);
+			}
+			display2.printTexture (image);
+
+
+
+
+			color = scanModules.colorDetection (image, hueMin, humMax, sat, val);
+
+			display3.printBinary (color);
+		
+
+
+			//	scanModules.printBinary (imageModules.medianFilter (color));
+			if (median) {
+				scanModules.printBinary (imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation ((color))))));
+			} else {
+				scanModules.printBinary (imageModules.floodFillQueue (imageModules.erosion (imageModules.dilation (color))));
+			}
+				
+		}
+		frames++;
 	}
 
 	void Start ()
@@ -49,26 +98,34 @@ public class MapCreator : MonoBehaviour
 		init ();
 		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
 		HUD = imageModules.flipXAndY (scanModules.originalTexture);
-		scanModules.printTexture (imageModules.RGBNormalize (scanModules.originalTexture.GetPixels ()));
+
+		scanModules.printTexture (imageModules.whiteBalance ((scanModules.originalTexture.GetPixels ())));
 	}
 
 
-	void StartOld ()
+	void Start1 ()
 	{
 		init ();
 		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
 		HUD = imageModules.flipXAndY (scanModules.originalTexture);
 
+		Color[] scanImage = imageModules.RGBNormalize (imageModules.whiteBalance (scanModules.originalImage));
+		scanModules.printTexture (scanImage);
+
 		// Scanning:
-		bool[,] yellow	= scanModules.colorDetection ((scanModules.originalImage), 0.09f, 0.2f, 0.09, 0f); 	// getting colors from input image
-		bool[,] red = scanModules.colorDetection ((scanModules.originalImage), 0.96f, 0.02f, 0.43f, 0.5f); 		// getting colors from input image
-		bool[,] green = scanModules.colorDetection ((scanModules.originalImage), 0.3f, 0.52f, 0.13f, 0.3f); 	// getting colors from input image
-		bool[,] blue = scanModules.colorDetection ((scanModules.originalImage), 0.55f, 0.65f, 0.13f, 0.3f); 	// getting colors from input image
+		bool[,] red = scanModules.colorDetection ((scanImage), 0.96f, 0.02f, 0.05f, 0f); 		// getting colors from input image
+		bool[,] yellow	= scanModules.colorDetection ((scanImage), 0.09f, 0.2f, 0.05f, 0f); 	// getting colors from input image
+		bool[,] green = scanModules.colorDetection ((scanImage), 0.43f, 0.57f, 0.04f, 0f); 	// getting colors from input image
+		bool[,] blue = scanModules.colorDetection ((scanImage), 0.55f, 0.65f, 0.09f, 0f); 	// getting colors from input image
 
 		// Generating
 		float[,] mountains = generator.generateMountains (red, mountainHeight);
 		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density);
 		float[,] riversAndBase = generator.generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
+
+		display1.printBinary (mountains);
+		display2.printBinary (riversAndBase);
+		display3.printBinary (yellow);
 
 		// Applying:
 		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
@@ -101,6 +158,9 @@ public class MapCreator : MonoBehaviour
 		generator = GetComponent<generator> ();
 		imageModules = GetComponent<imageProcModules> ();
 		scanModules = GameObject.Find ("colorScan").GetComponent<ColorDetection> ();
+		display1 = GameObject.Find ("display1").GetComponent<ColorDetection> ();
+		display2 = GameObject.Find ("display2").GetComponent<ColorDetection> ();
+		display3 = GameObject.Find ("display3").GetComponent<ColorDetection> ();
 		montainModules = GetComponent<MountainGeneration> ();
 
 		emptyMap = new float[scanModules.widthOfTex, scanModules.heightOfTex]; // getting terrain data

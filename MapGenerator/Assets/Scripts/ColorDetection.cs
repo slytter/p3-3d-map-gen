@@ -145,7 +145,7 @@ public class ColorDetection : MonoBehaviour
 				}
 			}
 		}
-		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+		Texture2D image = (Texture2D)gameObject.GetComponent<Renderer> ().material.mainTexture;
 		image.SetPixels (pixN);
 		image.Apply ();	
 	}
@@ -160,14 +160,15 @@ public class ColorDetection : MonoBehaviour
 				pixN [y * input.GetLength (0) + x].b = input [x, y];
 			}
 		}
-		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+
+		Texture2D image = (Texture2D)gameObject.GetComponent<Renderer> ().material.mainTexture;
 		image.SetPixels (pixN);
 		image.Apply ();	
 	}
 
 	public void printTexture (Color[] inp)
 	{
-		Texture2D image = (Texture2D)GetComponent<Renderer> ().material.mainTexture;
+		Texture2D image = (Texture2D)gameObject.GetComponent<Renderer> ().material.mainTexture;
 		image.SetPixels (inp);
 		image.Apply ();	
 	}

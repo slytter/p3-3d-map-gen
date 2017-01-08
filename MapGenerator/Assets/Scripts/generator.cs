@@ -26,7 +26,6 @@ public class generator : MonoBehaviour
 
 		binaryTreeArea = imageModules.dilation (imageModules.dilation (binaryTreeArea));
 		binaryTreeArea = imageModules.floodFillQueue (binaryTreeArea);
-		scanModules.printBinary (binaryTreeArea);
 
 		float[,] treeArea = imageModules.boolToFloat (binaryTreeArea);
 		float[,] treePositions = imageModules.generateTreePositions (treeArea, 6);
@@ -67,7 +66,6 @@ public class generator : MonoBehaviour
 		//		area = imageModules.erosion (area); 
 
 		area = imageModules.floodFillQueue (area);
-		scanModules.printBinary (area);
 		float[,] mountainArea = new float[area.GetLength (0), area.GetLength (1)];
 		mountainArea = imageModules.boolToFloat (area);
 		mountainArea = imageModules.gaussian (mountainArea, 10);
