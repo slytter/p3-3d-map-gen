@@ -51,17 +51,16 @@ public class MapCreator : MonoBehaviour
 		lowPolyFy ();
 		generator.generateTrees (mainTerrain, tree, green, biggestDimension, baseHeight);
 
-		blobClassify.debug = false;
+		blobClassify.debug = true;
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
 
 		if (!generator.generateObjects (blobs, "Triangle", mainTerrain, spawn, 0, true))
 			generator.SpawnPrefab (255, 255, mainTerrain, spawn);
-		
 		generator.generateObjects (blobs, "Square", mainTerrain, Key, 0, false);
 
 		if (!generator.generateObjects (blobs, "Circle", mainTerrain, gateObj, 90f, true))
 			generator.SpawnPrefab (255, 255, mainTerrain, gateObj, new Vector3 (90f, 90f, 0f));
-
+		
 	}
 
 
