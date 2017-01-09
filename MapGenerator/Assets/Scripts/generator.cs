@@ -37,7 +37,7 @@ public class generator : MonoBehaviour
 		List <TreeInstance> treeList = new List<TreeInstance> (mainTerrain.terrainData.treeInstances); 
 		for (int i = 0; i < treePositions.GetLength (1); i++) {
 			if (mainTerrain.terrainData.GetSteepness (treePositions [1, i] * xScale, treePositions [0, i] * yScale) < 45f) { // 1 & 0 has been flipped to mirror trees.
-				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (int)(baseHeight)) {
+				if (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale), (int)(treePositions [0, i] * yScale)) > (baseHeight)) {
 					tree.position = new Vector3 (treePositions [1, i] * xScale, (mainTerrain.terrainData.GetHeight ((int)(treePositions [1, i] * xScale * 512), (int)(treePositions [0, i] * yScale * 512)) / 100), treePositions [0, i] * yScale); 
 					tree.color = Color.yellow;
 					tree.lightmapColor = Color.yellow;

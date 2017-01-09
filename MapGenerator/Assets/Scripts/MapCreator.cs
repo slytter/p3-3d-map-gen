@@ -43,14 +43,14 @@ public class MapCreator : MonoBehaviour
 	public bool median = true;
 	public bool median2 = true;
 	public float thresh = 0.2f;
-	public float whiteThresh = 1.8f;
+	public float whiteThresh = 1.5f;
 
 
 	bool[,] color;
 
 	int frames = 0;
 
-	void Update ()
+	void Update1 ()
 	{
 		if (frames % 2 == 0) {
 			Color[] image = scanModules.originalImage;
@@ -60,8 +60,6 @@ public class MapCreator : MonoBehaviour
 		
 			if (whiteB) {
 				image = imageModules.whiteBalance (image);
-
-
 			}
 
 			image = imageModules.cutBlacks (image, thresh);
@@ -84,7 +82,7 @@ public class MapCreator : MonoBehaviour
 
 			//	scanModules.printBinary (imageModules.medianFilter (color));
 			if (median) {
-				scanModules.printBinary (imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation ((color))))));
+				scanModules.printBinary (imageModules.floodFillQueue (imageModules.medianFilter (imageModules.erosion (imageModules.dilation (imageModules.medianFilter (color))))));
 			} else {
 				scanModules.printBinary (imageModules.floodFillQueue (imageModules.erosion (imageModules.dilation (color))));
 			}
@@ -93,7 +91,7 @@ public class MapCreator : MonoBehaviour
 		frames++;
 	}
 
-	void Start ()
+	void Start1 ()
 	{
 		init ();
 		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
@@ -103,29 +101,42 @@ public class MapCreator : MonoBehaviour
 	}
 
 
-	void Start1 ()
+	void Start ()
 	{
 		init ();
 		biggestDimension = generator.mapSize (mainTerrain, heightOfMap, scanModules);
 		HUD = imageModules.flipXAndY (scanModules.originalTexture);
 
-		Color[] scanImage = imageModules.RGBNormalize (imageModules.whiteBalance (scanModules.originalImage));
+		Color[] scanImage = scanModules.originalImage;
+		scanImage = imageModules.whiteBalance (scanImage); 
+		scanImage = imageModules.cutBlacks (scanImage, thresh); 
+		scanImage = imageModules.cutWhites (scanImage, whiteThresh); 
+		scanImage = imageModules.RGBNormalize (scanImage);
+		display1.printTexture (scanImage);
 		scanModules.printTexture (scanImage);
 
+
 		// Scanning:
-		bool[,] red = scanModules.colorDetection ((scanImage), 0.96f, 0.02f, 0.05f, 0f); 		// getting colors from input image
-		bool[,] yellow	= scanModules.colorDetection ((scanImage), 0.09f, 0.2f, 0.05f, 0f); 	// getting colors from input image
-		bool[,] green = scanModules.colorDetection ((scanImage), 0.43f, 0.57f, 0.04f, 0f); 	// getting colors from input image
-		bool[,] blue = scanModules.colorDetection ((scanImage), 0.55f, 0.65f, 0.09f, 0f); 	// getting colors from input image
+		bool[,] red = scanModules.colorDetection ((scanImage), 0.95f, 0.08f, 0.3f, 0.46f); 		// getting colors from input image
+		red = imageModules.floodFillQueue (imageModules.medianFilter (imageModules.erosion (imageModules.dilation ((red)))));
+
+		bool[,] yellow	= scanModules.colorDetection (scanImage, 0.1f, 0.3f, 0.3f, 0.3f); 	// getting colors from input image
+		yellow = imageModules.floodFillQueue (yellow);
+
+		bool[,] green = scanModules.colorDetection ((scanImage), 0.35f, 0.55f, 0.2f, 0.2f); 	// getting colors from input image
+		green = imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation (green))));
+
+		bool[,] blue = scanModules.colorDetection ((scanImage), 0.56f, 0.8f, 0.3f, 0.37f); 	// getting colors from input image
+		blue = imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation (blue))));
+
 
 		// Generating
 		float[,] mountains = generator.generateMountains (red, mountainHeight);
 		float[,] baseMap = imageModules.perlin (emptyMap, baseHeight / 2, intensity, density);
 		float[,] riversAndBase = generator.generateRiversIntoBase (blue, baseMap); //generate rivers into base perlin map
 
-		display1.printBinary (mountains);
-		display2.printBinary (riversAndBase);
-		display3.printBinary (yellow);
+		display2.printBinary (mountains);
+		display3.printBinary (riversAndBase);
 
 		// Applying:
 		float[,] finalMap = montainModules.finalizeMap (imageModules.add (riversAndBase, mountains), 5);
@@ -133,17 +144,16 @@ public class MapCreator : MonoBehaviour
 		lowPolyFy ();
 		generator.generateTrees (mainTerrain, tree, green, biggestDimension, baseHeight);
 
-		blobClassify.debug = false;
+		blobClassify.debug = true;
 		Blob[] blobs = blobClassify.grassFire (imageModules.blackFrame (yellow));
 
 		if (!generator.generateObjects (blobs, "Triangle", mainTerrain, spawn, 0, true))
 			generator.SpawnPrefab (255, 255, mainTerrain, spawn);
-		
 		generator.generateObjects (blobs, "Square", mainTerrain, Key, 0, false);
 
 		if (!generator.generateObjects (blobs, "Circle", mainTerrain, gateObj, 90f, true))
 			generator.SpawnPrefab (255, 255, mainTerrain, gateObj, new Vector3 (90f, 90f, 0f));
-
+		
 	}
 
 
@@ -182,15 +192,15 @@ public class MapCreator : MonoBehaviour
 
 
 
-	//	void OnGUI ()
-	//	{
-	//		GUI.DrawTexture (new Rect (1920 - 260, 10, 250, 250), HUD, ScaleMode.StretchToFill, true, 0f);
-	//		int canvasX = 1920 - 260;
-	//		int canvasY = 10;
-	//		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
-	//		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
-	//		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
-	//	}
+	void OnGUI ()
+	{
+		GUI.DrawTexture (new Rect (1920 - 260, 10, 250, 250), HUD, ScaleMode.StretchToFill, true, 0f);
+		int canvasX = 1920 - 260;
+		int canvasY = 10;
+		float canvasPlayerPosX = 250 - GameObject.Find ("FPSController(Clone)").transform.position.x / 512 * 250 + canvasX;
+		float canvasPlayerPosY = GameObject.Find ("FPSController(Clone)").transform.position.z / 512 * 250 + canvasY;
+		GUI.DrawTexture (new Rect ((int)canvasPlayerPosX - 15, (int)canvasPlayerPosY - 15, 30, 30), playerIcon, ScaleMode.StretchToFill, true, 0f);
+	}
 
 
 
