@@ -43,7 +43,7 @@ public class MapCreator : MonoBehaviour
 	public bool median = true;
 	public bool median2 = true;
 	public float thresh = 0.2f;
-	public float whiteThresh = 1.5f;
+	public float whiteThresh = 1.8f;
 
 
 	bool[,] color;
@@ -82,7 +82,7 @@ public class MapCreator : MonoBehaviour
 
 			//	scanModules.printBinary (imageModules.medianFilter (color));
 			if (median) {
-				scanModules.printBinary (imageModules.floodFillQueue (imageModules.medianFilter (imageModules.erosion (imageModules.dilation (imageModules.medianFilter (color))))));
+				scanModules.printBinary (imageModules.floodFillQueue (imageModules.medianFilter (imageModules.erosion (imageModules.dilation ((color))))));
 			} else {
 				scanModules.printBinary (imageModules.floodFillQueue (imageModules.erosion (imageModules.dilation (color))));
 			}
@@ -109,25 +109,23 @@ public class MapCreator : MonoBehaviour
 
 		Color[] scanImage = scanModules.originalImage;
 		scanImage = imageModules.whiteBalance (scanImage); 
+		scanModules.printTexture (scanImage);
 		scanImage = imageModules.cutBlacks (scanImage, thresh); 
 		scanImage = imageModules.cutWhites (scanImage, whiteThresh); 
-		scanImage = imageModules.RGBNormalize (scanImage);
-		display1.printTexture (scanImage);
-		scanModules.printTexture (scanImage);
+		//	scanImage = imageModules.RGBNormalize (scanImage);
+
+
 
 
 		// Scanning:
-		bool[,] red = scanModules.colorDetection ((scanImage), 0.95f, 0.08f, 0.3f, 0.46f); 		// getting colors from input image
-		red = imageModules.floodFillQueue (imageModules.medianFilter (imageModules.erosion (imageModules.dilation ((red)))));
+		bool[,] red = scanModules.colorDetection ((scanImage), 0.95f, 0.08f, 0.2f, 0.46f); 		// getting colors from input image
 
-		bool[,] yellow	= scanModules.colorDetection (scanImage, 0.1f, 0.3f, 0.3f, 0.3f); 	// getting colors from input image
+		bool[,] yellow	= scanModules.colorDetection (scanImage, 0.1f, 0.3f, 0.2f, 0.3f); 	// getting colors from input image
 		yellow = imageModules.floodFillQueue (yellow);
 
-		bool[,] green = scanModules.colorDetection ((scanImage), 0.35f, 0.55f, 0.2f, 0.2f); 	// getting colors from input image
-		green = imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation (green))));
+		bool[,] green = scanModules.colorDetection ((scanImage), 0.35f, 0.55f, 0.16f, 0.2f); 	// getting colors from input image
 
-		bool[,] blue = scanModules.colorDetection ((scanImage), 0.56f, 0.8f, 0.3f, 0.37f); 	// getting colors from input image
-		blue = imageModules.floodFillQueue (imageModules.medianFilter5x5 (imageModules.erosion (imageModules.dilation (blue))));
+		bool[,] blue = scanModules.colorDetection ((scanImage), 0.56f, 0.8f, 0.06f, 0.2f); 	// getting colors from input image
 
 
 		// Generating

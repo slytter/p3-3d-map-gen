@@ -72,43 +72,27 @@ public class imageProcModules : MonoBehaviour
 	public Color[] whiteBalance (Color[] inputImg)
 	{
 		Color[] output = new Color[inputImg.Length];
-		float Rmin = 1f;
 		float Rmax = 0f;
-		float Gmin = 1f;
 		float Gmax = 0f;
-		float Bmin = 1f;
 		float Bmax = 0f;
 
 		for (int i = 0; i < inputImg.Length; i++) {
-			if (inputImg [i].r < Rmin)
-				Rmin = inputImg [i].r;
 			if (inputImg [i].r > Rmax)
 				Rmax = inputImg [i].r;
-			
-			if (inputImg [i].g < Gmin)
-				Gmin = inputImg [i].g;
+
 			if (inputImg [i].g > Gmax)
 				Gmax = inputImg [i].g;
 
-			if (inputImg [i].b < Bmin)
-				Bmin = inputImg [i].b;
 			if (inputImg [i].b > Bmax)
 				Bmax = inputImg [i].b;
 		}
 
 		for (int i = 0; i < inputImg.Length; i++) {
-			output [i].r = map (inputImg [i].r, 0, Rmax, 0, 1);
-			output [i].g = map (inputImg [i].g, 0, Gmax, 0, 1);
-			output [i].b = map (inputImg [i].b, 0, Bmax, 0, 1);
+			output [i].r = inputImg [i].r / Rmax;
+			output [i].g = inputImg [i].g / Gmax;
+			output [i].b = inputImg [i].b / Bmax;
 
 		}
-
-		print ("Rmax: " + Rmax);
-		print ("Rmin: " + Rmin);
-		print ("Gmax: " + Gmax);
-		print ("Gmin: " + Gmin);
-		print ("Bmax: " + Bmax);
-		print ("Bmin: " + Bmin);
 		return output;
 	}
 

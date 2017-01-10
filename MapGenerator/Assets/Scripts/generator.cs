@@ -25,6 +25,8 @@ public class generator : MonoBehaviour
 		float xScale = (float)scanModules.heightOfTex / (float)biggestDimension;
 
 		binaryTreeArea = imageModules.dilation (imageModules.dilation (binaryTreeArea));
+		binaryTreeArea = imageModules.erosion (binaryTreeArea);
+		binaryTreeArea = imageModules.medianFilter (binaryTreeArea);
 		binaryTreeArea = imageModules.floodFillQueue (binaryTreeArea);
 
 		float[,] treeArea = imageModules.boolToFloat (binaryTreeArea);
@@ -60,10 +62,12 @@ public class generator : MonoBehaviour
 		area = imageModules.medianFilter (area);
 		area = imageModules.dilation (area); //area = where red is.
 		area = imageModules.erosion (area); 
-		area = imageModules.dilation (area); //area = where red is.
-		area = imageModules.erosion (area);
-		//		area = imageModules.dilation (area); //area = where red is.
-		//		area = imageModules.erosion (area); 
+		area = imageModules.medianFilter (area);
+
+//		area = imageModules.dilation (area); //area = where red is.
+//		area = imageModules.erosion (area);
+////				area = imageModules.dilation (area); //area = where red is.
+//				area = imageModules.erosion (area); 
 
 		area = imageModules.floodFillQueue (area);
 		float[,] mountainArea = new float[area.GetLength (0), area.GetLength (1)];
@@ -85,8 +89,11 @@ public class generator : MonoBehaviour
 
 	public float[,] generateRiversIntoBase (bool[,] area, float[,] basemap)
 	{
+//		area = imageModules.medianFilter (area); 
 		area = imageModules.dilation (area);
 		area = imageModules.dilation (area);
+		area = imageModules.dilation (area);
+		area = imageModules.erosion (area); 
 		area = imageModules.erosion (area); 
 		area = imageModules.floodFillQueue (area);
 		float[,] river = imageModules.boolToFloat (area);
